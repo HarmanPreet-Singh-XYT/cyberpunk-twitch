@@ -157,10 +157,10 @@ function Navbar({ setIsMenuOpen }) {
                 
                 <nav className="hidden md:flex space-x-1">
                   <NavLink active>Discover</NavLink>
-                  <NavLink>Browse</NavLink>
-                  <NavLink>Esports</NavLink>
-                  <NavLink>Live</NavLink>
-                  <NavLink>Neural</NavLink>
+                  <NavLink active={false}>Browse</NavLink>
+                  <NavLink active={false}>Esports</NavLink>
+                  <NavLink active={false}>Live</NavLink>
+                  <NavLink active={false}>Neural</NavLink>
                 </nav>
               </div>
               
@@ -237,11 +237,11 @@ function Navbar({ setIsMenuOpen }) {
                 </button>
                 
                 {/* New button: Terminal */}
-                <button className="p-2 rounded-lg text-gray-300 relative group overflow-hidden hidden md:flex" aria-label="Terminal">
+                <a href='/console' className="p-2 rounded-lg text-gray-300 relative group overflow-hidden hidden md:flex" aria-label="Terminal">
                   <span className="absolute inset-0 bg-cyan-800 opacity-0 group-hover:opacity-20 transition-opacity"></span>
                   <span className="absolute inset-0 border border-cyan-500/0 group-hover:border-cyan-500/50 rounded-lg transition-all"></span>
                   <Terminal size={20} className="relative z-10 group-hover:text-cyan-400 transition-colors" />
-                </button>
+                </a>
                 
                 <div className="flex items-center space-x-2 group relative cursor-pointer">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 p-0.5 relative">
@@ -283,15 +283,15 @@ function Navbar({ setIsMenuOpen }) {
                       </div>
                     </div>
                     
-                    <a href="#" className="flex items-center px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400 rounded mt-1">
+                    <a href="/profile" className="flex items-center px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400 rounded mt-1">
                       <User size={14} className="mr-2" />
                       Profile
                     </a>
-                    <a href="#" className="flex items-center px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400 rounded">
+                    <a href="/security" className="flex items-center px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400 rounded">
                       <Shield size={14} className="mr-2" />
                       Security Settings
                     </a>
-                    <a href="#" className="flex items-center px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400 rounded">
+                    <a href="/console" className="flex items-center px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400 rounded">
                       <Terminal size={14} className="mr-2" />
                       Command Console
                     </a>

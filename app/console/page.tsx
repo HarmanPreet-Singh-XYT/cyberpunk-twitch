@@ -1,9 +1,9 @@
-import CyberpunkLanding from '@/components/Landing'
+import NetrunnerConsole from '@/components/Console'
 import React from 'react'
 
 const page = () => {
   return (
-    <CyberpunkLanding/>
+    <NetrunnerConsole/>
   )
 }
 

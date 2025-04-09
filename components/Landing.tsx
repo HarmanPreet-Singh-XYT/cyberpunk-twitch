@@ -1,8 +1,8 @@
 'use client'
 import { useState, useEffect } from 'react';
 import Navbar from './Stream/Navbar';
-import Sidebar from './Stream/channels';
 import CyberpunkTwitchCarousel from './Carousel';
+import Sidebar from './Stream/Channels';
 
 // Main App Component
 export default function CyberpunkLanding() {
@@ -115,7 +115,7 @@ export default function CyberpunkLanding() {
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar navigation */}
           {/* <Sidebar isOpen={isMenuOpen} setCurrentSection={setCurrentSection} /> */}
-          <Sidebar isOpen={isMenuOpen} setCurrentSection={setCurrentSection} />
+          <Sidebar setIsOpen={setIsMenuOpen} isOpen={isMenuOpen} setCurrentSection={setCurrentSection} />
           
           {/* Main content area */}
           <main className="flex-1 overflow-y-auto pb-20 relative z-10">

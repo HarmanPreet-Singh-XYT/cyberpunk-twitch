@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import CyberpunkTwitchStream from './Enahanced';
 import Navbar from './Stream/Navbar';
-import Sidebar from './Stream/channels';
+import Sidebar from './Stream/Channels';
 
 // Main App Component
 export default function CyberpunkTwitch() {
@@ -28,59 +28,59 @@ export default function CyberpunkTwitch() {
   const [theme, setTheme] = useState('neon'); // neon, retro, minimal
   
   // Terminal boot sequence effect
-  useEffect(() => {
-    const bootText = [
-      "> INITIALIZING SYSTEM...",
-      "> CONNECTING TO CYBERSPACE...",
-      "> LOADING NEURAL INTERFACE...",
-      "> ESTABLISHING SECURE CONNECTION...",
-      "> RENDERING VISUAL MODULES...",
-      "> SYSTEM ONLINE. WELCOME TO NEON STREAM."
-    ];
+  // useEffect(() => {
+  //   const bootText = [
+  //     "> INITIALIZING SYSTEM...",
+  //     "> CONNECTING TO CYBERSPACE...",
+  //     "> LOADING NEURAL INTERFACE...",
+  //     "> ESTABLISHING SECURE CONNECTION...",
+  //     "> RENDERING VISUAL MODULES...",
+  //     "> SYSTEM ONLINE. WELCOME TO NEON STREAM."
+  //   ];
     
-    let currentLine = 0;
-    let currentChar = 0;
-    let interval;
+  //   let currentLine = 0;
+  //   let currentChar = 0;
+  //   let interval;
     
-    if (isTerminalVisible) {
-      interval = setInterval(() => {
-        if (currentLine < bootText.length) {
-          if (currentChar < bootText[currentLine].length) {
-            setTerminalText(prev => prev + bootText[currentLine][currentChar]);
-            currentChar++;
-          } else {
-            setTerminalText(prev => prev + '\n');
-            currentLine++;
-            currentChar = 0;
-          }
-        } else {
-          clearInterval(interval);
-          setTimeout(() => {
-            setIsTerminalVisible(false);
-          }, 1000);
-        }
-      }, 30);
-    }
+  //   if (isTerminalVisible) {
+  //     interval = setInterval(() => {
+  //       if (currentLine < bootText.length) {
+  //         if (currentChar < bootText[currentLine].length) {
+  //           setTerminalText(prev => prev + bootText[currentLine][currentChar]);
+  //           currentChar++;
+  //         } else {
+  //           setTerminalText(prev => prev + '\n');
+  //           currentLine++;
+  //           currentChar = 0;
+  //         }
+  //       } else {
+  //         clearInterval(interval);
+  //         setTimeout(() => {
+  //           setIsTerminalVisible(false);
+  //         }, 1000);
+  //       }
+  //     }, 30);
+  //   }
     
-    return () => clearInterval(interval);
-  }, [isTerminalVisible]);
+  //   return () => clearInterval(interval);
+  // }, [isTerminalVisible]);
 
-  if (isTerminalVisible) {
-    return (
-      <div className="bg-black min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-2xl bg-black border-2 border-green-500 p-4 text-green-500 font-mono text-lg">
-          <div className="flex justify-between mb-2">
-            <div>TERMINAL v3.7.5</div>
-            <div className="animate-pulse">█</div>
-          </div>
-          <div className="h-px bg-green-500 mb-4 animate-pulse"></div>
-          <pre className="whitespace-pre-wrap">
-            {terminalText}
-          </pre>
-        </div>
-      </div>
-    );
-  }
+  // if (isTerminalVisible) {
+  //   return (
+  //     <div className="bg-black min-h-screen flex items-center justify-center p-4">
+  //       <div className="w-full max-w-2xl bg-black border-2 border-green-500 p-4 text-green-500 font-mono text-lg">
+  //         <div className="flex justify-between mb-2">
+  //           <div>TERMINAL v3.7.5</div>
+  //           <div className="animate-pulse">█</div>
+  //         </div>
+  //         <div className="h-px bg-green-500 mb-4 animate-pulse"></div>
+  //         <pre className="whitespace-pre-wrap">
+  //           {terminalText}
+  //         </pre>
+  //       </div>
+  //     </div>
+  //   );
+  // }
   
   return (
     <div className={`min-h-screen bg-[#121212] text-gray-100 overflow-hidden relative ${theme === 'minimal' ? 'bg-opacity-95' : ''}`}>
@@ -127,7 +127,7 @@ export default function CyberpunkTwitch() {
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar navigation */}
           {/* <Sidebar isOpen={isMenuOpen} setCurrentSection={setCurrentSection} /> */}
-          <Sidebar isOpen={isMenuOpen} setCurrentSection={setCurrentSection} />
+          <Sidebar setIsOpen={setIsMenuOpen} isOpen={isMenuOpen} setCurrentSection={setCurrentSection} />
           
           {/* Main content area */}
           <main className="flex-1 overflow-y-auto pb-20 relative z-10">
@@ -514,233 +514,6 @@ function NavLink({ children, active }) {
 //       </li>
 //     );
 //   }
-  
-  // Channel Link Component with hover effects
-  function ChannelLink({ name, game, viewers, avatar, isLive, isNew, onHover, onLeave, isHovered }) {
-    // Generate dynamic gradient based on avatar type
-    const getGradient = (type) => {
-      const gradients = {
-        neon: 'from-purple-600 to-cyan-500',
-        pixel: 'from-pink-600 to-blue-500',
-        synth: 'from-cyan-500 to-green-500',
-        data: 'from-red-500 to-yellow-400',
-        glitch: 'from-indigo-600 to-purple-600',
-        cyber: 'from-blue-500 to-teal-400',
-        ghost: 'from-violet-600 to-indigo-500',
-        byte: 'from-green-400 to-cyan-500',
-        default: 'from-gray-600 to-gray-500'
-      };
-      return gradients[type] || gradients.default;
-    };
-  
-    return (
-      <li 
-        className="relative" 
-        onMouseEnter={onHover} 
-        onMouseLeave={onLeave}
-      >
-        <a 
-          href="#" 
-          onClick={(e) => e.preventDefault()} 
-          className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200 ${
-            isHovered ? 'bg-gray-800/80 shadow-[0_0_8px_rgba(139,92,246,0.3)]' : 'hover:bg-gray-800/50'
-          }`}
-        >
-          <div className="relative flex-shrink-0">
-            <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${getGradient(avatar)} animate-pulse-slow`}></div>
-            {isLive && (
-              <span className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-500 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-pink-600 ring-1 ring-gray-900"></span>
-              </span>
-            )}
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="text-sm font-medium flex items-center text-gray-200">
-              <span className="truncate">{name}</span>
-              {isLive && (
-                <span className="ml-2 flex-shrink-0 text-xs font-semibold bg-gradient-to-r from-pink-600 to-purple-600 text-gray-900 px-1.5 py-0.5 rounded text-center">LIVE</span>
-              )}
-              {isNew && (
-                <span className="ml-2 flex-shrink-0 text-xs font-semibold bg-cyan-500 text-gray-900 px-1.5 py-0.5 rounded">NEW</span>
-              )}
-            </div>
-            <div className="text-xs text-gray-400 flex items-center">
-              <span className="truncate">{game}</span>
-              {isLive && viewers && (
-                <span className="ml-2 flex items-center text-pink-400">
-                  <Activity size={12} className="mr-0.5" />
-                  {viewers}
-                </span>
-              )}
-            </div>
-          </div>
-        </a>
-        
-        {/* Preview on hover - only visible on desktop */}
-        {isHovered && (
-          <div className="absolute left-full ml-2 w-48 hidden lg:block z-50">
-            <div className="bg-gray-900 border border-cyan-900/50 rounded-lg shadow-lg overflow-hidden">
-              <div className="h-24 bg-gradient-to-br from-gray-800 to-gray-900 relative flex items-center justify-center">
-                <div className={`absolute inset-0 opacity-20 bg-gradient-to-r ${getGradient(avatar)}`}></div>
-                <div className={`w-12 h-12 rounded-full bg-gradient-to-r ${getGradient(avatar)}`}></div>
-              </div>
-              <div className="p-3">
-                <div className="font-medium text-white mb-1 flex items-center">
-                  {name}
-                  {isLive && (
-                    <span className="ml-2 text-xs font-semibold bg-gradient-to-r from-pink-600 to-purple-600 text-gray-900 px-1.5 py-0.5 rounded">LIVE</span>
-                  )}
-                </div>
-                <div className="text-sm text-gray-400 mb-1">{game}</div>
-                {isLive && viewers && (
-                  <div className="text-sm flex items-center text-pink-400">
-                    <Activity size={14} className="mr-1" />
-                    {viewers} viewers
-                  </div>
-                )}
-                <button className="mt-2 w-full bg-purple-600 hover:bg-purple-700 text-white py-1 rounded-md text-sm transition-colors duration-200">
-                  {isLive ? 'Watch Stream' : 'View Channel'}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </li>
-    );
-  }
-
-// Featured Stream Component
-function FeaturedStream({ isVideoPlaying, setIsVideoPlaying, isMuted, setIsMuted }) {
-  return (
-    <div className="rounded-lg overflow-hidden border border-purple-900 bg-gray-800 relative">
-      <div className="aspect-video bg-gray-900 relative overflow-hidden">
-        {/* Placeholder video */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-full h-full bg-gradient-to-br from-purple-900/50 via-gray-900/80 to-cyan-900/50">
-            <div className="flex items-center justify-center h-full">
-              <img src="/api/placeholder/640/360" alt="Stream placeholder" className="mix-blend-overlay opacity-60" />
-            </div>
-          </div>
-        </div>
-        
-        {/* Stream info overlay */}
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-gray-900 to-transparent p-4">
-          <div className="flex items-center space-x-3 mb-2">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center">
-              <User size={20} />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-white">CyberNomad</h3>
-              <p className="text-sm text-gray-300">Playing Neon Drift • 12.5K viewers</p>
-            </div>
-          </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Night City Showdown Tournament - Finals!</h2>
-          <div className="flex items-center space-x-3">
-            <span className="bg-pink-500/20 text-pink-400 px-2 py-1 rounded text-xs font-medium">Esports</span>
-            <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs font-medium">Competitive</span>
-            <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs font-medium">FPS</span>
-          </div>
-        </div>
-        
-        {/* Video controls */}
-        <div className="absolute inset-x-0 bottom-0 p-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <button 
-              onClick={() => setIsVideoPlaying(!isVideoPlaying)}
-              className="w-10 h-10 rounded-full bg-pink-500 bg-opacity-90 flex items-center justify-center hover:bg-opacity-100 transition-colors"
-            >
-              {isVideoPlaying ? <Pause size={20} /> : <Play size={20} />}
-            </button>
-            <button 
-              onClick={() => setIsMuted(!isMuted)} 
-              className="w-8 h-8 rounded-full bg-gray-800 bg-opacity-70 flex items-center justify-center hover:bg-opacity-90 transition-colors"
-            >
-              {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-            </button>
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <button className="w-8 h-8 rounded-full bg-gray-800 bg-opacity-70 flex items-center justify-center hover:bg-opacity-90 transition-colors">
-              <Heart size={16} />
-            </button>
-            <button className="w-8 h-8 rounded-full bg-gray-800 bg-opacity-70 flex items-center justify-center hover:bg-opacity-90 transition-colors">
-              <Share2 size={16} />
-            </button>
-          </div>
-        </div>
-      </div>
-      
-      {/* Chat section */}
-      <div className="flex border-t border-purple-900">
-        <div className="flex-1 p-4">
-          <div className="mb-4">
-            <h3 className="text-xl font-bold mb-2">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-500">
-                Tournament Finals: Night City Showdown
-              </span>
-            </h3>
-            <p className="text-gray-300">
-              Watch CyberNomad compete in the final round of the Night City Championship. Winner takes home 50,000 credits and the title of Night City Champion!
-            </p>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            <button className="px-4 py-2 bg-pink-500 text-white rounded font-medium hover:bg-pink-600 transition-colors">
-              Follow
-            </button>
-            <button className="px-4 py-2 bg-purple-500 text-white rounded font-medium hover:bg-purple-600 transition-colors">
-              Subscribe
-            </button>
-            <div className="text-gray-300 flex items-center">
-              <Heart size={16} className="mr-1" />
-              245.8K
-            </div>
-          </div>
-        </div>
-        
-        <div className="w-80 border-l border-purple-900 overflow-hidden hidden lg:block">
-          <div className="h-64 overflow-y-auto p-3 bg-gray-900 space-y-3">
-            <ChatMessage name="DataPirate" message="That last shot was insane!" />
-            <ChatMessage name="NeonHunter" message="GG EZ" />
-            <ChatMessage name="ByteRunner" message="Anyone know when the next match starts?" />
-            <ChatMessage name="GlitchMonk" message="CyberNomad is unstoppable today!" />
-            <ChatMessage name="SynthQueen" message="That's why I subscribed for 6 months" badge />
-            <ChatMessage name="PixelRiot" message="Let's go!!!" />
-            <ChatMessage name="GridHacker" message="What gaming chair does CN use?" />
-          </div>
-          <div className="p-3 border-t border-purple-900">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Send a message"
-                className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-sm w-full focus:outline-none focus:ring-1 focus:ring-purple-500"
-              />
-              <button className="absolute right-2 top-1.5 text-purple-400">
-                <MessageSquare size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Chat Message Component
-function ChatMessage({ name, message, badge }) {
-  return (
-    <div className="text-sm">
-      <span className="font-medium text-purple-400">{name}</span>
-      {badge && (
-        <span className="inline-block mx-1 px-1 py-0.5 bg-gradient-to-r from-pink-500 to-purple-500 text-xs rounded text-white">
-          SUB
-        </span>
-      )}
-      <span className="text-gray-300">: {message}</span>
-    </div>
-  );
-}
 
 // Recommended Streams Component with enhanced cyberpunk styling
 function RecommendedStreams() {

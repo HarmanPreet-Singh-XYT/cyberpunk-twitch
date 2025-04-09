@@ -5,6 +5,7 @@ import {
   Clock, Users, ChevronDown, Award, ExternalLink,
   Zap, Shield, Terminal, Target, Cpu, Radio
 } from "lucide-react";
+import CyberpunkVideoPlayer from "./Stream/VideoPlayer";
 
 function CyberpunkTwitchStream() {
   const [isVideoPlaying, setIsVideoPlaying] = useState(true);
@@ -174,12 +175,12 @@ function CyberpunkTwitchStream() {
         <RainEffect/>
       {/* Main content area (3/4 width on large screens) */}
       <div className={`${isFullscreen ? 'lg:col-span-4' : 'lg:col-span-3'}`}>
-        {/* Video component */}
-        <div className="rounded-lg overflow-hidden border border-purple-900 bg-[#121212] relative">
+        <CyberpunkVideoPlayer/>
+        {/* <div className="rounded-lg overflow-hidden border border-purple-900 bg-[#121212] relative">
           <div className="aspect-video bg-black relative overflow-hidden">
-            {/* Cyber HUD overlay elements */}
+            
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
-              {/* Top-left HUD frame */}
+              
               <div className="absolute top-4 left-4 flex items-center">
                 <div className="bg-black bg-opacity-70 border border-cyan-500 text-white text-xs font-bold px-2 py-1 rounded flex items-center">
                   <div className="w-2 h-2 bg-red-500 rounded-full mr-1 animate-pulse"></div>
@@ -195,7 +196,7 @@ function CyberpunkTwitchStream() {
                 </div>
               </div>
               
-              {/* Top-right HUD element */}
+              
               <div className="absolute top-4 right-4 bg-black bg-opacity-70 border border-cyan-500 text-white text-xs px-2 py-1 rounded">
                 <div className="flex items-center">
                   <Target size={12} className="mr-1 text-pink-400" />
@@ -203,68 +204,24 @@ function CyberpunkTwitchStream() {
                 </div>
               </div>
               
-              {/* Bottom-left combat stats (visible during gameplay) */}
-              {/* <div className="absolute bottom-16 left-4 bg-black bg-opacity-70 border border-pink-500 text-white text-xs p-2 rounded-lg hidden md:block">
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="flex items-center">
-                    <Shield size={12} className="mr-1 text-cyan-400" />
-                    <span className="text-cyan-400 font-mono mr-1">SHIELDS:</span>
-                    <div className="w-20 h-2 bg-gray-800 rounded-full">
-                      <div className="h-full w-3/4 bg-cyan-500 rounded-full"></div>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <Target size={12} className="mr-1 text-red-400" />
-                    <span className="text-red-400 font-mono mr-1">ACCURACY:</span>
-                    <span className="font-mono text-white">87%</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Zap size={12} className="mr-1 text-yellow-400" />
-                    <span className="text-yellow-400 font-mono mr-1">POWER:</span>
-                    <div className="w-20 h-2 bg-gray-800 rounded-full">
-                      <div className="h-full w-1/2 bg-yellow-500 rounded-full"></div>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <Radio size={12} className="mr-1 text-green-400" />
-                    <span className="text-green-400 font-mono mr-1">PING:</span>
-                    <span className="font-mono text-white">8ms</span>
-                  </div>
-                </div>
-              </div> */}
               
-              {/* Sponsor banner at bottom */}
-              {/* <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 border-t border-b border-purple-500 text-white text-xs py-1 px-4 w-1/2 text-center hidden md:block">
-                <span className="text-purple-400 font-mono">SPONSORED BY:</span> 
-                <span className="text-cyan-300 font-bold ml-2">{sponsors[currentSponsor]}</span>
-              </div> */}
             </div>
 
-            {/* Live indicator and glitching frame */}
+            
             <div className={`absolute inset-0 border-2 border-transparent ${showGlitch ? 'border-red-500 animate-pulse' : ''}`}></div>
 
-            {/* Placeholder video with cyberpunk styling */}
+            
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-full h-full bg-gradient-to-br from-purple-900/30 via-gray-900/80 to-pink-900/30">
                 <div className="flex items-center justify-center h-full">
                   <img src="/api/placeholder/640/360" alt="Stream placeholder" className="mix-blend-overlay opacity-70" />
-                  {/* Digital distortion overlay */}
+                  
                   <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 to-transparent mix-blend-overlay pointer-events-none"></div>
                   <div className="absolute inset-0 border-t border-b border-cyan-500/30 pointer-events-none h-full" style={{ backgroundImage: 'repeating-linear-gradient(transparent, transparent 1px, rgba(0, 255, 255, 0.03) 1px, rgba(0, 255, 255, 0.03) 2px)' }}></div>
                   
-                  {/* Scanning lines effect */}
-                  {/* <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                    <div 
-                      className="w-full h-1 bg-cyan-500/10 transform -translate-y-1/2"
-                      style={{ 
-                        position: 'absolute', 
-                        top: `${(streamTime % 100) / 100 * 100}%`,
-                        boxShadow: '0 0 10px rgba(0, 255, 255, 0.5)'
-                      }}
-                    ></div>
-                  </div> */}
                   
-                  {/* Random data visualization in corner */}
+                  
+                  
                   {showStats && (
                     <div className="absolute top-24 right-4 bg-black/50 border border-cyan-500/50 p-2 rounded text-xs font-mono">
                       <div className="text-cyan-400 mb-1 flex items-center">
@@ -285,16 +242,16 @@ function CyberpunkTwitchStream() {
               </div>
             </div>
             
-            {/* Stream controls overlay - visible on hover */}
+            
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black to-transparent p-4">
               
               <div className="relative w-full h-1 bg-gray-700 rounded-full mb-4 mt-6 overflow-hidden">
                 <div className="absolute left-0 top-0 h-full w-3/4 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full"></div>
                 
-                {/* Buffer indicator */}
+                
                 <div className="absolute left-0 top-0 h-full w-5/6 bg-white opacity-30 rounded-full"></div>
                 
-                {/* Time indicator */}
+                
                 <div className="absolute -top-6 left-3/4 transform -translate-x-1/2 text-xs bg-black bg-opacity-70 px-2 py-0.5 rounded border border-cyan-500/50 text-cyan-400 font-mono">
                   {formatStreamTime(streamTime)}
                 </div>
@@ -318,7 +275,7 @@ function CyberpunkTwitchStream() {
                     >
                       {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
                     </button>
-                    {/* Volume slider */}
+                    
                     <div className="h-1 w-0 group-hover:w-20 overflow-hidden transition-all duration-300 origin-left ml-1">
                       <div className="h-full w-20 bg-gray-700 rounded-full relative">
                         <div 
@@ -366,9 +323,9 @@ function CyberpunkTwitchStream() {
           </div>
         </div>
         
-        {/* Streamer info section with neomorphic design */}
+        
         <div className="p-4 bg-[#121212] border-b border-l border-r border-purple-900 rounded-b-lg mb-4 backdrop-blur-md relative overflow-hidden">
-          {/* Background grid effect */}
+          
           <div className="absolute inset-0 opacity-10" 
             style={{ 
               backgroundImage: 'linear-gradient(to right, cyan 1px, transparent 1px), linear-gradient(to bottom, cyan 1px, transparent 1px)',
@@ -379,13 +336,13 @@ function CyberpunkTwitchStream() {
           <div className="flex flex-col md:flex-row md:items-start md:justify-between relative z-10">
             <div className="flex items-start space-x-4 mb-4 md:mb-0">
               <div className="relative">
-                {/* Animated glowing border */}
+                
                 <div className="w-14 h-14 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 p-0.5 animate-pulse">
                   <div className="w-full h-full rounded-full bg-gray-800 flex items-center justify-center overflow-hidden border border-cyan-500/50">
                     <User size={24} className="text-cyan-400" />
                   </div>
                 </div>
-                {/* Live indicator dot */}
+                
                 <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-gray-800 rounded-full flex items-center justify-center border border-pink-500">
                   <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
                 </div>
@@ -460,7 +417,7 @@ function CyberpunkTwitchStream() {
             </div>
             </div>
           </div>
-        </div>
+        </div>  */}
         
         {/* Stream info section with enhanced cyberpunk visual elements */}
         <div className="p-4 bg-[#121212] border border-purple-900 rounded-lg mb-4 relative overflow-hidden">

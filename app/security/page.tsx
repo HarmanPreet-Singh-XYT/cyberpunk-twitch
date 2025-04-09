@@ -1,9 +1,9 @@
-import CyberpunkLanding from '@/components/Landing'
+import SecuritySettings from '@/components/Stream/Security'
 import React from 'react'
 
 const page = () => {
   return (
-    <CyberpunkLanding/>
+    <SecuritySettings/>
   )
 }
 

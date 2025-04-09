@@ -4,6 +4,7 @@ import {
   TerminalSquare, Tv, Gamepad2, Zap, ChevronLeft, ChevronRight, 
   Search, Bell, Settings, Wifi, ShieldAlert, Radio, Cpu, Eye
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
   const [hoveredChannel, setHoveredChannel] = useState(null);
@@ -145,6 +146,9 @@ function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
                 onLeave={() => setHoveredChannel(null)}
                 isHovered={hoveredChannel === 'NeonHunter'}
                 isVerified
+                isEncrypted
+                isNew={false}
+                isVIP={false}
               />
               <ChannelLink 
                 name="PixelRiot" 
@@ -155,6 +159,10 @@ function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
                 onHover={() => setHoveredChannel('PixelRiot')}
                 onLeave={() => setHoveredChannel(null)}
                 isHovered={hoveredChannel === 'PixelRiot'}
+                isEncrypted={false}
+                isNew={false}
+                isVIP={false}
+                isVerified
               />
               <ChannelLink 
                 name="SynthQueen" 
@@ -163,7 +171,12 @@ function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
                 onHover={() => setHoveredChannel('SynthQueen')}
                 onLeave={() => setHoveredChannel(null)}
                 isHovered={hoveredChannel === 'SynthQueen'}
-                isVIP
+                isEncrypted
+                isNew={false}
+                isVIP={true}
+                viewers={0}
+                isLive={false}
+                isVerified={false}
               />
               <ChannelLink 
                 name="DataPirate" 
@@ -172,6 +185,12 @@ function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
                 onHover={() => setHoveredChannel('DataPirate')}
                 onLeave={() => setHoveredChannel(null)}
                 isHovered={hoveredChannel === 'DataPirate'}
+                isEncrypted
+                isNew={false}
+                isVIP={false}
+                viewers={0}
+                isLive={false}
+                isVerified
               />
               <ChannelLink 
                 name="GlitchMonk" 
@@ -181,6 +200,11 @@ function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
                 onLeave={() => setHoveredChannel(null)}
                 isHovered={hoveredChannel === 'GlitchMonk'}
                 isEncrypted
+                isNew={false}
+                isVIP={false}
+                viewers={0}
+                isLive={false}
+                isVerified
               />
             </ul>
           </div>
@@ -205,6 +229,9 @@ function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
                 onHover={() => setHoveredChannel('CyberNomad')}
                 onLeave={() => setHoveredChannel(null)}
                 isHovered={hoveredChannel === 'CyberNomad'}
+                isVIP={true}
+                isEncrypted={false}
+                isVerified={true}
               />
               <ChannelLink 
                 name="DigitalGhost" 
@@ -214,6 +241,11 @@ function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
                 onLeave={() => setHoveredChannel(null)}
                 isHovered={hoveredChannel === 'DigitalGhost'}
                 isEncrypted
+                isNew={true}
+                isVIP={true}
+                viewers={0}
+                isVerified={false}
+                isLive={false}
               />
               <ChannelLink 
                 name="ByteRunner" 
@@ -225,13 +257,16 @@ function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
                 onLeave={() => setHoveredChannel(null)}
                 isHovered={hoveredChannel === 'ByteRunner'}
                 isVerified
+                isNew={true}
+                isVIP={true}
+                isEncrypted={true}
               />
             </ul>
           </div>
         </div>
         
         {/* User section */}
-        <div className="p-3 border-t border-cyan-900/30 bg-gray-800/50">
+        {/* <div className="p-3 border-t border-cyan-900/30 bg-gray-800/50">
           <div className="flex items-center">
             <div className="w-8 h-8 rounded bg-gradient-to-r from-purple-600 to-cyan-500 flex items-center justify-center">
               <span className="text-xs text-white font-mono">XJ7</span>
@@ -254,19 +289,116 @@ function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
       </aside>
       
       {/* Hover previews container - placed outside the sidebar to avoid overflow issues */}
       <div className="fixed pointer-events-none z-40">
-        {hoveredChannel === 'NeonHunter' && <ChannelPreview name="NeonHunter" game="Cyberpunk 2078" viewers="12.4K" avatar="neon" isLive isVerified />}
-        {hoveredChannel === 'PixelRiot' && <ChannelPreview name="PixelRiot" game="Night City Racers" viewers="5.2K" avatar="pixel" isLive />}
-        {hoveredChannel === 'SynthQueen' && <ChannelPreview name="SynthQueen" game="Just Chatting" avatar="synth" isVIP />}
-        {hoveredChannel === 'DataPirate' && <ChannelPreview name="DataPirate" game="HackNet Simulator" avatar="data" />}
-        {hoveredChannel === 'GlitchMonk' && <ChannelPreview name="GlitchMonk" game="System Shock" avatar="glitch" isEncrypted />}
-        {hoveredChannel === 'CyberNomad' && <ChannelPreview name="CyberNomad" game="Neon Drift" viewers="8.7K" avatar="cyber" isLive isNew />}
-        {hoveredChannel === 'DigitalGhost' && <ChannelPreview name="DigitalGhost" game="Neural Link" avatar="ghost" isEncrypted />}
-        {hoveredChannel === 'ByteRunner' && <ChannelPreview name="ByteRunner" game="GridWars X" viewers="3.1K" avatar="byte" isLive isVerified />}
+      {hoveredChannel === 'NeonHunter' && (
+        <ChannelPreview
+          name="NeonHunter"
+          game="Cyberpunk 2078"
+          viewers="12.4K"
+          avatar="neon"
+          isLive
+          isNew={false}
+          isVerified
+          isVIP={false}
+          isEncrypted
+        />
+      )}
+      {hoveredChannel === 'PixelRiot' && (
+        <ChannelPreview
+          name="PixelRiot"
+          game="Night City Racers"
+          viewers="5.2K"
+          avatar="pixel"
+          isLive
+          isNew={false}
+          isVerified
+          isVIP={false}
+          isEncrypted={false}
+        />
+      )}
+      {hoveredChannel === 'SynthQueen' && (
+        <ChannelPreview
+          name="SynthQueen"
+          game="Just Chatting"
+          viewers={0}
+          avatar="synth"
+          isLive={false}
+          isNew={false}
+          isVerified={false}
+          isVIP
+          isEncrypted
+        />
+      )}
+      {hoveredChannel === 'DataPirate' && (
+        <ChannelPreview
+          name="DataPirate"
+          game="HackNet Simulator"
+          viewers={0}
+          avatar="data"
+          isLive={false}
+          isNew={false}
+          isVerified
+          isVIP={false}
+          isEncrypted
+        />
+      )}
+      {hoveredChannel === 'GlitchMonk' && (
+        <ChannelPreview
+          name="GlitchMonk"
+          game="System Shock"
+          viewers={0}
+          avatar="glitch"
+          isLive={false}
+          isNew={false}
+          isVerified
+          isVIP={false}
+          isEncrypted
+        />
+      )}
+      {hoveredChannel === 'CyberNomad' && (
+        <ChannelPreview
+          name="CyberNomad"
+          game="Neon Drift"
+          viewers="8.7K"
+          avatar="cyber"
+          isLive
+          isNew
+          isVerified
+          isVIP
+          isEncrypted={false}
+        />
+      )}
+      {hoveredChannel === 'DigitalGhost' && (
+        <ChannelPreview
+          name="DigitalGhost"
+          game="Neural Link"
+          viewers={0}
+          avatar="ghost"
+          isLive={false}
+          isNew
+          isVerified={false}
+          isVIP
+          isEncrypted
+        />
+      )}
+      {hoveredChannel === 'ByteRunner' && (
+        <ChannelPreview
+          name="ByteRunner"
+          game="GridWars X"
+          viewers="3.1K"
+          avatar="byte"
+          isLive
+          isNew
+          isVerified
+          isVIP
+          isEncrypted
+        />
+      )}
+
       </div>
       
       {/* Toggle button for mobile */}
@@ -320,13 +452,15 @@ function SidebarLink({ icon, children, active, onClick, notification, notificati
 
 // Channel Link Component
 function ChannelLink({ name, game, viewers, avatar, isLive, isNew, onHover, onLeave, isHovered, isVerified, isVIP, isEncrypted }) {
+  const router = useRouter();
   return (
     <li 
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
       className="relative"
+      onClick={() => router.push(`/live/${name}`)}
     >
-      <a href="#" onClick={(e) => e.preventDefault()} className="flex items-center px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-800/80 hover:text-cyan-400 group transition-all duration-200">
+      <a href={`/live/${name}`} onClick={(e) => e.preventDefault()} className="flex items-center px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-800/80 hover:text-cyan-400 group transition-all duration-200">
         <div className="relative">
           <div className={`w-8 h-8 rounded ${
             avatar === 'neon' ? 'bg-gradient-to-r from-cyan-500 to-blue-600' :
