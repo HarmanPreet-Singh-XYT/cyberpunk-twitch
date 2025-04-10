@@ -16,59 +16,59 @@ export default function CyberpunkLanding() {
   const [theme, setTheme] = useState('neon'); // neon, retro, minimal
   
   // Terminal boot sequence effect
-  useEffect(() => {
-    const bootText = [
-      "> INITIALIZING SYSTEM...",
-      "> CONNECTING TO CYBERSPACE...",
-      "> LOADING NEURAL INTERFACE...",
-      "> ESTABLISHING SECURE CONNECTION...",
-      "> RENDERING VISUAL MODULES...",
-      "> SYSTEM ONLINE. WELCOME TO NEON STREAM."
-    ];
+  // useEffect(() => {
+  //   const bootText = [
+  //     "> INITIALIZING SYSTEM...",
+  //     "> CONNECTING TO CYBERSPACE...",
+  //     "> LOADING NEURAL INTERFACE...",
+  //     "> ESTABLISHING SECURE CONNECTION...",
+  //     "> RENDERING VISUAL MODULES...",
+  //     "> SYSTEM ONLINE. WELCOME TO NEON STREAM."
+  //   ];
     
-    let currentLine = 0;
-    let currentChar = 0;
-    let interval;
+  //   let currentLine = 0;
+  //   let currentChar = 0;
+  //   let interval;
     
-    if (isTerminalVisible) {
-      interval = setInterval(() => {
-        if (currentLine < bootText.length) {
-          if (currentChar < bootText[currentLine].length) {
-            setTerminalText(prev => prev + bootText[currentLine][currentChar]);
-            currentChar++;
-          } else {
-            setTerminalText(prev => prev + '\n');
-            currentLine++;
-            currentChar = 0;
-          }
-        } else {
-          clearInterval(interval);
-          setTimeout(() => {
-            setIsTerminalVisible(false);
-          }, 1000);
-        }
-      }, 30);
-    }
+  //   if (isTerminalVisible) {
+  //     interval = setInterval(() => {
+  //       if (currentLine < bootText.length) {
+  //         if (currentChar < bootText[currentLine].length) {
+  //           setTerminalText(prev => prev + bootText[currentLine][currentChar]);
+  //           currentChar++;
+  //         } else {
+  //           setTerminalText(prev => prev + '\n');
+  //           currentLine++;
+  //           currentChar = 0;
+  //         }
+  //       } else {
+  //         clearInterval(interval);
+  //         setTimeout(() => {
+  //           setIsTerminalVisible(false);
+  //         }, 1000);
+  //       }
+  //     }, 30);
+  //   }
     
-    return () => clearInterval(interval);
-  }, [isTerminalVisible]);
+  //   return () => clearInterval(interval);
+  // }, [isTerminalVisible]);
 
-  if (isTerminalVisible) {
-    return (
-      <div className="bg-black min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-2xl bg-black border-2 border-green-500 p-4 text-green-500 font-mono text-lg">
-          <div className="flex justify-between mb-2">
-            <div>TERMINAL v3.7.5</div>
-            <div className="animate-pulse">█</div>
-          </div>
-          <div className="h-px bg-green-500 mb-4 animate-pulse"></div>
-          <pre className="whitespace-pre-wrap">
-            {terminalText}
-          </pre>
-        </div>
-      </div>
-    );
-  }
+  // if (isTerminalVisible) {
+  //   return (
+  //     <div className="bg-black min-h-screen flex items-center justify-center p-4">
+  //       <div className="w-full max-w-2xl bg-black border-2 border-green-500 p-4 text-green-500 font-mono text-lg">
+  //         <div className="flex justify-between mb-2">
+  //           <div>TERMINAL v3.7.5</div>
+  //           <div className="animate-pulse">█</div>
+  //         </div>
+  //         <div className="h-px bg-green-500 mb-4 animate-pulse"></div>
+  //         <pre className="whitespace-pre-wrap">
+  //           {terminalText}
+  //         </pre>
+  //       </div>
+  //     </div>
+  //   );
+  // }
   
   return (
     <div className={`min-h-screen bg-gray-900 text-gray-100 overflow-hidden relative ${theme === 'minimal' ? 'bg-opacity-95' : ''}`}>

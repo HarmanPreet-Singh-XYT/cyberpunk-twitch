@@ -6,6 +6,7 @@ import {
   Zap, Shield, Terminal, Target, Cpu, Radio
 } from "lucide-react";
 import CyberpunkVideoPlayer from "./Stream/VideoPlayer";
+import CyberpunkChat from "./Stream/Chat";
 
 function CyberpunkTwitchStream() {
   const [isVideoPlaying, setIsVideoPlaying] = useState(true);
@@ -418,9 +419,94 @@ function CyberpunkTwitchStream() {
             </div>
           </div>
         </div>  */}
-        
+        <div className="rounded-b-lg p-4 overflow-hidden border-b-2 border-x-2 border-purple-900 bg-[#121212] relative">
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between relative z-10">
+              <div className="flex items-start space-x-4 mb-4 md:mb-0">
+                <div className="relative">
+                  
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 p-0.5 animate-pulse">
+                    <div className="w-full h-full rounded-full bg-gray-800 flex items-center justify-center overflow-hidden border border-cyan-500/50">
+                      <User size={24} className="text-cyan-400" />
+                    </div>
+                  </div>
+                  
+                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-gray-800 rounded-full flex items-center justify-center border border-pink-500">
+                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex items-center mb-1">
+                    <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 mr-2">CyberNomad</h3>
+                    <span className="bg-purple-500/20 text-purple-400 px-1.5 py-0.5 rounded text-xs font-medium border border-purple-500/50">Partner</span>
+                  </div>
+                  
+                  <div className="flex flex-col md:flex-row md:items-center md:space-x-4">
+                    <p className="text-gray-300 text-sm mb-1 md:mb-0">
+                      <span className="font-medium text-pink-400">Playing:</span> 
+                      <span className="ml-1 font-mono">Neon Drift</span>
+                    </p>
+                  </div>
+                  
+                  <div className="flex items-center space-x-2 mt-2">
+                    <span className="bg-pink-500/20 text-pink-400 px-2 py-0.5 rounded text-xs font-medium border border-pink-500/30">Esports</span>
+                    <span className="bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded text-xs font-medium border border-purple-500/30">Competitive</span>
+                    <span className="bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded text-xs font-medium border border-blue-500/30">FPS</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <button 
+                      onClick={() => setIsFollowing(!isFollowing)}
+                      className={`px-4 py-2 rounded font-medium transition-all flex items-center border ${
+                      isFollowing 
+                          ? "bg-gray-800 text-cyan-400 border-cyan-500/50 hover:bg-gray-700" 
+                          : "bg-gradient-to-r from-pink-500 to-purple-500 text-white border-transparent hover:shadow-lg hover:shadow-pink-500/20"
+                      }`}
+                  >
+                      {isFollowing ? "Following" : "Follow"}
+                      {isFollowing && <ChevronDown size={16} className="ml-1" />}
+                  </button>
+                  
+                  <button 
+                      onClick={() => setIsSubscribed(!isSubscribed)}
+                      className={`px-4 py-2 rounded font-medium transition-all flex items-center border ${
+                      isSubscribed 
+                          ? "bg-gray-800 text-purple-400 border-purple-500/50 hover:bg-gray-700" 
+                          : "bg-gradient-to-r from-blue-500 to-purple-500 text-white border-transparent hover:shadow-lg hover:shadow-purple-500/20"
+                      }`}
+                  >
+                      {isSubscribed ? "Subscribed" : "Subscribe"}
+                      {isSubscribed && <ChevronDown size={16} className="ml-1" />}
+                  </button>
+                  
+                  <button className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors border border-pink-500/30 hover:border-pink-500">
+                      <Gift size={20} className="text-pink-400" />
+                  </button>
+                  
+                  <button className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors border border-pink-500/30 hover:border-pink-500">
+                      <Heart size={20} className={`${isFollowing ? "text-pink-500" : "text-gray-400"}`} />
+                  </button>
+                  
+                  <button className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors border border-cyan-500/30 hover:border-cyan-500">
+                      <Share2 size={20} className="text-cyan-400" />
+                  </button>
+
+                </div>
+                <div className="flex items-center text-gray-400 text-sm ml-auto">
+                  <Users size={14} className="mr-1 text-red-500" />
+                  <span className="text-red-500 font-mono">{viewerCount.toLocaleString()} viewers</span>
+                  <span className="mx-2">•</span>
+                  <Clock size={14} className="mr-1 text-cyan-400" />
+                  <span className="text-cyan-400 font-mono">Started {Math.floor(streamTime / 3600)}h {Math.floor((streamTime % 3600) / 60)}m ago</span>
+              </div>
+              </div>
+          </div>
+        </div>
         {/* Stream info section with enhanced cyberpunk visual elements */}
-        <div className="p-4 bg-[#121212] border border-purple-900 rounded-lg mb-4 relative overflow-hidden">
+        <div className="p-4 bg-[#121212] mt-4 border border-purple-900 rounded-lg mb-4 relative overflow-hidden">
           {/* Tech circuit background pattern */}
           <div className="absolute inset-0 opacity-5" 
             style={{ 

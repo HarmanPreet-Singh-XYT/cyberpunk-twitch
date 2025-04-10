@@ -158,9 +158,6 @@ function Navbar({ setIsMenuOpen }) {
                 <nav className="hidden md:flex space-x-1">
                   <NavLink active>Discover</NavLink>
                   <NavLink active={false}>Browse</NavLink>
-                  <NavLink active={false}>Esports</NavLink>
-                  <NavLink active={false}>Live</NavLink>
-                  <NavLink active={false}>Neural</NavLink>
                 </nav>
               </div>
               
@@ -224,16 +221,16 @@ function Navbar({ setIsMenuOpen }) {
                   </div>
                 </div>
                 
-                <button className="p-2 rounded-lg text-gray-300 relative group overflow-hidden" aria-label="Notifications">
+                <button className="p-2 rounded-lg text-gray-300 relative group" aria-label="Notifications">
                   <span className="absolute inset-0 bg-purple-800 opacity-0 group-hover:opacity-20 transition-opacity"></span>
                   <span className="absolute inset-0 border border-purple-500/0 group-hover:border-purple-500/50 rounded-lg transition-all"></span>
                   <Bell size={20} className="relative z-10 group-hover:text-cyan-400 transition-colors" />
                   <span className="absolute top-0 right-0 block w-2 h-2 rounded-full bg-pink-500 ring-2 ring-pink-500/20 animate-pulse"></span>
                   
                   {/* Notification count */}
-                  <span className="absolute -top-1 -right-1 text-xs bg-pink-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
+                  {/* <span className="absolute -top-1 -right-1 text-xs bg-pink-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
                     3
-                  </span>
+                  </span> */}
                 </button>
                 
                 {/* New button: Terminal */}

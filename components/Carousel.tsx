@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Play, Pause, Volume2, VolumeX, Users, ChevronLeft, ChevronRight, Zap, Eye, Shield } from "lucide-react";
-
+import { useRouter } from "next/navigation";
+import data from '@/app/data'
 export default function CyberpunkTwitchCarousel() {
   const [activeIndex, setActiveIndex] = useState(2); // Center stream is active by default
   const [isPlaying, setIsPlaying] = useState(true);
@@ -10,64 +11,64 @@ export default function CyberpunkTwitchCarousel() {
   const [systemMessage, setSystemMessage] = useState("CONNECTION ESTABLISHED");
   const glitchTimerRef = useRef(null);
   const systemMessageRef = useRef(null);
-
-  const streams = [
-    {
-      id: 1,
-      title: "NIGHT CITY NETRUNNING // Infiltrating Arasaka",
-      streamer: "CyberV1per",
-      game: "Cyberpunk 2077",
-      viewers: 14826,
-      tags: ["FPS", "RPG", "Stealth"],
-      thumbnail: "/api/placeholder/640/360",
-      securityLevel: "High",
-      streamQuality: "8K Neural"
-    },
-    {
-      id: 2,
-      title: "CORPO WARS: Militech vs Arasaka [Hard Mode]",
-      streamer: "NeonSamurai",
-      game: "Cyberpunk 2077",
-      viewers: 8762,
-      tags: ["RPG", "Story", "Violence"],
-      thumbnail: "/api/placeholder/640/360",
-      securityLevel: "Medium",
-      streamQuality: "4K HDR"
-    },
-    {
-      id: 3,
-      title: "LIVE: Neo-Tokyo Drift Championships",
-      streamer: "DriftQueen",
-      game: "NeoRacer 2077",
-      viewers: 22341,
-      tags: ["Racing", "Competitive", "Esports"],
-      thumbnail: "/api/placeholder/640/360",
-      securityLevel: "Low",
-      streamQuality: "8K Neural"
-    },
-    {
-      id: 4,
-      title: "NEURAL HACKING // Breaking ICE Protocols",
-      streamer: "GhostInTheNet",
-      game: "ShadowNet Simulator",
-      viewers: 7532,
-      tags: ["Strategy", "Hacking", "PvP"],
-      thumbnail: "/api/placeholder/640/360",
-      securityLevel: "Ultra",
-      streamQuality: "VR-Enhanced"
-    },
-    {
-      id: 5,
-      title: "MIDNIGHT BLADE // Cyber-ninja assassination run",
-      streamer: "SliceOfNight",
-      game: "Ghost Protocol",
-      viewers: 11438,
-      tags: ["Stealth", "Action", "Speedrun"],
-      thumbnail: "/api/placeholder/640/360",
-      securityLevel: "Medium",
-      streamQuality: "4K HDR"
-    }
-  ];
+  const streams = data.carouselStreams;
+  // const streams = [
+  //   {
+  //     id: 1,
+  //     title: "NIGHT CITY NETRUNNING // Infiltrating Arasaka",
+  //     streamer: "CyberV1per",
+  //     game: "Cyberpunk 2077",
+  //     viewers: 14826,
+  //     tags: ["FPS", "RPG", "Stealth"],
+  //     thumbnail: "/streamThumbnail/3.jpg",
+  //     securityLevel: "High",
+  //     streamQuality: "8K Neural"
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "CORPO WARS: Militech vs Arasaka [Hard Mode]",
+  //     streamer: "NeonSamurai",
+  //     game: "Cyberpunk 2077",
+  //     viewers: 8762,
+  //     tags: ["RPG", "Story", "Violence"],
+  //     thumbnail: "/streamThumbnail/2.webp",
+  //     securityLevel: "Medium",
+  //     streamQuality: "4K HDR"
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "LIVE: Neo-Tokyo Drift Championships",
+  //     streamer: "DriftQueen",
+  //     game: "NeoRacer 2077",
+  //     viewers: 22341,
+  //     tags: ["Racing", "Competitive", "Esports"],
+  //     thumbnail: "/streamThumbnail/1.webp",
+  //     securityLevel: "Low",
+  //     streamQuality: "8K Neural"
+  //   },
+  //   {
+  //     id: 4,
+  //     title: "NEURAL HACKING // Breaking ICE Protocols",
+  //     streamer: "GhostInTheNet",
+  //     game: "ShadowNet Simulator",
+  //     viewers: 7532,
+  //     tags: ["Strategy", "Hacking", "PvP"],
+  //     thumbnail: "/streamThumbnail/4.jpg",
+  //     securityLevel: "Ultra",
+  //     streamQuality: "VR-Enhanced"
+  //   },
+  //   {
+  //     id: 5,
+  //     title: "MIDNIGHT BLADE // Cyber-ninja assassination run",
+  //     streamer: "SliceOfNight",
+  //     game: "Ghost Protocol",
+  //     viewers: 11438,
+  //     tags: ["Stealth", "Action", "Speedrun"],
+  //     thumbnail: "/streamThumbnail/5.jpg",
+  //     securityLevel: "Medium",
+  //     streamQuality: "4K HDR"
+  //   }
+  // ];
 
   // Auto-rotate carousel every 8 seconds if not the center stream
   useEffect(() => {
@@ -278,34 +279,35 @@ export default function CyberpunkTwitchCarousel() {
                     )}
                     
                     {/* Stream info overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 p-3 z-20">
+                    <div className="absolute bottom-0 left-0 right-0 p-3 z-20 hover:cursor-pointer">
                       {/* Streamer info */}
-                      <div className="flex items-center mb-2">
-                        <div className="w-8 h-8 rounded-full bg-[#ff007f] mr-2 overflow-hidden flex items-center justify-center border border-[#00f0ff]/50 shadow-md shadow-[#00f0ff]/20">
-                          <span className="text-xs font-bold">{stream.streamer.substring(0, 2)}</span>
-                        </div>
+                      <a href={`/channel/${stream.id}`} className="flex items-center mb-2">
+                        {/* <div className="w-8 h-8 rounded-full bg-[#ff007f] mr-2 overflow-hidden flex items-center justify-center border border-[#00f0ff]/50 shadow-md shadow-[#00f0ff]/20">
+                          <span className="text-xs font-bold">{stream.channel.name.substring(0, 2)}</span>
+                        </div> */}
+                        <img src={stream.channel.avatar} className="w-8 h-8 rounded-full mr-2 overflow-hidden border border-[#00f0ff]/50 shadow-md shadow-[#00f0ff]/20"/>
                         <div>
                           <h3 className="text-sm font-bold text-white flex items-center">
-                            {stream.streamer}
+                            {stream.channel.name}
                             {isActive && (
                               <span className="ml-2 px-1 bg-[#ff007f]/20 border border-[#ff007f]/50 text-[#ff007f] text-xs rounded">
                                 VERIFIED
                               </span>
                             )}
                           </h3>
-                          <p className="text-xs text-[#00f0ff]">{stream.game}</p>
+                          <p className="text-xs text-[#00f0ff]">{stream.channel.game}</p>
                         </div>
                         <div className="ml-auto flex items-center">
                           <Eye className="w-3 h-3 text-[#ff007f] mr-1" />
                           <span className="text-xs">{formatViewers(stream.viewers)}</span>
                         </div>
-                      </div>
+                      </a>
                       
                       {/* Stream title */}
-                      <h4 className="text-sm font-bold mb-2 line-clamp-2">
+                      <a href="/live/streamer" className="text-sm hover:cursor-pointer font-bold mb-2 line-clamp-2">
                         {isActive && <span className="inline-block w-2 h-2 bg-[#ff007f] rounded-full mr-2 animate-pulse"></span>}
                         {stream.title}
-                      </h4>
+                      </a>
                       
                       {/* Tags and metadata */}
                       <div className="flex justify-between items-center">
@@ -327,7 +329,7 @@ export default function CyberpunkTwitchCarousel() {
                             </div>
                             <div className="flex items-center">
                               <Zap className="w-3 h-3 text-[#ff007f] mr-1" />
-                              <span className="text-xs">{stream.streamQuality}</span>
+                              <span className="text-xs">{stream.quality}</span>
                             </div>
                           </div>
                         )}
@@ -421,7 +423,7 @@ export default function CyberpunkTwitchCarousel() {
         <div className="flex justify-between items-center text-xs">
           <div className="flex items-center">
             <div className="mr-4">
-              <span className="text-[#8a8a8a]">ACTIVE_STREAM:</span> <span className="text-[#00f0ff]">{streams[activeIndex].streamer}</span>/<span className="text-[#ff007f]">{streams[activeIndex].game}</span>
+              <span className="text-[#8a8a8a]">ACTIVE_STREAM:</span> <span className="text-[#00f0ff]">{streams[activeIndex].channel.name}</span>/<span className="text-[#ff007f]">{streams[activeIndex].channel.game}</span>
             </div>
             <div>
               <span className="text-[#8a8a8a]">SIGNAL:</span> <span className="text-green-400">98%</span>
@@ -575,9 +577,9 @@ export default function CyberpunkTwitchCarousel() {
           </div>
         </div>
       </div>
+      <FollowingStreams/>
       <RecommendedStreams/>
       <CategoriesSection/>
-      <FollowingStreams/>
     </div>
   );
 }
@@ -597,7 +599,7 @@ function RecommendedStreams() {
           <span className="text-cyan-400">STREAMS</span>
           <span className="animate-pulse text-pink-500 ml-1">|</span>
         </h2>
-        <a href="#" className="text-sm text-cyan-400 hover:text-pink-400 transition-colors flex items-center group">
+        <a href="/browse" className="text-sm text-cyan-400 hover:text-pink-400 transition-colors flex items-center group">
           <span>VIEW_ALL</span>
           <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -606,7 +608,22 @@ function RecommendedStreams() {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        <StreamCard 
+        {data.recommendedStreams.map((each,index)=>(
+          <StreamCard 
+            key={each.id}
+            avatar={each.avatar}
+            id={each.id}
+            title={each.title}
+            creator={each.channelName} 
+            game={each.game}
+            viewers={each.viewers} 
+            tags={each.tags}
+            live={true}
+            viewerTrend="up"
+            thumbnail={each.thumbnail}
+          />
+        ))}
+        {/* <StreamCard 
           title="Late Night Hacking Session" 
           creator="DataPirate" 
           game="HackNet Simulator" 
@@ -614,6 +631,7 @@ function RecommendedStreams() {
           tags={["Hacking", "Cybersecurity"]}
           live={true}
           viewerTrend="up"
+          thumbnail={}
         />
         <StreamCard 
           title="Speed Running Night City" 
@@ -642,11 +660,11 @@ function RecommendedStreams() {
           tags={["Horror", "Retro"]}
           live={true}
           viewerTrend="down"
-        />
+        /> */}
       </div>
       
-      <div className="mt-16 relative">
-        {/* Decorative cyberpunk element */}
+      {/* <div className="mt-16 relative">
+        
         <div className="absolute -left-4 top-0 w-1 h-8 bg-cyan-500 shadow-glow-cyan"></div>
         
         <div className="flex items-center justify-between mb-6">
@@ -655,7 +673,7 @@ function RecommendedStreams() {
             <span className="text-pink-400">YOU_MIGHT_LIKE</span>
             <span className="animate-pulse text-cyan-500 ml-1">|</span>
           </h2>
-          <a href="#" className="text-sm text-cyan-400 hover:text-pink-400 transition-colors flex items-center group">
+          <a href="/browse" className="text-sm text-cyan-400 hover:text-pink-400 transition-colors flex items-center group">
             <span>VIEW_ALL</span>
             <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -664,21 +682,36 @@ function RecommendedStreams() {
         </div>
         
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-          <CategoryCard name="Cyberpunk 2078" viewers="105.2K" trending={true} />
+          {data.topCategories.map((category, index) => (
+            <CategoryCard thumbnail={category.thumbnail} key={index} name={category.name} viewers={formatNumber(category.viewers)} trending={category.isTrending} />
+          ))}
+          {/* <CategoryCard name="Cyberpunk 2078" viewers="105.2K" trending={true} />
           <CategoryCard name="Night City Racers" viewers="78.6K" trending={true} />
           <CategoryCard name="Neural Link" viewers="45.3K" />
           <CategoryCard name="GridWars X" viewers="67.8K" trending={true} />
           <CategoryCard name="HackNet Simulator" viewers="32.1K" />
           <CategoryCard name="System Shock" viewers="18.9K" />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
-
+function formatNumber(num) {
+  if (num >= 1_000_000_000) {
+    return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
+  }
+  if (num >= 1_000_000) {
+    return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+  }
+  if (num >= 1_000) {
+    return (num / 1_000).toFixed(1).replace(/\.0$/, '') + 'k';
+  }
+  return num.toString();
+}
 // Enhanced Stream Card Component
-function StreamCard({ title, creator, game, viewers, tags = [], live = false, viewerTrend = "stable", featured = false }) {
+function StreamCard({ id,title, creator, game,avatar, viewers, tags = [], live = false, viewerTrend = "stable", featured = false, thumbnail }) {
   // Viewer trend indicators
+  const router = useRouter();
   const trendIcons = {
     up: <svg className="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M12 7a1 1 0 01-1 1H9v9a1 1 0 01-2 0V8H6a1 1 0 01-1-1V6a1 1 0 011-1h5a1 1 0 011 1v1z" clipRule="evenodd" transform="rotate(45, 10, 10)" /></svg>,
     down: <svg className="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M12 7a1 1 0 01-1 1H9v9a1 1 0 01-2 0V8H6a1 1 0 01-1-1V6a1 1 0 011-1h5a1 1 0 011 1v1z" clipRule="evenodd" transform="rotate(-45, 10, 10)" /></svg>,
@@ -687,8 +720,8 @@ function StreamCard({ title, creator, game, viewers, tags = [], live = false, vi
 
   return (
     <div className={`rounded-lg overflow-hidden bg-[#121212] border ${featured ? 'border-cyan-500 shadow-glow-cyan' : 'border-purple-900'} hover:border-pink-500 transition-all group transform hover:-translate-y-1`}>
-      <div className="aspect-video bg-[#121212] relative overflow-hidden">
-        <img src="/api/placeholder/320/180" alt="Stream thumbnail" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+      <div onClick={()=>{router.push(`/live/${id}`)}} className="aspect-video hover:cursor-pointer bg-[#121212] relative overflow-hidden">
+        <img src={thumbnail} alt="Stream thumbnail" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
         
         {/* Stream information overlay */}
         <div className="absolute top-0 left-0 w-full p-2 flex justify-between items-start">
@@ -714,7 +747,7 @@ function StreamCard({ title, creator, game, viewers, tags = [], live = false, vi
             </div>
             <div className="px-1.5 py-0.5 bg-pink-600 text-xs font-medium rounded text-white flex items-center">
               {trendIcons[viewerTrend]}
-              <span className="ml-1">{viewers}</span>
+              <span className="ml-1">{formatNumber(viewers)}</span>
             </div>
           </div>
         </div>
@@ -726,14 +759,15 @@ function StreamCard({ title, creator, game, viewers, tags = [], live = false, vi
       
       <div className="p-3">
         <div className="flex items-start space-x-2 mb-2">
-          <div className="w-8 h-8 rounded-full overflow-hidden border border-cyan-700 flex-shrink-0 bg-gradient-to-r from-purple-600 to-pink-600 p-0.5">
+          {/* <div className="w-8 h-8 rounded-full overflow-hidden border border-cyan-700 flex-shrink-0 bg-gradient-to-r from-purple-600 to-pink-600 p-0.5">
             <div className="w-full h-full rounded-full bg-gray-800 flex items-center justify-center">
               <span className="text-xs text-cyan-400">{creator.substring(0, 2)}</span>
             </div>
-          </div>
+          </div> */}
+          <img src={avatar} alt={creator} className="w-8 h-8 rounded-full object-cover overflow-hidden border border-cyan-700 flex-shrink-0" />
           <div>
-            <h3 className="text-sm font-medium text-white line-clamp-1 group-hover:text-cyan-400 transition-colors">{title}</h3>
-            <p className="text-xs text-gray-400 hover:text-pink-400 transition-colors">@{creator}</p>
+            <h3 onClick={()=>{router.push(`/live/${id}`)}} className="text-sm hover:cursor-pointer font-medium text-white line-clamp-1 group-hover:text-cyan-400 transition-colors">{title}</h3>
+            <p onClick={()=>{router.push(`/channel/${id}`)}} className="text-xs hover:cursor-pointer text-gray-400 hover:text-pink-400 transition-colors">@{creator}</p>
           </div>
         </div>
         
@@ -750,11 +784,11 @@ function StreamCard({ title, creator, game, viewers, tags = [], live = false, vi
 }
 
 // Enhanced Category Card Component
-function CategoryCard({ name, viewers, trending = false }) {
+function CategoryCard({ thumbnail,name, viewers, trending = false }) {
   return (
     <div className="rounded-lg overflow-hidden bg-[#121212] border border-purple-900 hover:border-cyan-500 transition-all transform hover:-translate-y-1 group">
       <div className="aspect-video bg-gradient-to-br from-purple-900 to-[#121212] relative overflow-hidden">
-        <img src="/api/placeholder/160/90" alt="Category thumbnail" className="w-full h-full object-cover opacity-50 mix-blend-overlay group-hover:opacity-70 transition-opacity" />
+        <img src={thumbnail} alt="Category thumbnail" className="w-full h-full object-cover transition-opacity" />
         
         {/* Diagonal line decoration */}
         <div className="absolute top-0 right-0 w-full h-full pointer-events-none">
@@ -808,7 +842,10 @@ function CategoriesSection() {
       </div>
       
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        <CategoryDetailCard 
+        {data.categories.map((category, index) => (
+          <CategoryDetailCard thumbnail={category.thumbnail} key={index} newContent={category.isNew} name={category.name} channels={category.totalChannels} official={category.isOfficial} tags={category.tags} retro={category.isRetro} viewers={formatNumber(category.viewers)} trending={category.isTrending} />
+        ))}
+        {/* <CategoryDetailCard 
           name="Cyberpunk 2078" 
           viewers="105.2K" 
           tags={["FPS", "RPG", "Open World"]}
@@ -875,7 +912,7 @@ function CategoriesSection() {
           tags={["VR", "Social", "Simulation"]}
           channels={356}
           newContent={true}
-        />
+        /> */}
       </div>
     </div>
   );
@@ -896,11 +933,11 @@ function CategoryFilterButton({ label, active = false }) {
 }
 
 // Enhanced Category Detail Card Component
-function CategoryDetailCard({ name, viewers, tags = [], trending = false, channels, official = false, retro = false, newContent = false }) {
+function CategoryDetailCard({ name, thumbnail, viewers, tags = [], trending = false, channels, official = false, retro = false, newContent = false }) {
   return (
     <div className="rounded-lg overflow-hidden bg-[#121212] border border-purple-900 hover:border-cyan-500 transition-all group transform hover:-translate-y-1">
       <div className="aspect-video bg-gradient-to-br from-purple-900 to-gray-900 relative overflow-hidden">
-        <img src="/api/placeholder/240/135" alt="Category thumbnail" className="w-full h-full object-cover opacity-70 group-hover:opacity-90 transition-opacity mix-blend-overlay" />
+        <img src={thumbnail} alt="Category thumbnail" className="w-full h-full object-cover" />
         
         {/* Content status indicators */}
         <div className="absolute top-2 right-2 flex flex-col gap-1 items-end">
@@ -996,7 +1033,7 @@ function FollowingStreams() {
           <span className="text-cyan-400">STREAMS</span>
           <span className="animate-pulse text-pink-500 ml-1">|</span>
         </h2>
-        <a href="#" className="text-sm text-cyan-400 hover:text-pink-400 transition-colors flex items-center group">
+        <a href="/browse" className="text-sm text-cyan-400 hover:text-pink-400 transition-colors flex items-center group">
           <span>VIEW_ALL</span>
           <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -1005,7 +1042,22 @@ function FollowingStreams() {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        <StreamCard 
+        {data.followingStreams.map((each,index)=>(
+          <StreamCard 
+          key={each.id}
+          avatar={each.avatar}
+            id={each.id}
+            title={each.title}
+            creator={each.channelName} 
+            game={each.game}
+            viewers={each.viewers} 
+            tags={each.tags}
+            live={true}
+            viewerTrend="up"
+            thumbnail={each.thumbnail}
+          />
+        ))}
+        {/* <StreamCard 
           title="Late Night Hacking Session" 
           creator="DataPirate" 
           game="HackNet Simulator" 
@@ -1041,7 +1093,7 @@ function FollowingStreams() {
           tags={["Horror", "Retro"]}
           live={true}
           viewerTrend="down"
-        />
+        /> */}
       </div>
     </div>
   );

@@ -5,8 +5,8 @@ import {
   Search, Bell, Settings, Wifi, ShieldAlert, Radio, Cpu, Eye
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-
-function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
+import data from '@/app/data';
+function Sidebar({ isOpen, setIsOpen, setCurrentSection }:{isOpen:boolean,setIsOpen:any, setCurrentSection?:any}) {
   const [hoveredChannel, setHoveredChannel] = useState(null);
   const [glitchEffect, setGlitchEffect] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
@@ -19,13 +19,13 @@ function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
     }, Math.random() * 10000 + 5000);
     
     // Digital clock
-    const clockInterval = setInterval(() => {
-      setCurrentTime(new Date().toLocaleTimeString());
-    }, 1000);
+    // const clockInterval = setInterval(() => {
+    //   setCurrentTime(new Date().toLocaleTimeString());
+    // }, 1000);
     
     return () => {
       clearInterval(glitchInterval);
-      clearInterval(clockInterval);
+      // clearInterval(clockInterval);
     };
   }, []);
   
@@ -136,7 +136,25 @@ function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
               </button>
             </div>
             <ul className="space-y-1">
-              <ChannelLink 
+              {data.followedChannels.map((channel) => (
+                <ChannelLink 
+                  id={channel.id}
+                  key={channel.id}
+                  name={channel.name}
+                  game={channel.game}
+                  viewers={channel.viewers}
+                  avatar={channel.avatar}
+                  isLive={channel.isLive}
+                  onHover={() => setHoveredChannel(channel.name)}
+                  onLeave={() => setHoveredChannel(null)}
+                  isHovered={hoveredChannel === channel.name}
+                  isVIP={channel.isVIP}
+                  isEncrypted={channel.isEncrypted}
+                  isNew={channel.isNew}
+                  isVerified={channel.isVerified}
+                />
+              ))}
+              {/* <ChannelLink 
                 name="NeonHunter" 
                 game="Cyberpunk 2078" 
                 viewers="12.4K"
@@ -205,7 +223,7 @@ function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
                 viewers={0}
                 isLive={false}
                 isVerified
-              />
+              /> */}
             </ul>
           </div>
           
@@ -219,7 +237,25 @@ function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
               </button>
             </div>
             <ul className="space-y-1">
-              <ChannelLink 
+            {data.recommendedChannels.map((channel) => (
+                <ChannelLink 
+                  avatar={channel.avatar}
+                  key={channel.id}
+                  name={channel.name}
+                  game={channel.game}
+                  viewers={channel.viewers}
+                  id={channel.id}
+                  isLive={channel.isLive}
+                  onHover={() => setHoveredChannel(channel.name)}
+                  onLeave={() => setHoveredChannel(null)}
+                  isHovered={hoveredChannel === channel.name}
+                  isVIP={channel.isVIP}
+                  isEncrypted={channel.isEncrypted}
+                  isNew={false}
+                  isVerified={channel.isVerified}
+                />
+              ))}
+              {/* <ChannelLink 
                 name="CyberNomad" 
                 game="Neon Drift" 
                 viewers="8.7K"
@@ -260,7 +296,7 @@ function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
                 isNew={true}
                 isVIP={true}
                 isEncrypted={true}
-              />
+              /> */}
             </ul>
           </div>
         </div>
@@ -294,7 +330,15 @@ function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
       
       {/* Hover previews container - placed outside the sidebar to avoid overflow issues */}
       <div className="fixed pointer-events-none z-40">
-      {hoveredChannel === 'NeonHunter' && (
+      {hoveredChannel && (() => {
+        const channel = data.followedChannels.find(c => c.name === hoveredChannel);
+        return channel ? <ChannelPreview followers={channel.followers} description={channel.description} key={channel.id} name={channel.name} game={channel.game} viewers={channel.viewers} avatar={channel.avatar} isLive={channel.isLive} isNew={channel.isNew} isVerified={channel.isVerified} isVIP={channel.isVIP} isEncrypted={channel.isEncrypted} /> : null;
+      })()}
+      {hoveredChannel && (() => {
+        const channel = data.recommendedChannels.find(c => c.name === hoveredChannel);
+        return channel ? <ChannelPreview followers={channel.followers} description={channel.description} key={channel.id} name={channel.name} game={channel.game} viewers={channel.viewers} avatar={channel.avatar} isLive={channel.isLive} isNew={channel.isNew} isVerified={channel.isVerified} isVIP={channel.isVIP} isEncrypted={channel.isEncrypted} /> : null;
+      })()}
+      {/* {hoveredChannel === 'NeonHunter' && (
         <ChannelPreview
           name="NeonHunter"
           game="Cyberpunk 2078"
@@ -397,7 +441,7 @@ function Sidebar({ isOpen, setIsOpen, setCurrentSection }) {
           isVIP
           isEncrypted
         />
-      )}
+      )} */}
 
       </div>
       
@@ -449,20 +493,32 @@ function SidebarLink({ icon, children, active, onClick, notification, notificati
     </li>
   );
 }
+function formatNumber(num) {
+  if (num >= 1_000_000_000) {
+    return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
+  }
+  if (num >= 1_000_000) {
+    return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+  }
+  if (num >= 1_000) {
+    return (num / 1_000).toFixed(1).replace(/\.0$/, '') + 'k';
+  }
+  return num.toString();
+}
 
 // Channel Link Component
-function ChannelLink({ name, game, viewers, avatar, isLive, isNew, onHover, onLeave, isHovered, isVerified, isVIP, isEncrypted }) {
+function ChannelLink({ id,name, game, viewers, avatar, isLive, isNew, onHover, onLeave, isHovered, isVerified, isVIP, isEncrypted }) {
   const router = useRouter();
   return (
     <li 
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
       className="relative"
-      onClick={() => router.push(`/live/${name}`)}
+      onClick={() => router.push(`/live/${id}`)}
     >
       <a href={`/live/${name}`} onClick={(e) => e.preventDefault()} className="flex items-center px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-800/80 hover:text-cyan-400 group transition-all duration-200">
         <div className="relative">
-          <div className={`w-8 h-8 rounded ${
+          {/* <div className={`w-8 h-8 rounded ${
             avatar === 'neon' ? 'bg-gradient-to-r from-cyan-500 to-blue-600' :
             avatar === 'pixel' ? 'bg-gradient-to-r from-green-500 to-emerald-600' :
             avatar === 'synth' ? 'bg-gradient-to-r from-purple-500 to-pink-600' :
@@ -474,7 +530,8 @@ function ChannelLink({ name, game, viewers, avatar, isLive, isNew, onHover, onLe
             'bg-gray-700'
           } flex items-center justify-center`}>
             <span className="text-xs font-bold text-white">{name.substring(0, 1)}</span>
-          </div>
+          </div> */}
+          <img src={avatar} alt={name} className="w-8 h-8 rounded object-cover hover overflow-hidden" />
           {isLive && (
             <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-gray-900 animate-pulse"></span>
           )}
@@ -514,76 +571,17 @@ function ChannelLink({ name, game, viewers, avatar, isLive, isNew, onHover, onLe
           <div className="text-xs font-medium">
             <span className="flex items-center text-red-400">
               <span className="w-1.5 h-1.5 rounded-full bg-red-500 mr-1"></span>
-              {viewers}
+              {formatNumber(viewers)}
             </span>
           </div>
         )}
       </a>
       
-      {/* Hover preview */}
-      {/* {isHovered && (
-        <div className="absolute left-full ml-2 top-0 w-48 bg-gray-800 rounded-lg border border-cyan-900/50 shadow-xl z-50 overflow-hidden">
-          <div className="bg-gradient-to-r from-purple-900/40 to-cyan-900/20 p-3">
-            <div className="flex items-center">
-              <div className={`w-10 h-10 rounded ${
-                avatar === 'neon' ? 'bg-gradient-to-r from-cyan-500 to-blue-600' :
-                avatar === 'pixel' ? 'bg-gradient-to-r from-green-500 to-emerald-600' :
-                avatar === 'synth' ? 'bg-gradient-to-r from-purple-500 to-pink-600' :
-                avatar === 'data' ? 'bg-gradient-to-r from-orange-500 to-red-600' :
-                avatar === 'glitch' ? 'bg-gradient-to-r from-blue-500 to-indigo-600' :
-                avatar === 'cyber' ? 'bg-gradient-to-r from-yellow-500 to-amber-600' :
-                avatar === 'ghost' ? 'bg-gradient-to-r from-purple-500 to-indigo-600' :
-                avatar === 'byte' ? 'bg-gradient-to-r from-cyan-500 to-blue-600' :
-                'bg-gray-700'
-              } flex items-center justify-center`}>
-                <span className="text-sm font-bold text-white">{name.substring(0, 1)}</span>
-              </div>
-              <div className="ml-2">
-                <div className="font-medium text-white flex items-center">
-                  {name}
-                  {isVerified && <span className="ml-1 text-cyan-400"><svg className="w-3 h-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><path d="M22 4L12 14.01l-3-3"></path></svg></span>}
-                  {isVIP && <span className="ml-1 text-purple-400"><svg className="w-3 h-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></span>}
-                  {isEncrypted && <span className="ml-1 text-red-400"><svg className="w-3 h-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>}
-                </div>
-                <div className="text-xs text-gray-400">{game}</div>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-800/90 px-3 py-2">
-            <div className="flex justify-between text-xs text-gray-400 mb-2">
-              <span>{isLive ? 'LIVE' : 'OFFLINE'}</span>
-              <span>Followers: 124K</span>
-            </div>
-            <div className="text-xs text-gray-300 line-clamp-2">
-              {avatar === 'neon' ? 'Exploring Night City with new cyber implants!' : 
-               avatar === 'pixel' ? 'Racing through the neon streets of New Tokyo!' :
-               avatar === 'synth' ? 'Music production and cyber fashion talk!' :
-               avatar === 'data' ? 'Hacking the mainframe, evading Netwatch!' :
-               avatar === 'glitch' ? 'Exploring system vulnerabilities and tech talk.' :
-               avatar === 'cyber' ? 'High-speed drifting through augmented reality!' :
-               avatar === 'ghost' ? 'Building neural interfaces for enhanced gaming.' :
-               avatar === 'byte' ? 'Tactical strategy in the digital warzone!' :
-               'Streaming the latest content from the net!'}
-            </div>
-            {isLive && viewers && (
-              <div className="mt-2 bg-gray-900/60 rounded-md px-2 py-1 text-xs text-gray-300">
-                <div className="flex justify-between">
-                  <span>Viewers:</span>
-                  <span className="text-cyan-400">{viewers}</span>
-                </div>
-                <div className="w-full h-1 bg-gray-700 rounded-full mt-1 overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full" style={{ width: '75%' }}></div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )} */}
     </li>
   );
 }
 // Separate Channel Preview Component - positioned in DOM differently
-function ChannelPreview({ name, game, viewers, avatar, isLive, isNew, isVerified, isVIP, isEncrypted }) {
+function ChannelPreview({ name, game, viewers,description,followers, avatar, isLive, isNew, isVerified, isVIP, isEncrypted }) {
   // Calculate position - this is fixed because we are using a fixed container
   // In a real implementation, you might want to dynamically calculate this based on
   // the position of the hovered item to ensure it appears next to it
@@ -593,7 +591,7 @@ function ChannelPreview({ name, game, viewers, avatar, isLive, isNew, isVerified
          style={{ transform: 'translateX(8px)' }}>
       <div className="bg-gradient-to-r from-purple-900/40 to-cyan-900/20 p-3">
         <div className="flex items-center">
-          <div className={`w-10 h-10 rounded ${
+          {/* <div className={`w-10 h-10 rounded ${
             avatar === 'neon' ? 'bg-gradient-to-r from-cyan-500 to-blue-600' :
             avatar === 'pixel' ? 'bg-gradient-to-r from-green-500 to-emerald-600' :
             avatar === 'synth' ? 'bg-gradient-to-r from-purple-500 to-pink-600' :
@@ -605,7 +603,8 @@ function ChannelPreview({ name, game, viewers, avatar, isLive, isNew, isVerified
             'bg-gray-700'
           } flex items-center justify-center`}>
             <span className="text-sm font-bold text-white">{name.substring(0, 1)}</span>
-          </div>
+          </div> */}
+          <img src={avatar} alt={name} className="w-10 h-10 rounded object-cover overflow-hidden flex-shrink-0" />
           <div className="ml-2">
             <div className="font-medium text-white flex items-center">
               {name}
@@ -620,10 +619,10 @@ function ChannelPreview({ name, game, viewers, avatar, isLive, isNew, isVerified
       <div className="bg-gray-800/90 px-3 py-2">
         <div className="flex justify-between text-xs text-gray-400 mb-2">
           <span>{isLive ? 'LIVE' : 'OFFLINE'}</span>
-          <span>Followers: 124K</span>
+          <span>Followers: {formatNumber(followers)}</span>
         </div>
         <div className="text-xs text-gray-300 line-clamp-2">
-          {avatar === 'neon' ? 'Exploring Night City with new cyber implants!' : 
+          {/* {avatar === 'neon' ? 'Exploring Night City with new cyber implants!' : 
            avatar === 'pixel' ? 'Racing through the neon streets of New Tokyo!' :
            avatar === 'synth' ? 'Music production and cyber fashion talk!' :
            avatar === 'data' ? 'Hacking the mainframe, evading Netwatch!' :
@@ -631,13 +630,14 @@ function ChannelPreview({ name, game, viewers, avatar, isLive, isNew, isVerified
            avatar === 'cyber' ? 'High-speed drifting through augmented reality!' :
            avatar === 'ghost' ? 'Building neural interfaces for enhanced gaming.' :
            avatar === 'byte' ? 'Tactical strategy in the digital warzone!' :
-           'Streaming the latest content from the net!'}
+           'Streaming the latest content from the net!'} */}
+          {description}
         </div>
         {isLive && viewers && (
           <div className="mt-2 bg-gray-900/60 rounded-md px-2 py-1 text-xs text-gray-300">
             <div className="flex justify-between">
               <span>Viewers:</span>
-              <span className="text-cyan-400">{viewers}</span>
+              <span className="text-cyan-400">{formatNumber(viewers)}</span>
             </div>
             <div className="w-full h-1 bg-gray-700 rounded-full mt-1 overflow-hidden">
               <div className="h-full bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full" style={{ width: '75%' }}></div>

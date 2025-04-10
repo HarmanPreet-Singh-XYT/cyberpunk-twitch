@@ -313,12 +313,6 @@ export default function CyberpunkVideoPlayer() {
           <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
             {/* Top-left HUD frame */}
             <div className="absolute top-4 left-4 flex items-center">
-              {/* Live indicator */}
-              <div className="bg-black bg-opacity-70 border border-t-2 border-l-2 border-cyan-500 border-r-pink-500 border-b-pink-500 text-white text-xs font-bold p-1 rounded-sm flex items-center transform skew-x-6">
-                <div className="w-2 h-2 bg-red-500 rounded-full mr-1 animate-pulse"></div>
-                <span className="text-red-500 font-mono tracking-wider">LIVE</span>
-              </div>
-              
               {/* Viewer count */}
               <div className={`ml-2 bg-black bg-opacity-70 border ${highlightedSection === 'viewers' ? 'border-2 border-yellow-400' : 'border border-cyan-500'} text-white text-xs p-1 rounded-sm flex items-center transform skew-x-6 transition-all duration-300`}>
                 <Users size={12} className={`mr-1 ${highlightedSection === 'viewers' ? 'text-yellow-400' : 'text-cyan-400'}`} />
