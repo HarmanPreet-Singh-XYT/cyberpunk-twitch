@@ -1,11 +1,9 @@
 'use client'
-import Browse from '@/components/Browse'
-
 import React from 'react'
-
+import CyberpunkTwitchBrowse from '@/components/BrowseTesting'
 const page = () => {
   return (
-    <Browse/>
+    <CyberpunkTwitchBrowse />
   )
 }
 
