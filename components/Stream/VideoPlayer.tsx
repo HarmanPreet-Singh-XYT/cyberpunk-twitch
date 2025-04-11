@@ -4,6 +4,8 @@ import {
   Pause, Play, VolumeX, Volume2, Cpu, ExternalLink, 
   Settings, Eye, Wifi, Box, ChevronUp
 } from "lucide-react";
+import Data from "@/app/data";
+import { useParams } from 'next/navigation'
 
 export default function CyberpunkVideoPlayer() {
   // State for UI controls
@@ -12,7 +14,7 @@ export default function CyberpunkVideoPlayer() {
   const [audioLevel, setAudioLevel] = useState(70);
   const [showStats, setShowStats] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [viewerCount, setViewerCount] = useState(2547);
+  const [viewerCount, setViewerCount] = useState(0);
   const [streamTime, setStreamTime] = useState(0);
   const [videoDuration, setVideoDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -21,12 +23,13 @@ export default function CyberpunkVideoPlayer() {
   const [showScanlines, setShowScanlines] = useState(true);
   const [showControlsOverlay, setShowControlsOverlay] = useState(false);
   const [highlightedSection, setHighlightedSection] = useState(null);
-  
+  const params = useParams<{ id:string }>()
   // Video reference and container reference
   const videoRef = useRef(null);
   const videoContainerRef = useRef(null);
   const progressBarRef = useRef(null);
-
+  // const [streamLink, setstreamLink] = useState("/");
+  const streamLink: string = Data.streams.find(each => each.id === params.id)?.streamLink || '/';
   // Stream stats for overlay
   const [streamStats, setStreamStats] = useState({
     fps: "30",
@@ -134,6 +137,10 @@ export default function CyberpunkVideoPlayer() {
 
   // Video event listeners
   useEffect(() => {
+    Data.streams.map((each)=>{if(each.id === params.id){
+      setViewerCount(each.viewers);
+      // setstreamLink(each.streamLink);
+    }});
     const video = videoRef.current;
     if (!video) return;
 
@@ -260,7 +267,7 @@ export default function CyberpunkVideoPlayer() {
             playsInline
             ref={videoRef}
             className="absolute inset-0 w-full h-full object-cover"
-            src="/DrDisrespect.mp4" // Replace with your video URL
+            src={streamLink} // Replace with your video URL
             poster="/api/placeholder/640/360" // Optional: placeholder image while video loads
           ></video>
 

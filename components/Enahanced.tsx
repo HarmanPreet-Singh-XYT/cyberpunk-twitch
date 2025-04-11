@@ -5,9 +5,33 @@ import {
   Clock, Users, ChevronDown, Award, ExternalLink,
   Zap, Shield, Terminal, Target, Cpu, Radio
 } from "lucide-react";
-import CyberpunkVideoPlayer from "./Stream/VideoPlayer";
+import CyberpunkVideoPlayer from "./Stream/LiveVideoPlayer";
 import CyberpunkChat from "./Stream/Chat";
-
+import { useParams, useRouter } from 'next/navigation'
+import data from "@/app/data";
+import CyberpunkTwitchChat from "./Stream/Chat";
+interface Stream {
+  id: string;
+  thumbnail: string;
+  streamLink:string;
+  channelId: string;
+  title: string;
+  game: string;
+  viewers: number;
+  startedAt: string;
+  duration: string;
+  tags: string[];
+  securityLevel: "Low" | "Medium" | "High" | "Extreme";
+  quality: string;
+  ping: number;
+  signalQuality: number;
+  avatar:string;
+  channelName:string;
+  channelCredits:number | string;
+  subscriptions:number | string;
+  isSlow:string;
+  chatMode:string;
+}
 function CyberpunkTwitchStream() {
   const [isVideoPlaying, setIsVideoPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
@@ -21,6 +45,30 @@ function CyberpunkTwitchStream() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [audioLevel, setAudioLevel] = useState(75);
   const [showStats, setShowStats] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const params = useParams<{ id:string }>()
+  const [Data, setData] = useState<Stream>({
+    id: "",
+    thumbnail: '/placeholder/1200/675',
+    streamLink:'',
+    channelId: "", // Ninja
+    title: "",
+    game: "",
+    viewers: 0,
+    startedAt: "",
+    duration: "",
+    tags: [],
+    securityLevel: "Low",
+    quality: "",
+    ping: 0,
+    signalQuality: 0,
+    channelName:'',
+    avatar:'/placeholder/1200/675',
+    channelCredits:0,
+    subscriptions:0,
+    isSlow:'ON',
+    chatMode:'Followers Only'
+  });
 
   // Sample chat messages with timestamps
   const [chatMessages, setChatMessages] = useState([
@@ -49,10 +97,10 @@ function CyberpunkTwitchStream() {
 
   // Random tournament stats to display dynamically
   const tournamentTeams = [
-    { name: "CyberNomad", wins: 6, losses: 1, kdRatio: 4.7, credits: 42500 },
-    { name: "NetRunner", wins: 5, losses: 2, kdRatio: 3.9, credits: 38400 },
-    { name: "PixelRiot", wins: 4, losses: 3, kdRatio: 3.2, credits: 27800 },
-    { name: "DataSlicer", wins: 3, losses: 4, kdRatio: 2.8, credits: 21300 }
+    { name: "DrDisrespect", wins: 6, losses: 1, kdRatio: 4.7, credits: 42500 },
+    { name: "Shroud", wins: 5, losses: 2, kdRatio: 3.9, credits: 38400 },
+    { name: "Tfue", wins: 4, losses: 3, kdRatio: 3.2, credits: 27800 },
+    { name: "Ninja", wins: 3, losses: 4, kdRatio: 2.8, credits: 21300 }
   ];
 
   // Live updated sponsorship banners
@@ -63,6 +111,31 @@ function CyberpunkTwitchStream() {
 
   // Simulated chat activity and viewer count
   useEffect(() => {
+    const stream = data.streams.find((each)=>each.id === params.id);
+    const channel = data.channels.find((each)=>each.id === stream.channelId);
+    const user = data.users.find((each)=>each.id === channel.userId);
+    setData({
+      id: stream.id,
+      thumbnail: stream.thumbnail,
+      streamLink:stream.thumbnail,
+      channelId: stream.channelId, // Ninja
+      title: stream.title,
+      game: stream.game,
+      viewers: stream.viewers,
+      startedAt: stream.startedAt,
+      duration: stream.duration,
+      tags: stream.tags,
+      securityLevel: stream.securityLevel,
+      quality: stream.quality,
+      ping: stream.ping,
+      signalQuality: stream.signalQuality,
+      channelName:channel.name,
+      avatar:user.avatar,
+      channelCredits:channel.credits,
+      subscriptions:channel.subscriptions,
+      isSlow:channel.isSlowMode ? 'ON' : 'OFF',
+      chatMode:'Followers Only'
+    })
     // Update stream time every second
     const timeInterval = setInterval(() => {
       setStreamTime(prevTime => prevTime + 1);
@@ -170,7 +243,16 @@ function CyberpunkTwitchStream() {
     const secs = seconds % 60;
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
-
+  const stylePool = [
+    "bg-pink-500/20 text-pink-400 border border-pink-500/30",
+    "bg-purple-500/20 text-purple-400 border border-purple-500/30",
+    "bg-blue-500/20 text-blue-400 border border-blue-500/30",
+    "bg-green-500/20 text-green-400 border border-green-500/30",
+    "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30",
+    "bg-red-500/20 text-red-400 border border-red-500/30",
+    "bg-indigo-500/20 text-indigo-400 border border-indigo-500/30",
+  ];
+  
   return (
     <div className={`grid grid-cols-1 lg:grid-cols-4 lg:gap-4 mx-auto bg-[#121212] text-white ${showGlitch ? 'animate-pulse' : ''}`}>
         <RainEffect/>
@@ -420,15 +502,22 @@ function CyberpunkTwitchStream() {
           </div>
         </div>  */}
         <div className="rounded-b-lg p-4 overflow-hidden border-b-2 border-x-2 border-purple-900 bg-[#121212] relative">
+          <div className="absolute inset-0 opacity-10" 
+            style={{ 
+              backgroundImage: 'linear-gradient(to right, cyan 1px, transparent 1px), linear-gradient(to bottom, cyan 1px, transparent 1px)',
+              backgroundSize: '20px 20px'
+            }}>
+          </div>
           <div className="flex flex-col md:flex-row md:items-start md:justify-between relative z-10">
               <div className="flex items-start space-x-4 mb-4 md:mb-0">
                 <div className="relative">
-                  
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 p-0.5 animate-pulse">
-                    <div className="w-full h-full rounded-full bg-gray-800 flex items-center justify-center overflow-hidden border border-cyan-500/50">
-                      <User size={24} className="text-cyan-400" />
+                  <a href={`/channel/${Data.id}`}>
+                    <div className="w-14 h-14 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 p-0.5 animate-pulse">
+                      <img src={Data.avatar} className="w-full h-full rounded-full bg-gray-800 flex items-center justify-center overflow-hidden border border-cyan-500/50"/>
+                        {/* <User size={24} className="text-cyan-400" /> */}
+                      {/* </div> */}
                     </div>
-                  </div>
+                  </a>
                   
                   <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-gray-800 rounded-full flex items-center justify-center border border-pink-500">
                     <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
@@ -437,21 +526,35 @@ function CyberpunkTwitchStream() {
                 
                 <div>
                   <div className="flex items-center mb-1">
-                    <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 mr-2">CyberNomad</h3>
+                  <a href={`/channel/${Data.id}`}>
+                    <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 mr-2">{Data.channelName}</h3>
+                  </a>
                     <span className="bg-purple-500/20 text-purple-400 px-1.5 py-0.5 rounded text-xs font-medium border border-purple-500/50">Partner</span>
                   </div>
                   
                   <div className="flex flex-col md:flex-row md:items-center md:space-x-4">
                     <p className="text-gray-300 text-sm mb-1 md:mb-0">
                       <span className="font-medium text-pink-400">Playing:</span> 
-                      <span className="ml-1 font-mono">Neon Drift</span>
+                      <span className="ml-1 font-mono">{Data.game}</span>
                     </p>
                   </div>
                   
-                  <div className="flex items-center space-x-2 mt-2">
-                    <span className="bg-pink-500/20 text-pink-400 px-2 py-0.5 rounded text-xs font-medium border border-pink-500/30">Esports</span>
+                  <div className="flex flex-wrap items-center space-x-2 mt-2">
+                    {/* <span className="bg-pink-500/20 text-pink-400 px-2 py-0.5 rounded text-xs font-medium border border-pink-500/30">Esports</span>
                     <span className="bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded text-xs font-medium border border-purple-500/30">Competitive</span>
-                    <span className="bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded text-xs font-medium border border-blue-500/30">FPS</span>
+                    <span className="bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded text-xs font-medium border border-blue-500/30">FPS</span> */}
+                    {Data.tags.map((name, index) => {
+                      const style = stylePool[index % stylePool.length];
+                      return (
+                        <span
+                          key={name}
+                          className={`px-2 py-0.5 rounded text-xs font-medium ${style}`}
+                        >
+                          {name}
+                        </span>
+                      );
+                    })}
+
                   </div>
                 </div>
               </div>
@@ -459,49 +562,71 @@ function CyberpunkTwitchStream() {
               <div className="flex flex-col gap-4">
                 <div className="flex flex-wrap items-center gap-2">
                   <button 
-                      onClick={() => setIsFollowing(!isFollowing)}
-                      className={`px-4 py-2 rounded font-medium transition-all flex items-center border ${
-                      isFollowing 
-                          ? "bg-gray-800 text-cyan-400 border-cyan-500/50 hover:bg-gray-700" 
-                          : "bg-gradient-to-r from-pink-500 to-purple-500 text-white border-transparent hover:shadow-lg hover:shadow-pink-500/20"
-                      }`}
-                  >
-                      {isFollowing ? "Following" : "Follow"}
-                      {isFollowing && <ChevronDown size={16} className="ml-1" />}
-                  </button>
-                  
-                  <button 
-                      onClick={() => setIsSubscribed(!isSubscribed)}
-                      className={`px-4 py-2 rounded font-medium transition-all flex items-center border ${
-                      isSubscribed 
-                          ? "bg-gray-800 text-purple-400 border-purple-500/50 hover:bg-gray-700" 
-                          : "bg-gradient-to-r from-blue-500 to-purple-500 text-white border-transparent hover:shadow-lg hover:shadow-purple-500/20"
-                      }`}
-                  >
-                      {isSubscribed ? "Subscribed" : "Subscribe"}
-                      {isSubscribed && <ChevronDown size={16} className="ml-1" />}
-                  </button>
-                  
-                  <button className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors border border-pink-500/30 hover:border-pink-500">
-                      <Gift size={20} className="text-pink-400" />
-                  </button>
-                  
-                  <button className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors border border-pink-500/30 hover:border-pink-500">
-                      <Heart size={20} className={`${isFollowing ? "text-pink-500" : "text-gray-400"}`} />
-                  </button>
-                  
-                  <button className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors border border-cyan-500/30 hover:border-cyan-500">
-                      <Share2 size={20} className="text-cyan-400" />
-                  </button>
+        onClick={() => setIsFollowing(!isFollowing)}
+        className={`px-5 py-2 rounded font-bold tracking-wider uppercase text-sm transition-all flex items-center relative overflow-hidden
+        ${isFollowing 
+          ? "bg-gray-900 text-cyan-400 border-l-4 border-cyan-500 shadow-lg shadow-cyan-500/20" 
+          : "bg-gradient-to-r from-pink-600 to-purple-600 text-white border border-pink-500 shadow-md shadow-pink-500/40 hover:shadow-lg hover:shadow-pink-500/60"
+        }`}
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-cyan-500/10 opacity-50"></div>
+        <Zap size={16} className="mr-2" />
+        {isFollowing ? "Connected" : "Connect"}
+        {isFollowing && <ChevronDown size={16} className="ml-1" />}
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
+      </button>
+      
+      {/* Subscribe Button */}
+      <button 
+        onClick={() => setIsSubscribed(!isSubscribed)}
+        className={`px-5 py-2 rounded font-bold tracking-wider uppercase text-sm transition-all flex items-center relative overflow-hidden
+        ${isSubscribed 
+          ? "bg-gray-900 text-purple-400 border-l-4 border-purple-500 shadow-lg shadow-purple-500/20" 
+          : "bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white border border-blue-500 shadow-md shadow-blue-500/40 hover:shadow-lg hover:shadow-purple-500/60"
+        }`}
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-50"></div>
+        <Zap size={16} className="mr-2" />
+        {isSubscribed ? "Subscribed" : "Subscribe"}
+        {isSubscribed && <ChevronDown size={16} className="ml-1" />}
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
+      </button>
+      
+      {/* Gift Button */}
+      <button className="w-12 h-12 rounded-lg bg-gray-900 flex items-center justify-center hover:bg-gray-800 transition-all border border-pink-500/50 shadow-md shadow-pink-500/20 hover:shadow-lg hover:shadow-pink-500/40 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-transparent"></div>
+        <Gift size={20} className="text-pink-400 z-10" />
+        <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-pink-500 to-transparent"></div>
+      </button>
+      
+      {/* Like Button */}
+      <button 
+        onClick={() => setIsLiked(!isLiked)}
+        className="w-12 h-12 rounded-lg bg-gray-900 flex items-center justify-center hover:bg-gray-800 transition-all border border-red-500/50 shadow-md shadow-red-500/20 hover:shadow-lg hover:shadow-red-500/40 relative overflow-hidden"
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-transparent"></div>
+        <Heart 
+          size={20} 
+          className={`z-10 ${isLiked ? "text-red-500 fill-red-500" : "text-gray-400"}`} 
+        />
+        <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent"></div>
+      </button>
+      
+      {/* Share Button */}
+      <button className="w-12 h-12 rounded-lg bg-gray-900 flex items-center justify-center hover:bg-gray-800 transition-all border border-cyan-500/50 shadow-md shadow-cyan-500/20 hover:shadow-lg hover:shadow-cyan-500/40 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-transparent"></div>
+        <Share2 size={20} className="text-cyan-400 z-10" />
+        <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
+      </button>
 
                 </div>
                 <div className="flex items-center text-gray-400 text-sm ml-auto">
                   <Users size={14} className="mr-1 text-red-500" />
-                  <span className="text-red-500 font-mono">{viewerCount.toLocaleString()} viewers</span>
+                  <span className="text-red-500 font-mono">{Data.viewers.toLocaleString()} viewers</span>
                   <span className="mx-2">•</span>
                   <Clock size={14} className="mr-1 text-cyan-400" />
                   <span className="text-cyan-400 font-mono">Started {Math.floor(streamTime / 3600)}h {Math.floor((streamTime % 3600) / 60)}m ago</span>
-              </div>
+                </div>
               </div>
           </div>
         </div>
@@ -655,122 +780,7 @@ function CyberpunkTwitchStream() {
         {/* Chat section (1/4 width on large screens) - only shown if not fullscreen */}
         {!isFullscreen && (
           <div className="lg:col-span-1">
-            <div className="rounded-lg border border-purple-900 overflow-hidden relative">
-              {/* Glitching overlay effect on chat */}
-              <div className={`absolute inset-0 border-2 border-transparent z-20 pointer-events-none ${showGlitch ? 'border-pink-500/50 animate-pulse' : ''}`}></div>
-              
-              {/* Chat header with cyberpunk styling */}
-              <div className="bg-gray-800 p-3 border-b border-purple-900 flex items-center justify-between relative overflow-hidden">
-                {/* Digital grid background */}
-                <div className="absolute inset-0 opacity-10" 
-                  style={{ 
-                    backgroundImage: 'linear-gradient(to right, cyan 1px, transparent 1px), linear-gradient(to bottom, cyan 1px, transparent 1px)',
-                    backgroundSize: '10px 10px'
-                  }}>
-                </div>
-                
-                <div className="flex items-center relative z-10">
-                  <MessageSquare size={16} className="mr-2 text-purple-400" />
-                  <span className="font-medium text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Stream Chat</span>
-                </div>
-                <div className="flex items-center space-x-2 relative z-10">
-                  <div className="flex items-center text-xs text-cyan-400 mr-2 bg-cyan-500/10 px-2 py-0.5 rounded font-mono border border-cyan-500/30">
-                    <Users size={10} className="mr-1" />
-                    {Math.floor(viewerCount * 0.82).toLocaleString()}
-                  </div>
-                  <button className="w-6 h-6 rounded flex items-center justify-center hover:bg-gray-700 transition-colors">
-                    <Settings size={14} />
-                  </button>
-                </div>
-              </div>
-              
-              {/* Chat messages with enhanced styling */}
-              <div className="h-[70vh] overflow-y-auto p-3 bg-[#121212] space-y-2 relative">
-                {/* Grid background */}
-                <div className="absolute inset-0 opacity-5" 
-                  style={{ 
-                    backgroundImage: 'linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)'
-                  }}>
-                </div>
-                
-                {chatMessages.map((msg) => (
-                  <ChatMessage 
-                    key={msg.id} 
-                    name={msg.name} 
-                    message={msg.message} 
-                    badge={msg.badge} 
-                    isModerator={msg.isModerator}
-                    timestamp={msg.timestamp}
-                    credits={msg.credits}
-                  />
-                ))}
-              </div>
-              
-              {/* Chat input with cyberpunk styling */}
-              <div className="p-3 border-t border-purple-900 bg-gray-800 relative overflow-hidden">
-                {/* Digital noise background */}
-                <div className="absolute inset-0 opacity-5" 
-                  style={{ 
-                    backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")'
-                  }}>
-                </div>
-                
-                <form onSubmit={handleSendMessage} className="relative z-10">
-                  <input
-                    type="text"
-                    value={chatMessage}
-                    onChange={(e) => setChatMessage(e.target.value)}
-                    placeholder="Send a message"
-                    className="bg-[#121212] border border-purple-500/30 rounded-lg px-3 py-2 text-sm w-full focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500 transition-all placeholder-gray-500"
-                  />
-                  
-                  <div className="absolute right-2 top-2 flex items-center space-x-1">
-                    <button 
-                      type="button"
-                      onClick={() => setShowEmotes(!showEmotes)} 
-                      className="text-gray-400 hover:text-purple-400"
-                    >
-                      <Star size={16} />
-                    </button>
-                    
-                    <button type="submit" className="text-purple-400 hover:text-purple-300">
-                      <MessageSquare size={16} />
-                    </button>
-                  </div>
-                  
-                  {/* Emote picker with enhanced styling */}
-                  {showEmotes && (
-                    <div className="absolute bottom-full left-0 w-full bg-gray-800 border border-purple-500/50 rounded-lg p-2 mb-2 backdrop-blur-sm">
-                      <div className="grid grid-cols-5 gap-2">
-                        {["👾", "🎮", "🤖", "💻", "🔥", "⚡", "🎯", "💢", "🏆", "🚀"].map((emote, i) => (
-                          <button
-                            key={i}
-                            type="button"
-                            onClick={() => setChatMessage(prev => prev + emote)}
-                            className="w-8 h-8 flex items-center justify-center hover:bg-gray-700 rounded transition-colors border border-gray-700 hover:border-purple-500"
-                          >
-                            {emote}
-                          </button>
-                        ))}
-                      </div>
-                      
-                      <div className="mt-2 grid grid-cols-5 gap-2">
-                        {["🔫", "🔪", "💯", "🧠", "🦾", "🌐", "💎", "🕹️", "💀", "⚔️"].map((emote, i) => (
-                          <button
-                            key={i}
-                            type="button"
-                            onClick={() => setChatMessage(prev => prev + emote)}
-                            className="w-8 h-8 flex items-center justify-center hover:bg-gray-700 rounded transition-colors border border-gray-700 hover:border-purple-500"
-                          >
-                            {emote}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </form>
-              </div>
-            </div>
+            <CyberpunkTwitchChat/>
             
             {/* Chat info panel */}
             <div className="mt-4 rounded-lg border border-cyan-900 overflow-hidden bg-[#121212] p-3">
@@ -782,22 +792,22 @@ function CyberpunkTwitchStream() {
               <div className="space-y-2 text-sm">
                 <div className="flex items-center justify-between">
                   <div className="text-gray-400">Channel Credits</div>
-                  <div className="font-medium text-cyan-400 font-mono">48,230</div>
+                  <div className="font-medium text-cyan-400 font-mono">{Data.channelCredits.toLocaleString()}</div>
                 </div>
                 
                 <div className="flex items-center justify-between">
                   <div className="text-gray-400">Subscriptions</div>
-                  <div className="font-medium text-pink-400 font-mono">12,853</div>
+                  <div className="font-medium text-pink-400 font-mono">{Data.subscriptions.toLocaleString()}</div>
                 </div>
                 
                 <div className="flex items-center justify-between">
                   <div className="text-gray-400">Chat Mode</div>
-                  <div className="font-medium text-purple-400 font-mono">Followers Only</div>
+                  <div className="font-medium text-purple-400 font-mono">{Data.chatMode}</div>
                 </div>
                 
                 <div className="flex items-center justify-between">
                   <div className="text-gray-400">Slow Mode</div>
-                  <div className="font-medium text-green-400 font-mono">Off</div>
+                  <div className="font-medium text-green-400 font-mono">{Data.isSlow}</div>
                 </div>
               </div>
             </div>

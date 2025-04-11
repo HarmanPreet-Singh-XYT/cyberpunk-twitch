@@ -199,6 +199,7 @@ interface Channel {
 interface Stream {
   id: string;
   thumbnail: string;
+  streamLink:string;
   channelId: string;
   title: string;
   game: string;
@@ -1021,6 +1022,7 @@ const streams: Stream[] = [
     {
       id: "s1",
       thumbnail: 'https://d.newsweek.com/en/full/846377/ninja-fortnite-drake.png',
+      streamLink:'https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/1HP+clutch+by+Ninja..mp4',
       channelId: "c1", // Ninja
       title: "FORTNITE CHAMPION SERIES FINALS! | !youtube !socials",
       game: "Fortnite",
@@ -1036,6 +1038,7 @@ const streams: Stream[] = [
     {
       id: "s2",
       thumbnail: 'https://cdn.oneesports.gg/cdn-data/2023/05/xqc_twitch_stream.jpg',
+      streamLink:'https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/xQc+Reacts+to+his+Embarrassing+Sidemen+Football+Charity+Lowlights.mp4',
       channelId: "c2", // xQc
       title: "JUICER WARLORD TAKES OVER | NEW !MERCH",
       game: "Just Chatting",
@@ -1051,6 +1054,7 @@ const streams: Stream[] = [
     {
       id: "s3",
       thumbnail: 'https://i.ytimg.com/vi/xiJD1PKU7Fo/maxresdefault.jpg',
+      streamLink:'https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/Pokimane+Reacts+to+Valorant+Episode+2+with+Twitch+Chat!.mp4',
       channelId: "c3", // Pokimane
       title: "RANKED GRIND w/ FRIENDS | !discord !socials",
       game: "VALORANT",
@@ -1066,6 +1070,7 @@ const streams: Stream[] = [
     {
       id: "s4",
       thumbnail: 'https://www.dexerto.com/cdn-image/wp-content/uploads/2022/02/22/NICKMERCS-Apex-Legends-hackers-1024x576.jpg?width=1200&quality=75&format=auto',
+      streamLink:'https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/Nickmercs+-+Nick+on+playing+with+toosh+%5B+APEX+LEGENDS+CLIPS+%5D.mp4',
       channelId: "c4", // NICKMERCS
       title: "MFAM | APEX RANKED GRIND | !youtube !merch",
       game: "Apex Legends",
@@ -1081,6 +1086,7 @@ const streams: Stream[] = [
     {
       id: "s5",
       thumbnail: 'https://i.ytimg.com/vi/9-ANGAR_pg8/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgUChMMA8=&rs=AOn4CLBHkbpLgSEpVg4pO7LsYX2UU0MIOA',
+      streamLink:'https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/8+MINUTES+OF+SHROUD+TRYHARDING+IN+VALORANT+RANKED.mp4',
       channelId: "c5", // Shroud
       title: "VALORANT RADIANT RANKED | AIM GOD | !youtube",
       game: "VALORANT",
@@ -1096,6 +1102,7 @@ const streams: Stream[] = [
     {
       id: "s6",
       thumbnail: 'https://static0.gamerantimages.com/wordpress/wp-content/uploads/2021/11/amouranth-3.jpg',
+      streamLink:'https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/bodyguards+amouranth+Just+Chatting+Top+Clip+by+1336plus1.mp4',
       channelId: "c6", // Amouranth
       title: "HOT TUB STREAM | SUBATHON DAY 3 | !socials !sub",
       game: "Just Chatting",
@@ -1111,6 +1118,7 @@ const streams: Stream[] = [
     {
       id: "s7",
       thumbnail: 'https://staticg.sportskeeda.com/editor/2020/11/d3217-16044879399279-800.jpg',
+      streamLink:"https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/TimTheTatMan+Finally+Explains+Why+He+Won't+Play+With+Ninja+Anymore.mp4",
       channelId: "c7", // TimTheTatman
       title: "COD WARZONE WITH THE BOYS | !sub !prime",
       game: "Call of Duty: Warzone",
@@ -1126,6 +1134,7 @@ const streams: Stream[] = [
     {
       id: "s8",
       thumbnail: 'https://s2.dmcdn.net/v/Oop1R1Rn_hFMi_29O/x1080',
+      streamLink:'https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/Tfue+hunting+rifle+clip+INSANE!.mp4',
       channelId: "c8", // Tfue
       title: "FORTNITE CASH CUP | TOP PLAYER NA | !newvid",
       game: "Fortnite",
@@ -1141,6 +1150,7 @@ const streams: Stream[] = [
     {
       id: "s9",
       thumbnail: 'https://www.svg.com/img/gallery/valkyrae-has-a-plan-to-save-among-us/why-the-long-wait-for-among-us-updates-1622144358.jpg',
+      streamLink:'https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/Valkyrae+finally+meets+Corpse+in+real+life+%F0%9F%A5%B0%F0%9F%A5%B0.mp4',
       channelId: "c9", // Valkyrae
       title: "AMONG US WITH FRIENDS | OTV LOBBIES | !youtube",
       game: "Among Us",
@@ -1156,6 +1166,7 @@ const streams: Stream[] = [
     {
       id: "s10",
       thumbnail: 'https://i.kinja-img.com/image/upload/c_fill,h_675,pg_1,q_80,w_1200/uxeswitfrpsw2hbijhbu.jpg',
+      streamLink:'https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/DrDisrespect.mp4',
       channelId: "c10", // DrDisrespect
       title: "THE 2X DOMINATING WARZONE | VSM THROUGH THE ROOF | !merch",
       game: "Call of Duty: Warzone",
@@ -1657,8 +1668,9 @@ const getFollowedChannels = (): FollowedChannel[] => {
     .filter(channel => channel.id === "c1" || channel.id === "c2" || channel.id === "c5" || channel.id === "c7")
     .map(channel => {
       const user = users.find(u => u.id === channel.userId)!;
+      const stream = streams.find(s => s.channelId === channel.id);
       return {
-        id: channel.id,
+        id: stream.id,
         name: user.name,
         game: channel.game || "Unknown",
         viewers: channel.viewers,
@@ -1742,16 +1754,17 @@ interface RecommendedChannel {
   followers: number;
 }
 const getRecommendedChannels = (): RecommendedChannel[] => {
-  // Select channels that aren't already followed but are interesting
   return channels
-    .filter(channel => !["c1", "c2", "c5","c7"].includes(channel.id) && channel.isLive)
+    .filter(channel => !["c1", "c2", "c5", "c7"].includes(channel.id) && channel.isLive)
     .map(channel => {
       const user = users.find(u => u.id === channel.userId)!;
+      const stream = streams.find(s => s.channelId === channel.id);
+
       return {
-        id: channel.id,
+        id: stream.id,
         name: user.name,
         followers: channel.followers,
-        isNew:channel.isNew,
+        isNew: channel.isNew,
         game: channel.game || "Unknown",
         viewers: channel.viewers,
         avatar: user.avatar,
@@ -1759,10 +1772,11 @@ const getRecommendedChannels = (): RecommendedChannel[] => {
         isVerified: user.isVerified,
         isVIP: user.isVIP,
         isEncrypted: channel.isSecure,
-        description: channel.description
+        description: channel.description,
       };
     });
 };
+
 // Export all data
 export const cyberpunkTwitchData = {
   users,

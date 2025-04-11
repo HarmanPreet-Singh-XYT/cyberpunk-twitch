@@ -304,7 +304,7 @@ export default function CyberpunkTwitchCarousel() {
                       </a>
                       
                       {/* Stream title */}
-                      <a href="/live/streamer" className="text-sm hover:cursor-pointer font-bold mb-2 line-clamp-2">
+                      <a href={`/live/${stream.id}`} className="text-sm hover:cursor-pointer font-bold mb-2 line-clamp-2">
                         {isActive && <span className="inline-block w-2 h-2 bg-[#ff007f] rounded-full mr-2 animate-pulse"></span>}
                         {stream.title}
                       </a>
@@ -577,9 +577,9 @@ export default function CyberpunkTwitchCarousel() {
           </div>
         </div>
       </div>
+      <CategoriesSection/>
       <FollowingStreams/>
       <RecommendedStreams/>
-      <CategoriesSection/>
     </div>
   );
 }

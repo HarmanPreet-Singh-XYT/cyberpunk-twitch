@@ -15,6 +15,8 @@ import {
 import CyberpunkTwitchStream from './Enahanced';
 import Navbar from './Stream/Navbar';
 import Sidebar from './Stream/Channels';
+import { useRouter } from 'next/navigation';
+import data from '@/app/data';
 
 // Main App Component
 export default function CyberpunkTwitch() {
@@ -518,17 +520,17 @@ function NavLink({ children, active }) {
 // Recommended Streams Component with enhanced cyberpunk styling
 function RecommendedStreams() {
   return (
-    <div className="relative">
+    <div className="relative mt-8">
       {/* Decorative cyberpunk element */}
-      <div className="absolute -left-4 top-0 w-1 h-8 bg-pink-500 shadow-glow-pink"></div>
+      <div className="absolute -left-4 top-0 w-1 h-8 bg-[#121212] shadow-glow-pink"></div>
       
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-bold text-white relative">
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">RECOMMENDED_</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">FOLLOWING_</span>
           <span className="text-cyan-400">STREAMS</span>
           <span className="animate-pulse text-pink-500 ml-1">|</span>
         </h2>
-        <a href="#" className="text-sm text-cyan-400 hover:text-pink-400 transition-colors flex items-center group">
+        <a href="/browse" className="text-sm text-cyan-400 hover:text-pink-400 transition-colors flex items-center group">
           <span>VIEW_ALL</span>
           <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -537,79 +539,41 @@ function RecommendedStreams() {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        <StreamCard 
-          title="Late Night Hacking Session" 
-          creator="DataPirate" 
-          game="HackNet Simulator" 
-          viewers="8.2K" 
-          tags={["Hacking", "Cybersecurity"]}
-          live={true}
-          viewerTrend="up"
-        />
-        <StreamCard 
-          title="Speed Running Night City" 
-          creator="PixelRiot" 
-          game="Night City Racers" 
-          viewers="15.7K" 
-          tags={["Racing", "Speedrun"]}
-          live={true}
-          viewerTrend="stable"
-        />
-        <StreamCard 
-          title="Neural Link Tournament" 
-          creator="SynthQueen" 
-          game="Neural Link" 
-          viewers="23.1K" 
-          tags={["Tournament", "Esports"]}
-          live={true}
-          viewerTrend="up"
-          featured={true}
-        />
-        <StreamCard 
-          title="System Shock Playthrough" 
-          creator="GlitchMonk" 
-          game="System Shock" 
-          viewers="5.3K" 
-          tags={["Horror", "Retro"]}
-          live={true}
-          viewerTrend="down"
-        />
-      </div>
-      
-      <div className="mt-16 relative">
-        {/* Decorative cyberpunk element */}
-        <div className="absolute -left-4 top-0 w-1 h-8 bg-cyan-500 shadow-glow-cyan"></div>
-        
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-white relative">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">CATEGORIES_</span>
-            <span className="text-pink-400">YOU_MIGHT_LIKE</span>
-            <span className="animate-pulse text-cyan-500 ml-1">|</span>
-          </h2>
-          <a href="#" className="text-sm text-cyan-400 hover:text-pink-400 transition-colors flex items-center group">
-            <span>VIEW_ALL</span>
-            <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </a>
-        </div>
-        
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-          <CategoryCard name="Cyberpunk 2078" viewers="105.2K" trending={true} />
-          <CategoryCard name="Night City Racers" viewers="78.6K" trending={true} />
-          <CategoryCard name="Neural Link" viewers="45.3K" />
-          <CategoryCard name="GridWars X" viewers="67.8K" trending={true} />
-          <CategoryCard name="HackNet Simulator" viewers="32.1K" />
-          <CategoryCard name="System Shock" viewers="18.9K" />
-        </div>
+        {data.followingStreams.map((each,index)=>(
+          <StreamCard 
+            key={each.id}
+            avatar={each.avatar}
+            id={each.id}
+            title={each.title}
+            creator={each.channelName} 
+            game={each.game}
+            viewers={each.viewers} 
+            tags={each.tags}
+            live={true}
+            viewerTrend="up"
+            thumbnail={each.thumbnail}
+          />
+        ))}
       </div>
     </div>
   );
 }
-
+function formatNumber(num) {
+  if (num >= 1_000_000_000) {
+    return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
+  }
+  if (num >= 1_000_000) {
+    return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+  }
+  if (num >= 1_000) {
+    return (num / 1_000).toFixed(1).replace(/\.0$/, '') + 'k';
+  }
+  return num.toString();
+}
 // Enhanced Stream Card Component
-function StreamCard({ title, creator, game, viewers, tags = [], live = false, viewerTrend = "stable", featured = false }) {
+function StreamCard({ id,title, creator, game,avatar, viewers, tags = [], live = false, viewerTrend = "stable", featured = false, thumbnail }) {
   // Viewer trend indicators
+  const router = useRouter();
   const trendIcons = {
     up: <svg className="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M12 7a1 1 0 01-1 1H9v9a1 1 0 01-2 0V8H6a1 1 0 01-1-1V6a1 1 0 011-1h5a1 1 0 011 1v1z" clipRule="evenodd" transform="rotate(45, 10, 10)" /></svg>,
     down: <svg className="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M12 7a1 1 0 01-1 1H9v9a1 1 0 01-2 0V8H6a1 1 0 01-1-1V6a1 1 0 011-1h5a1 1 0 011 1v1z" clipRule="evenodd" transform="rotate(-45, 10, 10)" /></svg>,
@@ -617,9 +581,9 @@ function StreamCard({ title, creator, game, viewers, tags = [], live = false, vi
   };
 
   return (
-    <div className={`rounded-lg overflow-hidden bg-gray-900 border ${featured ? 'border-cyan-500 shadow-glow-cyan' : 'border-purple-900'} hover:border-pink-500 transition-all group transform hover:-translate-y-1`}>
-      <div className="aspect-video bg-gray-900 relative overflow-hidden">
-        <img src="/api/placeholder/320/180" alt="Stream thumbnail" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+    <div className={`rounded-lg overflow-hidden bg-[#121212] border ${featured ? 'border-cyan-500 shadow-glow-cyan' : 'border-purple-900'} hover:border-pink-500 transition-all group transform hover:-translate-y-1`}>
+      <div onClick={()=>{router.push(`/live/${id}`)}} className="aspect-video hover:cursor-pointer bg-[#121212] relative overflow-hidden">
+        <img src={thumbnail} alt="Stream thumbnail" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
         
         {/* Stream information overlay */}
         <div className="absolute top-0 left-0 w-full p-2 flex justify-between items-start">
@@ -645,7 +609,7 @@ function StreamCard({ title, creator, game, viewers, tags = [], live = false, vi
             </div>
             <div className="px-1.5 py-0.5 bg-pink-600 text-xs font-medium rounded text-white flex items-center">
               {trendIcons[viewerTrend]}
-              <span className="ml-1">{viewers}</span>
+              <span className="ml-1">{formatNumber(viewers)}</span>
             </div>
           </div>
         </div>
@@ -657,14 +621,15 @@ function StreamCard({ title, creator, game, viewers, tags = [], live = false, vi
       
       <div className="p-3">
         <div className="flex items-start space-x-2 mb-2">
-          <div className="w-8 h-8 rounded-full overflow-hidden border border-cyan-700 flex-shrink-0 bg-gradient-to-r from-purple-600 to-pink-600 p-0.5">
+          {/* <div className="w-8 h-8 rounded-full overflow-hidden border border-cyan-700 flex-shrink-0 bg-gradient-to-r from-purple-600 to-pink-600 p-0.5">
             <div className="w-full h-full rounded-full bg-gray-800 flex items-center justify-center">
               <span className="text-xs text-cyan-400">{creator.substring(0, 2)}</span>
             </div>
-          </div>
+          </div> */}
+          <img src={avatar} alt={creator} className="w-8 h-8 rounded-full object-cover overflow-hidden border border-cyan-700 flex-shrink-0" />
           <div>
-            <h3 className="text-sm font-medium text-white line-clamp-1 group-hover:text-cyan-400 transition-colors">{title}</h3>
-            <p className="text-xs text-gray-400 hover:text-pink-400 transition-colors">@{creator}</p>
+            <h3 onClick={()=>{router.push(`/live/${id}`)}} className="text-sm hover:cursor-pointer font-medium text-white line-clamp-1 group-hover:text-cyan-400 transition-colors">{title}</h3>
+            <p onClick={()=>{router.push(`/channel/${id}`)}} className="text-xs hover:cursor-pointer text-gray-400 hover:text-pink-400 transition-colors">@{creator}</p>
           </div>
         </div>
         
