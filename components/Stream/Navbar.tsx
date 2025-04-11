@@ -25,10 +25,10 @@ const globalStyles = `
   .animate-scan { animation: scan 2s linear infinite; }
 `;
 
-function NavLink({ children, active }) {
+function NavLink({ children, active, link }) {
   return (
     <a 
-      href="#" 
+      href={link}
       className={`px-3 py-2 text-sm rounded-lg relative group overflow-hidden ${
         active 
           ? 'text-cyan-400 font-medium' 
@@ -145,19 +145,20 @@ function Navbar({ setIsMenuOpen }) {
                     <span className="w-8 h-8 rounded-full bg-purple-500/10 animate-ping"></span>
                   </span>
                 </button>
-                
-                <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 mr-6 flex items-center relative overflow-hidden">
-                  <span className={`transition-all duration-300 ${showGlitch ? 'text-pink-500 inline-block translate-x-1' : ''}`}>NEON</span>
-                  <span className={`text-cyan-400 transition-all ${showGlitch ? 'skew-x-6 text-white' : ''}`}>STREAM</span>
-                  <Zap size={16} className="ml-1 text-yellow-400 animate-pulse" />
-                  {/* Decorative circuit lines */}
-                  <span className="absolute bottom-1 left-1 w-1/3 h-0.5 bg-pink-500/40"></span>
-                  <span className="absolute bottom-1 right-1 w-1/4 h-0.5 bg-cyan-500/40"></span>
-                </div>
+                <a href='/'>
+                  <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 mr-6 flex items-center relative overflow-hidden">
+                    <span className={`transition-all duration-300 ${showGlitch ? 'text-pink-500 inline-block translate-x-1' : ''}`}>NEON</span>
+                    <span className={`text-cyan-400 transition-all ${showGlitch ? 'skew-x-6 text-white' : ''}`}>STREAM</span>
+                    <Zap size={16} className="ml-1 text-yellow-400 animate-pulse" />
+                    {/* Decorative circuit lines */}
+                    <span className="absolute bottom-1 left-1 w-1/3 h-0.5 bg-pink-500/40"></span>
+                    <span className="absolute bottom-1 right-1 w-1/4 h-0.5 bg-cyan-500/40"></span>
+                  </div>
+                </a>
                 
                 <nav className="hidden md:flex space-x-1">
-                  <NavLink active>Discover</NavLink>
-                  <NavLink active={false}>Browse</NavLink>
+                  <NavLink link={'/'} active>Discover</NavLink>
+                  <NavLink link={'/browse'} active={false}>Browse</NavLink>
                 </nav>
               </div>
               
@@ -213,7 +214,7 @@ function Navbar({ setIsMenuOpen }) {
                   <Search size={16} className="absolute left-3 top-2 text-gray-400 group-hover:text-cyan-400 transition-colors" />
                   <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-500 group-focus-within:w-full transition-all duration-300"></span>
                   
-                  {/* Animated dots when focused */}
+                  
                   <div className="absolute right-3 top-2.5 hidden group-focus-within:flex items-center">
                     <span className="w-1 h-1 rounded-full bg-cyan-400 opacity-0 animate-dot-1"></span>
                     <span className="w-1 h-1 rounded-full bg-purple-400 opacity-0 animate-dot-2 mx-0.5"></span>

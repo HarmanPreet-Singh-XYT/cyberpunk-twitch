@@ -304,28 +304,28 @@ const ChatHeader = ({ viewerCount, streamTitle }) => {
 
   return (
     <div className="bg-gray-800 p-3 border-b border-purple-900 flex items-center justify-between relative overflow-hidden">
-                {/* Digital grid background */}
-                <div className="absolute inset-0 opacity-10" 
-                  style={{ 
-                    backgroundImage: 'linear-gradient(to right, cyan 1px, transparent 1px), linear-gradient(to bottom, cyan 1px, transparent 1px)',
-                    backgroundSize: '10px 10px'
-                  }}>
-                </div>
-                
-                <div className="flex items-center relative z-10">
-                  <MessageSquare size={16} className="mr-2 text-purple-400" />
-                  <span className="font-medium text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Stream Chat</span>
-                </div>
-                <div className="flex items-center space-x-2 relative z-10">
-                  {/* <div className="flex items-center text-xs text-cyan-400 mr-2 bg-cyan-500/10 px-2 py-0.5 rounded font-mono border border-cyan-500/30">
-                    <Users size={10} />
-                    {viewerCount.toLocaleString()}
-                  </div> */}
-                  <button className="w-6 h-6 rounded flex items-center justify-center hover:bg-gray-700 transition-colors">
-                    <Settings size={14} />
-                  </button>
-                </div>
-              </div>
+      {/* Digital grid background */}
+      <div className="absolute inset-0 opacity-10" 
+        style={{ 
+          backgroundImage: 'linear-gradient(to right, cyan 1px, transparent 1px), linear-gradient(to bottom, cyan 1px, transparent 1px)',
+          backgroundSize: '10px 10px'
+        }}>
+      </div>
+      
+      <div className="flex items-center relative z-10">
+        <MessageSquare size={16} className="mr-2 text-purple-400" />
+        <span className="font-medium text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Stream Chat</span>
+      </div>
+      <div className="flex items-center space-x-2 relative z-10">
+        {/* <div className="flex items-center text-xs text-cyan-400 mr-2 bg-cyan-500/10 px-2 py-0.5 rounded font-mono border border-cyan-500/30">
+          <Users size={10} />
+          {viewerCount.toLocaleString()}
+        </div> */}
+        <button className="w-6 h-6 rounded flex items-center justify-center hover:bg-gray-700 transition-colors">
+          <Settings size={14} />
+        </button>
+      </div>
+    </div>
   );
 };
 

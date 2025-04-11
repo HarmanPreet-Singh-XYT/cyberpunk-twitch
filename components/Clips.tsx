@@ -1,26 +1,23 @@
 'use client'
 import { useState, useEffect, useRef } from 'react';
 import { Play, Heart, Share2, MessageSquare, MoreHorizontal, ChevronLeft, ChevronRight, Clock, Eye, Volume2, Speaker, Maximize, Users, Star, Zap, Shield, ExternalLink, Download, Bookmark, Bell } from 'lucide-react';
-import CyberpunkVideoPlayer from './Clip/VideoPlayer';
+import CyberpunkVideoPlayer from './Stream/VideoPlayer';
 import Navbar from './Stream/Navbar';
 import Sidebar from './Stream/Channels';
-
-// Sample data
-const clipData = {
-  title: "NEURAL_OVERRIDE//Quickhack Showdown",
-  creator: "CyberNinja_2077",
-  game: "Night City Legends",
-  views: 142879,
-  likes: 23456,
-  comments: 1337,
-  shares: 890,
-  duration: "00:42",
-  created: "12 hours ago",
-  tags: ["#cyberpunk", "#quickhack", "#netrunner", "#corpo_hack"],
-  viewerCount: 1842,
-  categories: ["FPS", "Cyberpunk", "Action", "Stealth"],
-  description: "Infiltrated Arasaka mainframe with a custom daemon, took down 5 ICE protocols, and extracted the target data. Pure netrunner style - no guns, all hacks.",
-};
+import data from '@/app/data';
+import { useParams } from 'next/navigation';
+function formatNumber(num) {
+  if (num >= 1_000_000_000) {
+    return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
+  }
+  if (num >= 1_000_000) {
+    return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+  }
+  if (num >= 1_000) {
+    return (num / 1_000).toFixed(1).replace(/\.0$/, '') + 'k';
+  }
+  return num.toString();
+}
 
 const recommendedClips = [
   { id: 1, title: "CORPO_TAKEDOWN//Arasaka Infiltration", creator: "V_Merc", views: "98K", thumbnail: "/api/placeholder/320/180", duration: "00:58", createdAgo: "2 days ago" },
@@ -29,13 +26,7 @@ const recommendedClips = [
   { id: 4, title: "SANDEVISTAN//Time Dilation Takedown", creator: "TimeSliceR", views: "215K", thumbnail: "/api/placeholder/320/180", duration: "00:45", createdAgo: "1 day ago" },
 ];
 
-// Enhanced HUD-style progress indicators
-const statsProgressBars = [
-  { label: "GRAPHICS", value: 92, color: "cyan" },
-  { label: "NETRUNNING", value: 98, color: "pink" },
-  { label: "MOVEMENT", value: 85, color: "purple" },
-  { label: "COMBAT", value: 78, color: "amber" },
-];
+
 
 // Glitch effect generator
 const generateGlitchEffect = () => {
@@ -70,8 +61,36 @@ export default function CyberpunkClipPage() {
   const [glitchEffect, setGlitchEffect] = useState({ active: false });
   const [showTooltip, setShowTooltip] = useState("");
   const [activeTab, setActiveTab] = useState("comments");
-  const [currentViewers, setCurrentViewers] = useState(clipData.viewerCount);
+  const [currentViewers, setCurrentViewers] = useState<number>(0);
+  const [clipData, setClipData] = useState<any>(data.clips[0]);
+  const [channelInfo, setChannelInfo] = useState<any>(data.channels[0]);
+  const [userInfo, setUserInfo] = useState<any>(data.users[0]);
   const commentInputRef = useRef(null);
+  const params = useParams<{id:string}>();
+  // Enhanced HUD-style progress indicators
+  const statsProgressBars = [
+    { label: "GRAPHICS", value: clipData.ratings.graphics, color: "cyan" },
+    { label: "NETRUNNING", value: clipData.ratings.netrunning, color: "pink" },
+    { label: "MOVEMENT", value: clipData.ratings.movement, color: "purple" },
+    { label: "COMBAT", value: clipData.ratings.combat, color: "green" },
+  ];
+  function searchChannel(id:string){
+    const channel = data.channels.find(c => c.id === id);
+    return channel.name
+  }
+  useEffect(() => {
+    const clip = data.clips.find((clip) => clip.id === params.id);
+    if (clip) {
+      setClipData(clip);
+      setCurrentViewers(clip.views);
+  
+      const channel = data.channels.find((channel) => channel.id === clip.channelId);
+      setChannelInfo(channel);
+  
+      const user = data.users.find((user) => user.id === channel.userId);
+      setUserInfo(user);
+    }
+  }, [params.id, data]);
   
   // Regenerate noise effect periodically
   useEffect(() => {
@@ -105,7 +124,7 @@ export default function CyberpunkClipPage() {
   useEffect(() => {
     const viewerInterval = setInterval(() => {
       const change = Math.floor(Math.random() * 10) - 4;
-      setCurrentViewers(prev => Math.max(prev + change, clipData.viewerCount - 50));
+      setCurrentViewers(prev => Math.max(prev + change, clipData.views - 50));
     }, 5000);
     
     return () => clearInterval(viewerInterval);
@@ -285,12 +304,14 @@ export default function CyberpunkClipPage() {
               <div className="flex flex-wrap items-center text-sm mb-3">
                 <div className="mr-4 flex items-center">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 mr-2 overflow-hidden border border-gray-700 p-0.5">
-                    <div className="w-full h-full rounded-full bg-gray-900 flex items-center justify-center text-cyan-400 text-xs font-bold">CN</div>
+                    <img src={userInfo.avatar} alt={channelInfo.name} className="w-full rounded-full h-full object-cover" />
                   </div>
-                  <span className="text-cyan-400 hover:text-pink-400 transition-colors cursor-pointer flex items-center">
-                    {clipData.creator}
-                    <Shield size={12} className="ml-1 text-purple-400" aria-description="Verified Creator" />
-                  </span>
+                  <a href={`/channel/${data.streams.find((each)=>each.channelId===clipData.channelId).id}`}>
+                    <span className="text-cyan-400 hover:text-pink-400 transition-colors cursor-pointer flex items-center">
+                      {channelInfo.name}
+                      <Shield size={12} className="ml-1 text-purple-400" aria-description="Verified Creator" />
+                    </span>
+                  </a>
                 </div>
                 <div className="text-gray-500 flex items-center space-x-4">
                   <div className="flex items-center">
@@ -299,7 +320,7 @@ export default function CyberpunkClipPage() {
                   </div>
                   <div className="flex items-center">
                     <Clock size={14} className="mr-1 text-pink-400" />
-                    <span className="font-mono">{clipData.created}</span>
+                    <span className="font-mono">{clipData.createdAt}</span>
                   </div>
                   <div className="px-2 py-0.5 bg-gray-800 rounded text-xs border border-purple-600/50 hover:border-cyan-500 transition-colors cursor-pointer group">
                     <span className="group-hover:text-cyan-400 transition-colors">{clipData.game}</span>
@@ -360,7 +381,7 @@ export default function CyberpunkClipPage() {
               
               {/* Enhanced Tags */}
               <div className="flex flex-wrap gap-2 mt-4">
-                {clipData.tags.map((tag, index) => (
+                {channelInfo.channelTags.map((tag, index) => (
                   <span 
                     key={index} 
                     className="px-2 py-1 bg-gray-800 rounded-sm text-xs font-mono text-cyan-400 border-l-2 border-cyan-500 hover:bg-gray-700 cursor-pointer transition-colors relative group overflow-hidden"
@@ -506,7 +527,8 @@ export default function CyberpunkClipPage() {
               
               {activeTab === "related" && (
                 <div className="grid grid-cols-2 gap-3">
-                  {[...recommendedClips, ...recommendedClips.slice(0, 2)].map((clip, index) => (
+                {data.clips.map((clip, index) => clip.id !== params.id && (
+                  <a key={clip.id} href={`/clip/${clip.id}`}>
                     <div 
                       key={`grid-${clip.id}-${index}`} 
                       className="group bg-gray-900/80 border border-gray-800 hover:border-cyan-500/50 rounded-md overflow-hidden transition-all duration-300 cursor-pointer"
@@ -519,21 +541,31 @@ export default function CyberpunkClipPage() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <Play size={24} className="text-white/90" fill="currentColor" />
                         </div>
+                
+                        {/* Optional cyberpunk tag (can be conditional) */}
+                        <div className="absolute top-1 left-1 bg-pink-900/70 backdrop-blur-sm px-1 border-l border-pink-500 text-pink-300 text-[10px]">
+                          HOT CLIP
+                        </div>
                       </div>
-                      
+                
                       <div className="p-2">
                         <h4 className="text-xs font-medium mb-1 text-gray-100 line-clamp-1">{clip.title}</h4>
-                        <div className="flex justify-between text-xs">
-                          <span className="text-cyan-400">{clip.creator}</span>
+                        <div className="flex justify-between text-[11px]">
+                          <span className="text-cyan-400">
+                            {/* Replace with dynamic creator name if needed */}
+                            {data.channels.find((each)=> each.id === clip.channelId).name || 'DigitalSpectre'}
+                          </span>
                           <span className="text-gray-500 flex items-center">
                             <Eye size={10} className="mr-1" />
-                            {clip.views}
+                            {Intl.NumberFormat().format(clip.views)}
                           </span>
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  </a>
+                ))}
+              </div>
+              
               )}
               
               {activeTab === "info" && (
@@ -543,7 +575,7 @@ export default function CyberpunkClipPage() {
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div>
                         <p className="text-gray-500">Posted</p>
-                        <p className="text-gray-300">{clipData.created}</p>
+                        <p className="text-gray-300">{clipData.createdAt}</p>
                       </div>
                       <div>
                         <p className="text-gray-500">Duration</p>
@@ -581,18 +613,19 @@ export default function CyberpunkClipPage() {
               
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 mr-3 p-0.5">
-                  <div className="w-full h-full rounded-lg bg-gray-900 flex items-center justify-center text-cyan-400 font-bold">
+                  {/* <div className="w-full h-full rounded-lg bg-gray-900 flex items-center justify-center text-cyan-400 font-bold">
                     CN
-                  </div>
+                  </div> */}
+                  <img src={userInfo.avatar} alt={channelInfo.name} className="w-full h-full rounded-lg object-cover" />
                 </div>
                 <div>
                   <h3 className="font-bold text-lg text-purple-400 flex items-center">
-                    {clipData.creator}
+                    {channelInfo.name}
                     <Shield size={14} className="ml-1 text-cyan-400" />
                   </h3>
                   <div className="flex items-center">
                     <Star size={12} className="text-pink-500 mr-1" />
-                    <span className="text-xs text-gray-400">482K followers</span>
+                    <span className="text-xs text-gray-400">{formatNumber(channelInfo.followers)} followers</span>
                   </div>
                 </div>
               </div>
@@ -600,7 +633,7 @@ export default function CyberpunkClipPage() {
               <div className="mb-4 p-2 bg-gray-800/50 rounded border border-gray-700 text-xs text-gray-300">
                 <span className="text-cyan-400 font-mono">STATUS: </span>
                 <span className="text-pink-300">ONLINE - </span>
-                <span>Currently streaming Night City Legends</span>
+                <span>Currently streaming {channelInfo.game}</span>
               </div>
               
               <div className="flex space-x-2 mb-4">
@@ -622,7 +655,7 @@ export default function CyberpunkClipPage() {
                   CATEGORIES
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {clipData.categories.map((category, index) => (
+                  {channelInfo.channelTags.map((category, index) => (
                     <span 
                       key={index} 
                       className="px-2 py-1 bg-gray-800 text-xs text-cyan-400 rounded-sm hover:bg-gray-700 cursor-pointer transition-colors"
@@ -644,11 +677,11 @@ export default function CyberpunkClipPage() {
               </h3>
               
               <div className="space-y-4">
-                {recommendedClips.map((clip) => (
+                {data.clips.map((clip) => clip.id !== params.id && (
                   <div 
                     key={clip.id} 
                     className="group bg-gray-900/80 border border-gray-800 hover:border-cyan-500/50 rounded-md overflow-hidden transition-all duration-300 cursor-pointer"
-                    style={{boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)'}}
+                    style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)' }}
                   >
                     <div className="relative">
                       <img src={clip.thumbnail} alt={clip.title} className="w-full h-32 object-cover" />
@@ -658,24 +691,29 @@ export default function CyberpunkClipPage() {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <Play size={30} className="text-white/90" fill="currentColor" />
                       </div>
-                      
+
                       {/* Enhanced cyberpunk overlay */}
                       <div className="absolute top-2 left-2 bg-pink-900/70 backdrop-blur-sm px-1 border-l border-pink-500 text-pink-300 text-xs">
                         TRENDING
                       </div>
                     </div>
-                    
+
                     <div className="p-3">
-                      <h4 className="text-sm font-medium mb-1 text-gray-100 line-clamp-1">{clip.title}</h4>
+                      <h4 className="text-sm font-medium mb-1 text-gray-100 line-clamp-1">
+                        {clip.title}
+                      </h4>
                       <div className="flex justify-between text-xs">
-                        <span className="text-cyan-400">{clip.creator}</span>
+                        <span className="text-cyan-400">
+                          {/* You can replace this with actual channel name if available */}
+                          {searchChannel(clip.channelId) || 'DigitalSpectre'}
+                        </span>
                         <span className="text-gray-500 flex items-center">
                           <Eye size={12} className="mr-1" />
-                          {clip.views}
+                          {Intl.NumberFormat().format(clip.views)}
                         </span>
                       </div>
                       <div className="mt-1 flex justify-between text-xs text-gray-500">
-                        <span>{clip.createdAgo}</span>
+                        <span>{clip.createdAt || "just now"}</span>
                       </div>
                     </div>
                   </div>
@@ -687,6 +725,7 @@ export default function CyberpunkClipPage() {
                 </button>
               </div>
             </div>
+
             
             {/* Active users / live chat preview */}
             <div className="mt-6 p-3 bg-gray-900/80 border border-cyan-600/30 rounded-lg">
@@ -712,10 +751,13 @@ export default function CyberpunkClipPage() {
                   +{currentViewers - 8}
                 </div>
               </div>
-              
-              <button className="w-full py-2 bg-cyan-900/30 border border-cyan-700/30 text-cyan-400 text-sm rounded hover:bg-cyan-900/50 transition-colors">
-                JOIN LIVE CHAT
-              </button>
+
+              <a href={`/live/${data.streams.find((each)=>each.channelId===clipData.channelId).id}`}>
+                <button className="w-full py-2 bg-cyan-900/30 border border-cyan-700/30 text-cyan-400 text-sm rounded hover:bg-cyan-900/50 transition-colors">
+                  JOIN LIVE CHAT
+                </button>
+              </a>
+
             </div>
           </div>
         </main>

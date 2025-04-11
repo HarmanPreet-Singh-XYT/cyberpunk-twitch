@@ -1,10 +1,10 @@
 'use client'
-import TwitchChannelInfoPage from '@/components/Channel'
+import CyberpunkTwitchBrowse from '@/components/Browse'
 import React from 'react'
 
 const page = () => {
   return (
-    <TwitchChannelInfoPage/>
+    <CyberpunkTwitchBrowse/>
   )
 }
 

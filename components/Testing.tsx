@@ -142,13 +142,8 @@ export default function CyberpunkTwitch() {
               /> */}
               <CyberpunkTwitchStream/>
               <div className='py-6'></div>
-              {currentSection === 'recommended' && (
-                <>
-                  <RecommendedStreams />
-                  {/* <ProductShowcase /> */}
-                </>
-              )}
-              {currentSection === 'categories' && <CategoriesSection />}
+                <RecommendedStreams />
+                <Clips/>
               {/* {currentSection === 'following' && <FollowingSection />} */}
             </div>
           </main>
@@ -554,6 +549,50 @@ function RecommendedStreams() {
             thumbnail={each.thumbnail}
           />
         ))}
+      </div>
+    </div>
+  );
+}
+function Clips() {
+  return (
+    <div className="relative mt-8">
+      {/* Decorative cyberpunk element */}
+      <div className="absolute -left-4 top-0 w-1 h-8 bg-[#121212] shadow-glow-pink"></div>
+      
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-white relative">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">RECOMMENDED_</span>
+          <span className="text-cyan-400">CLIPS</span>
+          <span className="animate-pulse text-pink-500 ml-1">|</span>
+        </h2>
+        <a href="/browse" className="text-sm text-cyan-400 hover:text-pink-400 transition-colors flex items-center group">
+          <span>VIEW_ALL</span>
+          <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {data.clips.map((each,index)=>{
+          if(index>3) return;
+          const channel = data.channels.find((channel) => channel.id === each.channelId);
+          const user = data.users.find((user) => user.id === channel.userId);
+          return <StreamCard 
+            key={each.id}
+            avatar={user.avatar}
+            id={each.id}
+            title={each.title}
+            creator={channel.name} 
+            game={each.game}
+            viewers={each.views} 
+            tags={["competitive", "esports", "fps"]}
+            live={false}
+            viewerTrend="up"
+            thumbnail={each.thumbnail}
+          />
+        }
+        )}
       </div>
     </div>
   );

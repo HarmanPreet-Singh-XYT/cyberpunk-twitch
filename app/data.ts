@@ -84,6 +84,7 @@
     channelId: string;
     title: string;
     thumbnail: string;
+    streamLink:string;
     duration: string;
     views: number;
     createdAt: string;
@@ -159,6 +160,7 @@ interface User {
   };
 }
 
+
 interface Channel {
   id: string;
   userId: string;
@@ -194,6 +196,65 @@ interface Channel {
   languages?: string[];
   schedule?: Record<string, string | null>;
   socialLinks?: Record<string, string>;
+  
+  // New channel stats fields
+  followerCount?: number;
+  followerGoal?: number;
+  weeklyFollowerGain?: number;
+  subscriberCount?: number;
+  subscriberGoal?: number;
+  weeklySubscriberGain?: number;
+  averageViewers?: number;
+  averageViewersGrowth?: string;
+  monthlyViewGain?: number;
+  
+  // User interaction state
+  isFollowing?: boolean;
+  isNotificationsOn?: boolean;
+  channelTags?: string[];
+  
+  // Channel points
+  pointsPerHour?: number;
+  followerBonus?: number;
+  userPointBalance?: number;
+  
+  // Additional content arrays
+  recentBroadcasts?: RecentBroadcast[];
+  topClips?: TopClip[];
+  achievements?: Achievement[];
+  channelPointRewards?: ChannelPointReward[];
+}
+
+interface RecentBroadcast {
+  id: string;
+  title: string;
+  thumbnail: string;
+  viewCount: number;
+  commentCount: number;
+  duration: string;
+  createdAt: string;
+}
+
+interface TopClip {
+  id: string;
+  title: string;
+  thumbnail: string;
+  viewCount: number;
+  duration: string;
+  clipper: string;
+}
+
+interface Achievement {
+  id: string;
+  title: string;
+  completed: boolean;
+  progress: number;
+}
+
+interface ChannelPointReward {
+  id: string;
+  title: string;
+  cost: number;
 }
 
 interface Stream {
@@ -506,7 +567,118 @@ const channels: Channel[] = [
         instagram: "https://instagram.com/ninja",
         youtube: "https://youtube.com/ninja",
         tiktok: "https://tiktok.com/@ninja"
-      }
+      },
+      // New channel stats fields
+      followerCount: 412589,
+      followerGoal: 500000,
+      weeklyFollowerGain: 1200,
+      subscriberCount: 8456,
+      subscriberGoal: 10000,
+      weeklySubscriberGain: 203,
+      averageViewers: 7823,
+      averageViewersGrowth: "+12% this month",
+      monthlyViewGain: 89000,
+      // User interaction state
+      isFollowing: false,
+      isNotificationsOn: false,
+      channelTags: ["#Fortnite", "#Gaming", "#Esports", "#RedBull"],
+      // Channel points
+      pointsPerHour: 200,
+      followerBonus: 50,
+      userPointBalance: 4280,
+      // Additional content arrays
+      recentBroadcasts: [
+        {
+          id: "b1",
+          title: "Fortnite Season 10 - Road to Champion",
+          thumbnail: "/assets/thumbnails/ninja_broadcast1.jpg",
+          viewCount: 1250000,
+          commentCount: 45000,
+          duration: "8:12:47",
+          createdAt: "2025-04-10T15:30:00Z"
+        },
+        {
+          id: "b2",
+          title: "Tournament Practice with TSM",
+          thumbnail: "/assets/thumbnails/ninja_broadcast2.jpg",
+          viewCount: 980000,
+          commentCount: 32000,
+          duration: "5:45:13",
+          createdAt: "2025-04-08T16:00:00Z"
+        },
+        {
+          id: "b3",
+          title: "Viewer Games & Challenges",
+          thumbnail: "/assets/thumbnails/ninja_broadcast3.jpg",
+          viewCount: 870000,
+          commentCount: 28000,
+          duration: "6:30:21",
+          createdAt: "2025-04-06T14:00:00Z"
+        }
+      ],
+      topClips: [
+        {
+          id: "c1",
+          title: "Insane 1v4 Clutch Win",
+          thumbnail: "/assets/thumbnails/ninja_clip1.jpg",
+          viewCount: 2300000,
+          duration: "0:42",
+          clipper: "FortniteClips"
+        },
+        {
+          id: "c2",
+          title: "Ninja's Perfect Reaction to Stream Sniper",
+          thumbnail: "/assets/thumbnails/ninja_clip2.jpg",
+          viewCount: 1800000,
+          duration: "1:12",
+          clipper: "ClipMaster"
+        },
+        {
+          id: "c3",
+          title: "When Ninja Met Drake in Game",
+          thumbnail: "/assets/thumbnails/ninja_clip3.jpg",
+          viewCount: 5400000,
+          duration: "2:05",
+          clipper: "GamingHighlights"
+        }
+      ],
+      achievements: [
+        {
+          id: "a1",
+          title: "10 Million Followers",
+          completed: true,
+          progress: 100
+        },
+        {
+          id: "a2",
+          title: "20 Million Followers",
+          completed: false,
+          progress: 92
+        },
+        {
+          id: "a3",
+          title: "100 Tournament Wins",
+          completed: true,
+          progress: 100
+        }
+      ],
+      channelPointRewards: [
+        {
+          id: "r1",
+          title: "Play Together",
+          cost: 50000
+        },
+        {
+          id: "r2",
+          title: "Choose Next Game",
+          cost: 25000
+        },
+        {
+          id: "r3",
+          title: "Highlight My Message",
+          cost: 5000
+        }
+      ]
     },
     {
       id: "c2",
@@ -560,7 +732,90 @@ const channels: Channel[] = [
         twitter: "https://twitter.com/xQc",
         youtube: "https://youtube.com/xqcow",
         discord: "https://discord.gg/xqcow"
-      }
+      },
+      // New channel stats fields
+      followerCount: 382476,
+      followerGoal: 400000,
+      weeklyFollowerGain: 2500,
+      subscriberCount: 12350,
+      subscriberGoal: 15000,
+      weeklySubscriberGain: 415,
+      averageViewers: 42560,
+      averageViewersGrowth: "+8% this month",
+      monthlyViewGain: 124000,
+      // User interaction state
+      isFollowing: false,
+      isNotificationsOn: false,
+      channelTags: ["#JustChatting", "#Variety", "#Gaming", "#Reactions"],
+      // Channel points
+      pointsPerHour: 200,
+      followerBonus: 50,
+      userPointBalance: 3150,
+      // Additional content arrays
+      recentBroadcasts: [
+        {
+          id: "b4",
+          title: "Reacting to Reddit & LSF",
+          thumbnail: "/assets/thumbnails/xqc_broadcast1.jpg",
+          viewCount: 1450000,
+          commentCount: 87000,
+          duration: "10:45:32",
+          createdAt: "2025-04-10T22:00:00Z"
+        },
+        {
+          id: "b5",
+          title: "VALORANT Ranked Grind",
+          thumbnail: "/assets/thumbnails/xqc_broadcast2.jpg",
+          viewCount: 1280000,
+          commentCount: 72000,
+          duration: "12:30:15",
+          createdAt: "2025-04-09T21:30:00Z"
+        }
+      ],
+      topClips: [
+        {
+          id: "c4",
+          title: "xQc's Perfect Comeback",
+          thumbnail: "/assets/thumbnails/xqc_clip1.jpg",
+          viewCount: 3200000,
+          duration: "0:38",
+          clipper: "LaughFactory"
+        },
+        {
+          id: "c5",
+          title: "When xQc Got Scared",
+          thumbnail: "/assets/thumbnails/xqc_clip2.jpg",
+          viewCount: 2700000,
+          duration: "0:47",
+          clipper: "ClipChamp"
+        }
+      ],
+      achievements: [
+        {
+          id: "a4",
+          title: "10 Million Followers",
+          completed: true,
+          progress: 100
+        },
+        {
+          id: "a5",
+          title: "5 Million Subscribers",
+          completed: false,
+          progress: 84
+        }
+      ],
+      channelPointRewards: [
+        {
+          id: "r4",
+          title: "Media Share",
+          cost: 30000
+        },
+        {
+          id: "r5",
+          title: "TTS Message",
+          cost: 7000
+        }
+      ]
     },
     {
       id: "c3",
@@ -619,7 +874,90 @@ const channels: Channel[] = [
         instagram: "https://instagram.com/pokimanelol",
         youtube: "https://youtube.com/pokimane",
         tiktok: "https://tiktok.com/@pokimane"
-      }
+      },
+      // New channel stats fields
+      followerCount: 412589,
+      followerGoal: 500000,
+      weeklyFollowerGain: 1200,
+      subscriberCount: 8456,
+      subscriberGoal: 10000,
+      weeklySubscriberGain: 203,
+      averageViewers: 7823,
+      averageViewersGrowth: "+12% this month",
+      monthlyViewGain: 89000,
+      // User interaction state
+      isFollowing: false,
+      isNotificationsOn: false,
+      channelTags: ["#VALORANT", "#OfflineTV", "#Gaming", "#Variety"],
+      // Channel points
+      pointsPerHour: 200,
+      followerBonus: 50,
+      userPointBalance: 4280,
+      // Additional content arrays
+      recentBroadcasts: [
+        {
+          id: "b6",
+          title: "VALORANT with Friends",
+          thumbnail: "/assets/thumbnails/pokimane_broadcast1.jpg",
+          viewCount: 720000,
+          commentCount: 28000,
+          duration: "5:12:47",
+          createdAt: "2025-04-10T18:00:00Z"
+        },
+        {
+          id: "b7",
+          title: "Minecraft & Chill",
+          thumbnail: "/assets/thumbnails/pokimane_broadcast2.jpg",
+          viewCount: 650000,
+          commentCount: 24000,
+          duration: "4:30:13",
+          createdAt: "2025-04-08T18:00:00Z"
+        }
+      ],
+      topClips: [
+        {
+          id: "c6",
+          title: "Poki's Reaction to Surprise Donation",
+          thumbnail: "/assets/thumbnails/pokimane_clip1.jpg",
+          viewCount: 1500000,
+          duration: "0:52",
+          clipper: "TwitchMoments"
+        },
+        {
+          id: "c7",
+          title: "When Poki Got Jumpscared",
+          thumbnail: "/assets/thumbnails/pokimane_clip2.jpg",
+          viewCount: 1300000,
+          duration: "0:31",
+          clipper: "ClipIt"
+        }
+      ],
+      achievements: [
+        {
+          id: "a6",
+          title: "Partner Anniversary (10 Years)",
+          completed: true,
+          progress: 100
+        },
+        {
+          id: "a7",
+          title: "10M Followers",
+          completed: false,
+          progress: 92
+        }
+      ],
+      channelPointRewards: [
+        {
+          id: "r6",
+          title: "Play With Poki",
+          cost: 100000
+        },
+        {
+          id: "r7",
+          title: "Choose Valorant Agent",
+          cost: 15000
+        }
+      ]
     },
     {
       id: "c4",
@@ -674,7 +1012,90 @@ const channels: Channel[] = [
         instagram: "https://instagram.com/nickmercs",
         youtube: "https://youtube.com/NICKMERCS",
         facebook: "https://facebook.com/NickMercsFPS"
-      }
+      },
+      // New channel stats fields
+      followerCount: 325000,
+      followerGoal: 350000,
+      weeklyFollowerGain: 1500,
+      subscriberCount: 14200,
+      subscriberGoal: 15000,
+      weeklySubscriberGain: 320,
+      averageViewers: 23500,
+      averageViewersGrowth: "+15% this month",
+      monthlyViewGain: 105000,
+      // User interaction state
+      isFollowing: false,
+      isNotificationsOn: false,
+      channelTags: ["#ApexLegends", "#FaZeClan", "#FPS", "#Fitness"],
+      // Channel points
+      pointsPerHour: 200,
+      followerBonus: 50,
+      userPointBalance: 2850,
+      // Additional content arrays
+      recentBroadcasts: [
+        {
+          id: "b8",
+          title: "ALGS Scrims with FaZe",
+          thumbnail: "/assets/thumbnails/nickmercs_broadcast1.jpg",
+          viewCount: 820000,
+          commentCount: 42000,
+          duration: "6:15:27",
+          createdAt: "2025-04-10T10:00:00Z"
+        },
+        {
+          id: "b9",
+          title: "Morning Workout & Apex Ranked",
+          thumbnail: "/assets/thumbnails/nickmercs_broadcast2.jpg",
+          viewCount: 750000,
+          commentCount: 38000,
+          duration: "5:45:13",
+          createdAt: "2025-04-09T09:00:00Z"
+        }
+      ],
+      topClips: [
+        {
+          id: "c8",
+          title: "NICKMERCS 1v3 Clutch in Tournament",
+          thumbnail: "/assets/thumbnails/nickmercs_clip1.jpg",
+          viewCount: 1700000,
+          duration: "1:12",
+          clipper: "ApexMoments"
+        },
+        {
+          id: "c9",
+          title: "Nick's Perfect Flatline Spray",
+          thumbnail: "/assets/thumbnails/nickmercs_clip2.jpg",
+          viewCount: 1400000,
+          duration: "0:28",
+          clipper: "GameClips"
+        }
+      ],
+      achievements: [
+        {
+          id: "a8",
+          title: "FaZe Clan Member",
+          completed: true,
+          progress: 100
+        },
+        {
+          id: "a9",
+          title: "ALGS Champion",
+          completed: false,
+          progress: 75
+        }
+      ],
+      channelPointRewards: [
+        {
+          id: "r8",
+          title: "Workout Advice",
+          cost: 25000
+        },
+        {
+          id: "r9",
+          title: "Review My Gameplay",
+          cost: 50000
+        }
+      ]
     },
     {
       id: "c5",
@@ -728,7 +1149,90 @@ const channels: Channel[] = [
         twitter: "https://twitter.com/shroud",
         youtube: "https://youtube.com/shroud",
         discord: "https://discord.gg/shroud"
-      }
+      },
+      // New channel stats fields
+      followerCount: 452000,
+      followerGoal: 500000,
+      weeklyFollowerGain: 2800,
+      subscriberCount: 21500,
+      subscriberGoal: 25000,
+      weeklySubscriberGain: 450,
+      averageViewers: 32000,
+      averageViewersGrowth: "+10% this month",
+      monthlyViewGain: 135000,
+      // User interaction state
+      isFollowing: false,
+      isNotificationsOn: false,
+      channelTags: ["#VALORANT", "#FPS", "#Esports", "#AimGod"],
+      // Channel points
+      pointsPerHour: 200,
+      followerBonus: 50,
+      userPointBalance: 5120,
+      // Additional content arrays
+      recentBroadcasts: [
+        {
+          id: "b10",
+          title: "VALORANT Radiant Ranked",
+          thumbnail: "/assets/thumbnails/shroud_broadcast1.jpg",
+          viewCount: 1750000,
+          commentCount: 85000,
+          duration: "7:45:18",
+          createdAt: "2025-04-10T14:00:00Z"
+        },
+        {
+          id: "b11",
+          title: "Testing New FPS Games",
+          thumbnail: "/assets/thumbnails/shroud_broadcast2.jpg",
+          viewCount: 1620000,
+          commentCount: 72000,
+          duration: "8:12:43",
+          createdAt: "2025-04-09T14:00:00Z"
+        }
+      ],
+      topClips: [
+        {
+          id: "c10",
+          title: "Shroud's Insane Ace in VALORANT",
+          thumbnail: "/assets/thumbnails/shroud_clip1.jpg",
+          viewCount: 4200000,
+          duration: "0:45",
+          clipper: "VALClips"
+        },
+        {
+          id: "c11",
+          title: "When Shroud Shows Why He's the Best",
+          thumbnail: "/assets/thumbnails/shroud_clip2.jpg",
+          viewCount: 3800000,
+          duration: "1:02",
+          clipper: "FPSHighlights"
+        }
+      ],
+      achievements: [
+        {
+          id: "a10",
+          title: "CS:GO Legend",
+          completed: true,
+          progress: 100
+        },
+        {
+          id: "a11",
+          title: "VALORANT Prodigy",
+          completed: true,
+          progress: 100
+        }
+      ],
+      channelPointRewards: [
+        {
+          id: "r10",
+          title: "Aim Tips",
+          cost: 15000
+        },
+        {
+          id: "r11",
+          title: "Sensitivity Review",
+          cost: 25000
+        }
+      ]
     },
     {
       id: "c6",
@@ -787,7 +1291,90 @@ const channels: Channel[] = [
         instagram: "https://instagram.com/amouranth",
         youtube: "https://youtube.com/Amouranth",
         tiktok: "https://tiktok.com/@amouranth"
-      }
+      },
+      // New channel stats fields
+      followerCount: 295000,
+      followerGoal: 300000,
+      weeklyFollowerGain: 3500,
+      subscriberCount: 12800,
+      subscriberGoal: 15000,
+      weeklySubscriberGain: 480,
+      averageViewers: 18500,
+      averageViewersGrowth: "+18% this month",
+      monthlyViewGain: 120000,
+      // User interaction state
+      isFollowing: false,
+      isNotificationsOn: false,
+      channelTags: ["#JustChatting", "#HotTub", "#ASMR", "#Entrepreneur"],
+      // Channel points
+      pointsPerHour: 200,
+      followerBonus: 50,
+      userPointBalance: 3750,
+      // Additional content arrays
+      recentBroadcasts: [
+        {
+          id: "b12",
+          title: "Hot Tub Stream & Gaming",
+          thumbnail: "/assets/thumbnails/amouranth_broadcast1.jpg",
+          viewCount: 950000,
+          commentCount: 68000,
+          duration: "8:30:42",
+          createdAt: "2025-04-10T19:00:00Z"
+        },
+        {
+          id: "b13",
+          title: "ASMR & Chill",
+          thumbnail: "/assets/thumbnails/amouranth_broadcast2.jpg",
+          viewCount: 820000,
+          commentCount: 54000,
+          duration: "6:15:38",
+          createdAt: "2025-04-09T20:00:00Z"
+        }
+      ],
+      topClips: [
+        {
+          id: "c12",
+          title: "Amouranth's Perfect Response to Troll",
+          thumbnail: "/assets/thumbnails/amouranth_clip1.jpg",
+          viewCount: 2100000,
+          duration: "0:58",
+          clipper: "ClipChamp"
+        },
+        {
+          id: "c13",
+          title: "Business Advice from Amouranth",
+          thumbnail: "/assets/thumbnails/amouranth_clip2.jpg",
+          viewCount: 1800000,
+          duration: "1:42",
+          clipper: "StreamMoments"
+        }
+      ],
+      achievements: [
+        {
+          id: "a12",
+          title: "5M Followers",
+          completed: true,
+          progress: 100
+        },
+        {
+          id: "a13",
+          title: "Top Earner",
+          completed: true,
+          progress: 100
+        }
+      ],
+      channelPointRewards: [
+        {
+          id: "r12",
+          title: "Write Name on Whiteboard",
+          cost: 5000
+        },
+        {
+          id: "r13",
+          title: "Business Question",
+          cost: 25000
+        }
+      ]
     },
     {
       id: "c7",
@@ -842,7 +1429,90 @@ const channels: Channel[] = [
         youtube: "https://youtube.com/TimTheTatman",
         instagram: "https://instagram.com/timthetatman",
         facebook: "https://facebook.com/TimTheTatman"
-      }
+      },
+      // New channel stats fields
+      followerCount: 348000,
+      followerGoal: 400000,
+      weeklyFollowerGain: 2200,
+      subscriberCount: 15800,
+      subscriberGoal: 20000,
+      weeklySubscriberGain: 350,
+      averageViewers: 26700,
+      averageViewersGrowth: "+9% this month",
+      monthlyViewGain: 98000,
+      // User interaction state
+      isFollowing: false,
+      isNotificationsOn: false,
+      channelTags: ["#CallOfDuty", "#Warzone", "#FPS", "#Variety"],
+      // Channel points
+      pointsPerHour: 200,
+      followerBonus: 50,
+      userPointBalance: 4780,
+      // Additional content arrays
+      recentBroadcasts: [
+        {
+          id: "b14",
+          title: "Warzone Wednesday with the Squad",
+          thumbnail: "/assets/thumbnails/tim_broadcast1.jpg",
+          viewCount: 980000,
+          commentCount: 52000,
+          duration: "7:12:35",
+          createdAt: "2025-04-10T10:00:00Z"
+        },
+        {
+          id: "b15",
+          title: "Variety Tuesday - New Games",
+          thumbnail: "/assets/thumbnails/tim_broadcast2.jpg",
+          viewCount: 850000,
+          commentCount: 48000,
+          duration: "8:05:12",
+          createdAt: "2025-04-09T10:00:00Z"
+        }
+      ],
+      topClips: [
+        {
+          id: "c14",
+          title: "Tim's Funniest Fall",
+          thumbnail: "/assets/thumbnails/tim_clip1.jpg",
+          viewCount: 2800000,
+          duration: "0:32",
+          clipper: "ClipKing"
+        },
+        {
+          id: "c15",
+          title: "When Tim Finally Won",
+          thumbnail: "/assets/thumbnails/tim_clip2.jpg",
+          viewCount: 2450000,
+          duration: "1:15",
+          clipper: "WarzoneClips"
+        }
+      ],
+      achievements: [
+        {
+          id: "a14",
+          title: "Content Creator of the Year",
+          completed: true,
+          progress: 100
+        },
+        {
+          id: "a15",
+          title: "10M Followers",
+          completed: false,
+          progress: 70
+        }
+      ],
+      channelPointRewards: [
+        {
+          id: "r14",
+          title: "Dad Joke Time",
+          cost: 10000
+        },
+        {
+          id: "r15",
+          title: "Play Together",
+          cost: 75000
+        }
+      ]
     },
     {
       id: "c8",
@@ -896,7 +1566,90 @@ const channels: Channel[] = [
         twitter: "https://twitter.com/Tfue",
         youtube: "https://youtube.com/Tfue",
         instagram: "https://instagram.com/tfue"
-      }
+      },
+      // New channel stats fields
+      followerCount: 375000,
+      followerGoal: 400000,
+      weeklyFollowerGain: 1800,
+      subscriberCount: 15200,
+      subscriberGoal: 20000,
+      weeklySubscriberGain: 320,
+      averageViewers: 28500,
+      averageViewersGrowth: "+7% this month",
+      monthlyViewGain: 87000,
+      // User interaction state
+      isFollowing: false,
+      isNotificationsOn: false,
+      channelTags: ["#Fortnite", "#BattleRoyale", "#Esports", "#Pro"],
+      // Channel points
+      pointsPerHour: 200,
+      followerBonus: 50,
+      userPointBalance: 3950,
+      // Additional content arrays
+      recentBroadcasts: [
+        {
+          id: "b16",
+          title: "Arena Grind to Champion",
+          thumbnail: "/assets/thumbnails/tfue_broadcast1.jpg",
+          viewCount: 1020000,
+          commentCount: 58000,
+          duration: "6:30:22",
+          createdAt: "2025-04-10T13:00:00Z"
+        },
+        {
+          id: "b17",
+          title: "Duos with Cloakzy",
+          thumbnail: "/assets/thumbnails/tfue_broadcast2.jpg",
+          viewCount: 980000,
+          commentCount: 52000,
+          duration: "5:45:18",
+          createdAt: "2025-04-09T13:00:00Z"
+        }
+      ],
+      topClips: [
+        {
+          id: "c16",
+          title: "Tfue's Insane Snipe",
+          thumbnail: "/assets/thumbnails/tfue_clip1.jpg",
+          viewCount: 3200000,
+          duration: "0:42",
+          clipper: "FortniteClips"
+        },
+        {
+          id: "c17",
+          title: "When Tfue Outplayed the Entire Lobby",
+          thumbnail: "/assets/thumbnails/tfue_clip2.jpg",
+          viewCount: 2900000,
+          duration: "1:28",
+          clipper: "GameClips"
+        }
+      ],
+      achievements: [
+        {
+          id: "a16",
+          title: "Fortnite Friday Champion",
+          completed: true,
+          progress: 100
+        },
+        {
+          id: "a17",
+          title: "15M Followers",
+          completed: false,
+          progress: 73
+        }
+      ],
+      channelPointRewards: [
+        {
+          id: "r16",
+          title: "VOD Review",
+          cost: 50000
+        },
+        {
+          id: "r17",
+          title: "Choose Landing Spot",
+          cost: 15000
+        }
+      ]
     },
     {
       id: "c9",
@@ -955,7 +1708,90 @@ const channels: Channel[] = [
         youtube: "https://youtube.com/Valkyrae",
         instagram: "https://instagram.com/valkyrae",
         tiktok: "https://tiktok.com/@valkyrae"
-      }
+      },
+      // New channel stats fields
+      followerCount: 285000,
+      followerGoal: 300000,
+      weeklyFollowerGain: 1600,
+      subscriberCount: 9500,
+      subscriberGoal: 10000,
+      weeklySubscriberGain: 280,
+      averageViewers: 15200,
+      averageViewersGrowth: "+14% this month",
+      monthlyViewGain: 75000,
+      // User interaction state
+      isFollowing: false,
+      isNotificationsOn: false,
+      channelTags: ["#AmongUs", "#100Thieves", "#Gaming", "#Variety"],
+      // Channel points
+      pointsPerHour: 200,
+      followerBonus: 50,
+      userPointBalance: 3250,
+      // Additional content arrays
+      recentBroadcasts: [
+        {
+          id: "b18",
+          title: "Among Us with OTV & Friends",
+          thumbnail: "/assets/thumbnails/valkyrae_broadcast1.jpg",
+          viewCount: 650000,
+          commentCount: 32000,
+          duration: "5:15:42",
+          createdAt: "2025-04-10T15:00:00Z"
+        },
+        {
+          id: "b19",
+          title: "Variety Games with Toast & Sykkuno",
+          thumbnail: "/assets/thumbnails/valkyrae_broadcast2.jpg",
+          viewCount: 580000,
+          commentCount: 28000,
+          duration: "4:50:13",
+          createdAt: "2025-04-09T15:00:00Z"
+        }
+      ],
+      topClips: [
+        {
+          id: "c18",
+          title: "Rae's Perfect Impostor Round",
+          thumbnail: "/assets/thumbnails/valkyrae_clip1.jpg",
+          viewCount: 1800000,
+          duration: "2:12",
+          clipper: "AmongUsClips"
+        },
+        {
+          id: "c19",
+          title: "When Valkyrae Got Scared",
+          thumbnail: "/assets/thumbnails/valkyrae_clip2.jpg",
+          viewCount: 1600000,
+          duration: "0:38",
+          clipper: "ClipIt"
+        }
+      ],
+      achievements: [
+        {
+          id: "a18",
+          title: "Content Creator of the Year",
+          completed: true,
+          progress: 100
+        },
+        {
+          id: "a19",
+          title: "6M Followers",
+          completed: false,
+          progress: 97
+        }
+      ],
+      channelPointRewards: [
+        {
+          id: "r18",
+          title: "Game Suggestion",
+          cost: 20000
+        },
+        {
+          id: "r19",
+          title: "Play Together",
+          cost: 75000
+        }
+      ]
     },
     {
       id: "c10",
@@ -1013,7 +1849,90 @@ const channels: Channel[] = [
         twitter: "https://twitter.com/DrDisrespect",
         youtube: "https://youtube.com/DrDisrespect",
         instagram: "https://instagram.com/drdisrespect"
-      }
+      },
+      // New channel stats fields
+      followerCount: 412589,
+      followerGoal: 500000,
+      weeklyFollowerGain: 2500,
+      subscriberCount: 17800,
+      subscriberGoal: 20000,
+      weeklySubscriberGain: 420,
+      averageViewers: 45000,
+      averageViewersGrowth: "+16% this month",
+      monthlyViewGain: 152000,
+      // User interaction state
+      isFollowing: false,
+      isNotificationsOn: false,
+      channelTags: ["#CallOfDuty", "#Warzone", "#FPS", "#TwoTime"],
+      // Channel points
+      pointsPerHour: 200,
+      followerBonus: 50,
+      userPointBalance: 5340,
+      // Additional content arrays
+      recentBroadcasts: [
+        {
+          id: "b20",
+          title: "Champions Club Arena - Warzone Domination",
+          thumbnail: "/assets/thumbnails/drdisrespect_broadcast1.jpg",
+          viewCount: 1250000,
+          commentCount: 85000,
+          duration: "6:30:15",
+          createdAt: "2025-04-10T13:00:00Z"
+        },
+        {
+          id: "b21",
+          title: "VSM at Maximum Level - Warzone Tournament",
+          thumbnail: "/assets/thumbnails/drdisrespect_broadcast2.jpg",
+          viewCount: 1150000,
+          commentCount: 78000,
+          duration: "7:15:42",
+          createdAt: "2025-04-09T13:00:00Z"
+        }
+      ],
+      topClips: [
+        {
+          id: "c20",
+          title: "Doc's Perfect Gulag Win",
+          thumbnail: "/assets/thumbnails/drdisrespect_clip1.jpg",
+          viewCount: 4100000,
+          duration: "0:52",
+          clipper: "WarzoneHighlights"
+        },
+        {
+          id: "c21",
+          title: "The Doc's Legendary Speech",
+          thumbnail: "/assets/thumbnails/drdisrespect_clip2.jpg",
+          viewCount: 3850000,
+          duration: "2:15",
+          clipper: "ClipChampion"
+        }
+      ],
+      achievements: [
+        {
+          id: "a20",
+          title: "Two-Time Champion",
+          completed: true,
+          progress: 100
+        },
+        {
+          id: "a21",
+          title: "10M Followers",
+          completed: false,
+          progress: 87
+        }
+      ],
+      channelPointRewards: [
+        {
+          id: "r20",
+          title: "VSM Message",
+          cost: 10000
+        },
+        {
+          id: "r21",
+          title: "Gameplay Review",
+          cost: 50000
+        }
+      ]
     }
 ];
 
@@ -1288,16 +2207,17 @@ const streams: Stream[] = [
       id: "cl1",
       videoId: "v1",
       channelId: "c1",
-      title: "Moment I Cracked Militech's Security",
-      thumbnail: "/assets/thumbnails/militech-crack.jpg",
+      title: "Ninja Left for Just 1 Minute & This Is What Happened",
+      thumbnail:'https://i.ytimg.com/an_webp/AbKwwgkxYjo/mqdefault_6s.webp?du=3000&sqp=CM6V5b8G&rs=AOn4CLCEWRIuUQtnAC2E3VYiGuIK6fCU5w',
+      streamLink: "https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/Ninja+Left+For+Just+1+Minute+%26+This+Happened....mp4",
       duration: "0:47",
       views: 1729354,
       createdAt: "3 days ago",
       likes: 295173,
       comments: 13927,
       shares: 49271,
-      description: "The exact moment when the ICE shattered. Look at that data flow!",
-      game: "NightCity Overdrive",
+      description: "Stream Sniping by random players",
+      game: "Fortnite",
       resolution: "8K",
       ratings: {
         graphics: 92,
@@ -1309,17 +2229,18 @@ const streams: Stream[] = [
     {
       id: "cl2",
       videoId: "v3",
-      channelId: "c2",
-      title: "First X-ray Vision Test",
-      thumbnail: "/assets/thumbnails/xray-test.jpg",
+      channelId: "c10",
+      title: "Getting Timmy's Call",
+      thumbnail:'https://www.gry-online.pl/i/h/17/457021415.jpg',
+      streamLink: "https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/Twitter.mp4",
       duration: "1:23",
       views: 982735,
       createdAt: "2 days ago",
       likes: 173926,
       comments: 8273,
       shares: 27391,
-      description: "First successful test of the modded Kiroshi optics. Check out the detail!",
-      game: "CyberMods Unlimited",
+      description: "Timmy's call in an unexpected moment",
+      game: "Fortnite",
       resolution: "4K",
       ratings: {
         graphics: 89,
@@ -1331,17 +2252,18 @@ const streams: Stream[] = [
     {
       id: "cl3",
       videoId: "v6",
-      channelId: "c5",
-      title: "Consciousness Transfer Complete",
-      thumbnail: "/assets/thumbnails/transfer-complete.jpg",
+      channelId: "c10",
+      title: "DrDisrespect Valorant Stupid as like a Doc as animation",
+      thumbnail:'https://i.ytimg.com/an_webp/T8IMSPAazOQ/mqdefault_6s.webp?du=3000&sqp=CLyS5b8G&rs=AOn4CLC0oJSbAZ0cbahxXWwDzWEuLKud5A',
+      streamLink: "https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/DrDisrespect+Valorant+St+pid+as++like+a+Doc+as++animation+%EF%BD%9C+Rage+Gaming.mp4",
       duration: "2:17",
       views: 3928175,
       createdAt: "1 month ago",
       likes: 582731,
       comments: 27391,
       shares: 91273,
-      description: "The historic moment when the first full human consciousness was successfully transferred to the net.",
-      game: "Neural Dive",
+      description: "Doc acts as if he's a valorant character (animation wise)",
+      game: "Valorant",
       resolution: "16K",
       ratings: {
         graphics: 97,
@@ -1353,17 +2275,18 @@ const streams: Stream[] = [
     {
       id: "cl4",
       videoId: "v8",
-      channelId: "c7",
-      title: "Neural Interface Connection",
-      thumbnail: "/assets/thumbnails/neural-interface.jpg",
+      channelId: "c2",
+      title: "xQc Reacts to Pokimane's Insane Clutch",
+      thumbnail:'https://i.ytimg.com/an_webp/JBAUAaqLH3s/mqdefault_6s.webp?du=3000&sqp=CMOk5b8G&rs=AOn4CLAYRUg1RF14oGTBrZi1P0QFnPUA5w',
+      streamLink: "https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/xQc+Reacts+to+Pokimane's+Insane+Clutch.mp4",
       duration: "1:48",
       views: 827391,
       createdAt: "4 days ago",
       likes: 127392,
       comments: 5827,
       shares: 21739,
-      description: "The nerve-wracking moment when we connected the neural interface to the new arm. Patient reported full sensory feedback!",
-      game: "Cybernetic Surgery",
+      description: "Insane clutch by Pokimane, xQc Reacts",
+      game: "Valorant",
       resolution: "8K",
       ratings: {
         graphics: 91,
@@ -1375,17 +2298,18 @@ const streams: Stream[] = [
     {
       id: "cl5",
       videoId: "v9",
-      channelId: "c8",
-      title: "Glimpse Beyond The Blackwall",
-      thumbnail: "/assets/thumbnails/beyond-blackwall.jpg",
+      channelId: "c5",
+      title: "SHROUD PUBG WORLDS FASTEST 8 KILLS",
+      thumbnail:'https://i.ytimg.com/an_webp/DxyRe5wLA_4/mqdefault_6s.webp?du=3000&sqp=CNz45L8G&rs=AOn4CLAat15kgPi-bo5n35wTgTWt-PRasg',
+      streamLink: "https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/SHROUD+PUBG+WORLDS+FASTEST+8+KILLS.mp4",
       duration: "0:32",
       views: 627193,
       createdAt: "2 weeks ago",
       likes: 98273,
       comments: 3719,
       shares: 15937,
-      description: "A brief glimpse at what lurks beyond the Blackwall. Had to disconnect immediately after recording this.",
-      game: "DarkNet Exploration",
+      description: "Shroud creates world record as he kills 8 people in PUBG just after landing.",
+      game: "PUBG",
       resolution: "4K",
       ratings: {
         graphics: 86,
@@ -1661,6 +2585,144 @@ interface RecommendedStream {
   channelName: string;
   tags: string[];
 }
+interface EnrichedStreamData {
+  // Channel Information
+  channelName: string;
+  channelAvatar: string;
+  channelDescription: string;
+  channelTags: string[];
+
+  // Stream Status
+  isLive: boolean;
+  viewerCount: number;
+  streamTitle: string;
+  streamDescription: string;
+  streamStartTime: string;
+  streamCategory: string;
+  streamThumbnail:string;
+
+  // User Interaction State
+  isFollowing: boolean;
+  isNotificationsOn: boolean;
+
+  // Channel Stats
+  followerCount: number;
+  followerGoal: number;
+  weeklyFollowerGain: number;
+  subscriberCount: number;
+  subscriberGoal: number;
+  weeklySubscriberGain: number;
+  averageViewers: number;
+  averageViewersGrowth: string;
+  totalViews: number;
+  monthlyViewGain: number;
+
+  // Schedule Information
+  streamSchedule: {
+    [day: string]: string | null;
+  };
+  businessEmail: string;
+
+  // Content Collections
+  recentBroadcasts: Array<{
+    id: string;
+    title: string;
+    thumbnail: string;
+    viewCount: number;
+    commentCount: number;
+    duration: string;
+    createdAt: string;
+  }>;
+
+  topClips: Array<{
+    id: string;
+    title: string;
+    thumbnail: string;
+    viewCount: number;
+    duration: string;
+    clipper: string;
+  }>;
+
+  achievements: Array<{
+    id: string;
+    title: string;
+    completed: boolean;
+    progress: number;
+  }>;
+
+  channelPointRewards: Array<{
+    id: string;
+    title: string;
+    cost: number;
+  }>;
+
+  // Channel Point Information
+  pointsPerHour: number;
+  followerBonus: number;
+  userPointBalance: number;
+}
+
+export function getStreamById(
+  streamId: string,
+): EnrichedStreamData | null {
+  const stream = streams.find(s => s.id === streamId);
+  if (!stream) return null;
+
+  const channel = channels.find(c => c.id === stream.channelId);
+  if (!channel) return null;
+
+  const user = users.find(u => u.id === channel.userId);
+
+  return {
+    // Channel Info
+    channelName: user?.name || "Unknown",
+    channelAvatar: user?.avatar || "/placeholder-avatar.png",
+    channelDescription: user?.description || "No description available.",
+    channelTags: channel?.channelTags || [],
+
+    // Stream Status
+    isLive: channel?.isLive ?? false,
+    viewerCount: stream.viewers,
+    streamTitle: stream.title,
+    streamDescription: stream.tags?.join(", "),
+    streamStartTime: stream.startedAt,
+    streamCategory: stream.game,
+    streamThumbnail: stream.thumbnail,
+
+    // User Interaction
+    isFollowing: channel?.isFollowing ?? false,
+    isNotificationsOn: channel?.isNotificationsOn ?? false,
+
+    // Channel Stats
+    followerCount: channel?.followerCount ?? channel?.followers ?? 0,
+    followerGoal: channel?.followerGoal ?? 0,
+    weeklyFollowerGain: channel?.weeklyFollowerGain ?? 0,
+    subscriberCount: channel?.subscriberCount ?? channel?.subscriptions ?? 0,
+    subscriberGoal: channel?.subscriberGoal ?? 0,
+    weeklySubscriberGain: channel?.weeklySubscriberGain ?? 0,
+    averageViewers: channel?.averageViewers ?? 0,
+    averageViewersGrowth: channel?.averageViewersGrowth ?? "N/A",
+    totalViews: channel?.totalViews ?? 0,
+    monthlyViewGain: channel?.monthlyViewGain ?? 0,
+
+    // Schedule
+    streamSchedule: channel?.schedule || {},
+    businessEmail: `contact@${user?.name?.toLowerCase() || "channel"}.net`,
+
+    // Content Collections
+    recentBroadcasts: channel?.recentBroadcasts || [],
+    topClips: channel?.topClips || [],
+    achievements: channel?.achievements || [],
+    channelPointRewards: channel?.channelPointRewards || [],
+
+    // Channel Points
+    pointsPerHour: channel?.pointsPerHour ?? 0,
+    followerBonus: channel?.followerBonus ?? 0,
+    userPointBalance: channel?.userPointBalance ?? 0
+  };
+}
+
+
 
 // Helper function to get followed channels for UI
 const getFollowedChannels = (): FollowedChannel[] => {

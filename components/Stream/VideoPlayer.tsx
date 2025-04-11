@@ -14,7 +14,7 @@ export default function CyberpunkVideoPlayer() {
   const [audioLevel, setAudioLevel] = useState(70);
   const [showStats, setShowStats] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [viewerCount, setViewerCount] = useState(0);
+  const [viewerCount, setViewerCount] = useState(2560);
   const [streamTime, setStreamTime] = useState(0);
   const [videoDuration, setVideoDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -29,7 +29,7 @@ export default function CyberpunkVideoPlayer() {
   const videoContainerRef = useRef(null);
   const progressBarRef = useRef(null);
   // const [streamLink, setstreamLink] = useState("/");
-  const streamLink: string = Data.streams.find(each => each.id === params.id)?.streamLink || '/';
+  const streamLink: string = Data.clips.find(each => each.id === params.id).streamLink;
   // Stream stats for overlay
   const [streamStats, setStreamStats] = useState({
     fps: "30",
@@ -53,6 +53,10 @@ export default function CyberpunkVideoPlayer() {
 
   // Toggle video play/pause
   const togglePlay = () => {
+    Data.streams.map((each)=>{if(each.id === params.id){
+          setViewerCount(2600);
+          // setstreamLink(each.streamLink);
+        }});
     const video = videoRef.current;
     if (!video) return;
 
@@ -137,10 +141,6 @@ export default function CyberpunkVideoPlayer() {
 
   // Video event listeners
   useEffect(() => {
-    Data.streams.map((each)=>{if(each.id === params.id){
-      setViewerCount(each.viewers);
-      // setstreamLink(each.streamLink);
-    }});
     const video = videoRef.current;
     if (!video) return;
 
@@ -321,10 +321,10 @@ export default function CyberpunkVideoPlayer() {
             {/* Top-left HUD frame */}
             <div className="absolute top-4 left-4 flex items-center">
               {/* Live indicator */}
-              <div className="bg-black bg-opacity-70 border border-t-2 border-l-2 border-cyan-500 border-r-pink-500 border-b-pink-500 text-white text-xs font-bold p-1 rounded-sm flex items-center transform skew-x-6">
+              {/* <div className="bg-black bg-opacity-70 border border-t-2 border-l-2 border-cyan-500 border-r-pink-500 border-b-pink-500 text-white text-xs font-bold p-1 rounded-sm flex items-center transform skew-x-6">
                 <div className="w-2 h-2 bg-red-500 rounded-full mr-1 animate-pulse"></div>
                 <span className="text-red-500 font-mono tracking-wider">LIVE</span>
-              </div>
+              </div> */}
               
               {/* Viewer count */}
               <div className={`ml-2 bg-black bg-opacity-70 border ${highlightedSection === 'viewers' ? 'border-2 border-yellow-400' : 'border border-cyan-500'} text-white text-xs p-1 rounded-sm flex items-center transform skew-x-6 transition-all duration-300`}>

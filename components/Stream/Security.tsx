@@ -11,7 +11,7 @@ export default function SecuritySettings() {
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(true);
   const [biometricsEnabled, setBiometricsEnabled] = useState(false);
   const [loginNotifications, setLoginNotifications] = useState(true);
-  const [sessionTimeout, setSessionTimeout] = useState(30);
+  const [sessionTimeout, setSessionTimeout] = useState<any>(30);
   const [encryptionLevel, setEncryptionLevel] = useState('QUANTUM-V2');
   const [securityScore, setSecurityScore] = useState(80);
   const [scanningStatus, setScanningStatus] = useState(false);

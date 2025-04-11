@@ -1,15 +1,233 @@
 import { useState, useEffect } from 'react';
 import { Users, Tv, Clock, Share2, Bell, ExternalLink, MessageSquare, ThumbsUp, Award, Gamepad2, Eye, Shield, Zap, Terminal } from 'lucide-react';
+import Data,{ getStreamById} from "@/app/data";
+import { useParams, useRouter } from 'next/navigation';
+function formatNumber(num) {
+  if (num >= 1_000_000_000) {
+    return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
+  }
+  if (num >= 1_000_000) {
+    return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+  }
+  if (num >= 1_000) {
+    return (num / 1_000).toFixed(1).replace(/\.0$/, '') + 'k';
+  }
+  return num.toString();
+}
+
+interface EnrichedStreamData {
+  // Channel Information
+  channelName: string;
+  channelAvatar: string;
+  channelDescription: string;
+  channelTags: string[];
+
+  // Stream Status
+  isLive: boolean;
+  viewerCount: number;
+  streamTitle: string;
+  streamDescription: string;
+  streamStartTime: string;
+  streamCategory: string;
+  streamThumbnail:string;
+  // User Interaction State
+  isFollowing: boolean;
+  isNotificationsOn: boolean;
+
+  // Channel Stats
+  followerCount: number;
+  followerGoal: number;
+  weeklyFollowerGain: number;
+  subscriberCount: number;
+  subscriberGoal: number;
+  weeklySubscriberGain: number;
+  averageViewers: number;
+  averageViewersGrowth: string;
+  totalViews: number;
+  monthlyViewGain: number;
+
+  // Schedule Information
+  streamSchedule: {
+    [day: string]: string | null;
+  };
+  businessEmail: string;
+
+  // Content Collections
+  recentBroadcasts: Array<{
+    id: string;
+    title: string;
+    thumbnail: string;
+    viewCount: number;
+    commentCount: number;
+    duration: string;
+    createdAt: string;
+  }>;
+
+  topClips: Array<{
+    id: string;
+    title: string;
+    thumbnail: string;
+    viewCount: number;
+    duration: string;
+    clipper: string;
+  }>;
+
+  achievements: Array<{
+    id: string;
+    title: string;
+    completed: boolean;
+    progress: number;
+  }>;
+
+  channelPointRewards: Array<{
+    id: string;
+    title: string;
+    cost: number;
+  }>;
+
+  // Channel Point Information
+  pointsPerHour: number;
+  followerBonus: number;
+  userPointBalance: number;
+}
+
+const dummyStreamDetails: EnrichedStreamData = {
+  // Channel Info
+  channelName: "Ninja",
+  channelAvatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/90d40495-f467-4911-9035-72d8d10a49c5-profile_image-150x150.png",
+  channelDescription: "Professional Fortnite player, content creator, and Red Bull athlete.",
+  channelTags: ["#CallOfDuty", "#Warzone", "#FPS", "#TwoTime"],
+
+  // Stream Status
+  isLive: true,
+  viewerCount: 127352,
+  streamTitle: "FORTNITE CHAMPION SERIES FINALS! | !youtube !socials",
+  streamDescription: "competitive, fncs, tournament, pro, live",
+  streamStartTime: "2 hours ago",
+  streamCategory: "Fortnite",
+  streamThumbnail: "https://static-cdn.jtvnw.net/previews-ttv/live_user_ninja-1080x1920.jpg",
+
+  // User Interaction
+  isFollowing: false,
+  isNotificationsOn: false,
+
+  // Channel Stats
+  followerCount: 412589,
+  followerGoal: 500000,
+  weeklyFollowerGain: 2500,
+  subscriberCount: 17800,
+  subscriberGoal: 20000,
+  weeklySubscriberGain: 420,
+  averageViewers: 45000,
+  averageViewersGrowth: "+16% this month",
+  totalViews: 1450000000,
+  monthlyViewGain: 152000,
+
+  // Schedule
+  streamSchedule: {
+    monday: "13:00 - 19:00 PST",
+    tuesday: "13:00 - 19:00 PST",
+    wednesday: "13:00 - 19:00 PST",
+    thursday: "13:00 - 19:00 PST",
+    friday: "13:00 - 19:00 PST",
+    saturday: null,
+    sunday: null
+  },
+  businessEmail: "contact@ninja.net",
+
+  // Content Collections
+  recentBroadcasts: [
+    {
+      id: "b20",
+      title: "Champions Club Arena - Warzone Domination",
+      thumbnail: "/assets/thumbnails/drdisrespect_broadcast1.jpg",
+      viewCount: 1250000,
+      commentCount: 85000,
+      duration: "6:30:15",
+      createdAt: "2025-04-10T13:00:00Z"
+    },
+    {
+      id: "b21",
+      title: "VSM at Maximum Level - Warzone Tournament",
+      thumbnail: "/assets/thumbnails/drdisrespect_broadcast2.jpg",
+      viewCount: 1150000,
+      commentCount: 78000,
+      duration: "7:15:42",
+      createdAt: "2025-04-09T13:00:00Z"
+    }
+  ],
+  topClips: [
+    {
+      id: "c20",
+      title: "Doc's Perfect Gulag Win",
+      thumbnail: "/assets/thumbnails/drdisrespect_clip1.jpg",
+      viewCount: 4100000,
+      duration: "0:52",
+      clipper: "WarzoneHighlights"
+    },
+    {
+      id: "c21",
+      title: "The Doc's Legendary Speech",
+      thumbnail: "/assets/thumbnails/drdisrespect_clip2.jpg",
+      viewCount: 3850000,
+      duration: "2:15",
+      clipper: "ClipChampion"
+    }
+  ],
+  achievements: [
+    {
+      id: "a20",
+      title: "Two-Time Champion",
+      completed: true,
+      progress: 100
+    },
+    {
+      id: "a21",
+      title: "10M Followers",
+      completed: false,
+      progress: 87
+    }
+  ],
+  channelPointRewards: [
+    {
+      id: "r20",
+      title: "VSM Message",
+      cost: 10000
+    },
+    {
+      id: "r21",
+      title: "Gameplay Review",
+      cost: 50000
+    }
+  ],
+
+  // Channel Points
+  pointsPerHour: 200,
+  followerBonus: 50,
+  userPointBalance: 5340
+};
 
 export default function TwitchChannelInfoPage() {
   const [isLive, setIsLive] = useState(true);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isNotificationsOn, setIsNotificationsOn] = useState(false);
-  
+  const [ChannelInfo, setChannelInfo] = useState<EnrichedStreamData>(dummyStreamDetails);
   // Simulated viewer count that fluctuates
   const [viewerCount, setViewerCount] = useState(8427);
-  
+  const params = useParams<{ id:string }>()
+  const router = useRouter();
+  function pushToStream(){
+    router.push(`/live/${params.id}`);
+  }
+  function handleClipClick(id){
+    router.push(`/clip/${id}`);
+  }
   useEffect(() => {
+    const getData = getStreamById(params.id);
+    setChannelInfo(getData);
+    setIsFollowing(getData.isFollowing);
+    setIsNotificationsOn(getData.isNotificationsOn);
+    setIsLive(getData.isLive);
     const interval = setInterval(() => {
       setViewerCount(prev => {
         const change = Math.floor(Math.random() * 50) - 20;
@@ -66,7 +284,7 @@ export default function TwitchChannelInfoPage() {
               <div className="absolute inset-0 animate-pulse-slow rounded-full bg-cyan-500/20 scale-110"></div>
               <div className="w-20 h-20 rounded-full bg-gradient-to-r from-cyan-600 via-purple-600 to-pink-600 p-0.5 rotate-hexagon relative">
                 <div className="w-full h-full rounded-full overflow-hidden border border-gray-800 relative">
-                  <img src="/api/placeholder/100/100" alt="Channel avatar" className="w-full h-full object-cover" />
+                  <img src={ChannelInfo.channelAvatar} alt="Channel avatar" className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-purple-500/10"></div>
                 </div>
                 
@@ -86,7 +304,7 @@ export default function TwitchChannelInfoPage() {
                   <span className="relative">
                     {/* Text with glitch effect */}
                     <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent relative z-10">
-                      NEURO_DANCE
+                      {ChannelInfo.channelName}
                     </span>
                     <span className="absolute -inset-0.5 bg-cyan-500/20 blur-sm z-0 animate-pulse-slow"></span>
                     
@@ -104,23 +322,23 @@ export default function TwitchChannelInfoPage() {
                 </div>
                 <div className="text-gray-400 text-xs flex items-center gap-1 bg-gray-800/50 px-2 py-0.5 rounded border border-gray-700/50">
                   <Eye size={12} className="text-cyan-400" />
-                  <span className="font-bold text-cyan-400">{viewerCount.toLocaleString()}</span>
+                  <span className="font-bold text-cyan-400">{ChannelInfo.viewerCount.toLocaleString()}</span>
                 </div>
               </div>
               
               <div className="mt-1 text-gray-400 text-sm flex items-center">
-                <span className="mr-2">Cybernetic implants & street hacking - Livestreaming from Night City</span>
+                <span className="mr-2">{ChannelInfo.channelDescription}</span>
                 <span className="text-xs bg-gray-800 px-1 py-0.5 rounded border border-pink-500/30 text-pink-400">CORPO BLACKLIST</span>
               </div>
               
               <div className="mt-2 flex items-center gap-3 text-sm">
                 <div className="flex items-center gap-1">
                   <Gamepad2 size={14} className="text-purple-400" />
-                  <span>CyberRush 2077</span>
+                  <span>{ChannelInfo.streamCategory}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Users size={14} className="text-cyan-400" />
-                  <span>412K followers</span>
+                  <span>{formatNumber(ChannelInfo.followerCount)} followers</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Shield size={14} className="text-pink-500" />
@@ -184,7 +402,7 @@ export default function TwitchChannelInfoPage() {
             <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-cyan-500/70"></div>
             
             <div className="relative w-full h-96 bg-black">
-              <img src="/api/placeholder/800/500" alt="Stream thumbnail" className="w-full h-full object-cover opacity-90" />
+              <img src={ChannelInfo.streamThumbnail} alt="Stream thumbnail" className="w-full h-full object-cover opacity-90" />
               
               {/* Enhanced stream status overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent flex flex-col justify-end p-6">
@@ -197,28 +415,28 @@ export default function TwitchChannelInfoPage() {
                   </div>
                   <div className="px-2 py-1 bg-gray-800/80 text-xs rounded flex items-center gap-1 border border-gray-700/50">
                     <Clock size={12} className="text-cyan-400" />
-                    <span>5:23:12</span>
+                    <span>{ChannelInfo.streamStartTime}</span>
                   </div>
                   <div className="px-2 py-1 bg-gray-800/80 text-xs rounded flex items-center gap-1 border border-gray-700/50">
                     <Eye size={12} className="text-purple-400" />
-                    <span className="text-cyan-400 font-bold">{viewerCount.toLocaleString()}</span>
+                    <span className="text-cyan-400 font-bold">{ChannelInfo.viewerCount.toLocaleString()}</span>
                   </div>
                   <div className="px-2 py-1 bg-pink-900/30 text-xs rounded flex items-center gap-1 border border-pink-500/30">
                     <Zap size={12} className="text-pink-400" />
                     <span className="text-pink-400">HIGH RISK</span>
                   </div>
                 </div>
-                
-                <h2 className="text-2xl font-bold text-white mb-2 relative inline-block">
+
+                <h2 onClick={pushToStream} className="text-2xl hover:cursor-pointer font-bold text-white mb-2 relative inline-block">
                   <span className="relative">
-                    NETRUNNING THE CORPO BACKDOOR // DAY 145
+                    {ChannelInfo.streamTitle}
                     <span className="absolute -inset-1 bg-cyan-500/10 blur-sm -z-10"></span>
                     <span className="absolute top-0 left-1/4 h-full w-1 bg-cyan-400/30 -z-10 animate-flicker"></span>
                   </span>
                 </h2>
                 
                 <p className="text-gray-300 text-sm max-w-3xl backdrop-blur-sm bg-black/20 p-2 border-l-2 border-cyan-500/50">
-                  Today we're penetrating Arasaka's firewall and extracting classified data. High risk, high reward run with custom quickhacks. !gear !mods in chat.
+                  {ChannelInfo.streamDescription}
                 </p>
                 
                 {/* Cyberpunk-style connection status */}
@@ -243,6 +461,9 @@ export default function TwitchChannelInfoPage() {
             
             {/* Enhanced tags */}
             <div className="p-4 flex flex-wrap gap-2 relative">
+              {/* {ChannelInfo.channelTags.map((tag, index) => (
+                
+              ))} */}
               <div className="px-3 py-1 bg-gray-800 rounded-full text-xs text-cyan-400 border border-cyan-500/30 hover:border-cyan-500/70 cursor-pointer transition-all duration-300 relative overflow-hidden group">
                 <div className="absolute inset-0 bg-cyan-500/10 translate-x-full group-hover:animate-shimmer"></div>
                 <span className="relative z-10">#Cyberpunk</span>
@@ -287,7 +508,7 @@ export default function TwitchChannelInfoPage() {
                 <span className="w-1 h-6 bg-gradient-to-b from-cyan-400 to-purple-600"></span>
                 <Terminal size={16} className="text-purple-400" />
                 <span className="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
-                  ABOUT NEURO_DANCE
+                  ABOUT {ChannelInfo.channelName}
                 </span>
               </h3>
               
@@ -442,49 +663,73 @@ export default function TwitchChannelInfoPage() {
             </h3>
             
             <div className="space-y-4">
+              {/* Followers */}
               <div>
                 <div className="flex justify-between text-xs text-gray-400 mb-1">
                   <span>FOLLOWERS</span>
-                  <span className="text-cyan-400">+1.2K this week</span>
+                  <span className="text-cyan-400">{ChannelInfo.averageViewersGrowth}</span>
                 </div>
-                <div className="text-xl font-bold text-white">412,589</div>
+                <div className="text-xl font-bold text-white">
+                  {ChannelInfo.followerCount.toLocaleString()}
+                </div>
                 <div className="w-full h-1 bg-gray-800 rounded-full mt-2 relative overflow-hidden">
-                  <div className="h-full w-3/4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full relative overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full relative overflow-hidden"
+                    style={{
+                      width: `${(ChannelInfo.followerCount / ChannelInfo.followerGoal) * 100}%`,
+                    }}
+                  >
                     <div className="absolute inset-0 opacity-75 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-full animate-shimmer"></div>
                   </div>
                 </div>
-                <div className="text-xs text-gray-400 mt-1">75% to 500K milestone</div>
+                <div className="text-xs text-gray-400 mt-1">
+                  {Math.round((ChannelInfo.followerCount / ChannelInfo.followerGoal) * 100)}% to {ChannelInfo.followerGoal.toLocaleString()} milestone
+                </div>
               </div>
-              
+
+              {/* Subscribers */}
               <div>
                 <div className="flex justify-between text-xs text-gray-400 mb-1">
                   <span>SUBSCRIBERS</span>
-                  <span className="text-pink-500">+203 this week</span>
+                  <span className="text-pink-500">+{ChannelInfo.weeklySubscriberGain} this week</span>
                 </div>
-                <div className="text-xl font-bold text-white">8,456</div>
+                <div className="text-xl font-bold text-white">
+                  {ChannelInfo.subscriberCount.toLocaleString()}
+                </div>
                 <div className="w-full h-1 bg-gray-800 rounded-full mt-2 relative overflow-hidden">
-                  <div className="h-full w-4/5 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full relative overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-pink-500 to-purple-600 rounded-full relative overflow-hidden"
+                    style={{
+                      width: `${(ChannelInfo.subscriberCount / ChannelInfo.subscriberGoal) * 100}%`,
+                    }}
+                  >
                     <div className="absolute inset-0 opacity-75 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-full animate-shimmer"></div>
                   </div>
                 </div>
-                <div className="text-xs text-gray-400 mt-1">84% to 10K milestone</div>
+                <div className="text-xs text-gray-400 mt-1">
+                  {Math.round((ChannelInfo.subscriberCount / ChannelInfo.subscriberGoal) * 100)}% to {ChannelInfo.subscriberGoal.toLocaleString()} milestone
+                </div>
               </div>
-              
+
+              {/* AVG Viewers & Total Views */}
               <div className="border-t border-gray-700 pt-3 grid grid-cols-2 gap-4">
                 <div className="bg-gray-800/50 p-2 rounded border border-gray-700">
                   <div className="text-xs text-gray-400 mb-1">AVG VIEWERS</div>
-                  <div className="text-lg font-bold text-white">7,823</div>
-                  <div className="text-xs text-cyan-400">+12% this month</div>
+                  <div className="text-lg font-bold text-white">{ChannelInfo.averageViewers.toLocaleString()}</div>
+                  <div className="text-xs text-cyan-400">{ChannelInfo.averageViewersGrowth}</div>
                 </div>
-                
+
                 <div className="bg-gray-800/50 p-2 rounded border border-gray-700">
                   <div className="text-xs text-gray-400 mb-1">TOTAL VIEWS</div>
-                  <div className="text-lg font-bold text-white">2.1M</div>
-                  <div className="text-xs text-cyan-400">+89K this month</div>
+                  <div className="text-lg font-bold text-white">
+                    {(ChannelInfo.totalViews / 1_000_000).toFixed(1)}M
+                  </div>
+                  <div className="text-xs text-cyan-400">+{ChannelInfo.monthlyViewGain.toLocaleString()} this month</div>
                 </div>
               </div>
             </div>
           </div>
+
           
           {/* Enhanced top clips */}
           <div className="bg-gray-900/80 backdrop-blur-sm rounded border border-cyan-500/20 p-4 mb-6 relative">
@@ -500,10 +745,14 @@ export default function TwitchChannelInfoPage() {
             </h3>
             
             <div className="space-y-3">
-              {[1, 2, 3].map((item) => (
-                <div key={item} className="group cursor-pointer">
+              {Data.clips.map((clip) => (
+                <div onClick={() => handleClipClick(clip.id)} key={clip.id} className="group cursor-pointer">
                   <div className="relative">
-                    <img src={`/api/placeholder/400/${170 + item * 10}`} alt={`Clip ${item}`} className="w-full h-24 object-cover rounded opacity-90 group-hover:opacity-100 transition-all duration-300" />
+                    <img
+                      src={clip.thumbnail}
+                      alt={clip.title}
+                      className="w-full h-24 object-cover rounded opacity-90 group-hover:opacity-100 transition-all duration-300"
+                    />
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="w-8 h-8 bg-purple-600/80 rounded-full flex items-center justify-center">
                         <div className="ml-1 w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-white border-b-[6px] border-b-transparent"></div>
@@ -511,9 +760,9 @@ export default function TwitchChannelInfoPage() {
                     </div>
                     <div className="absolute bottom-0 right-0 bg-black/80 px-1 text-xs flex items-center">
                       <div className="w-1 h-1 bg-red-500 rounded-full animate-pulse mr-1"></div>
-                      0:42
+                      {clip.duration}
                     </div>
-                    
+
                     {/* Enhanced cyberpunk border */}
                     <div className="absolute inset-0 border border-cyan-500/0 group-hover:border-cyan-500/50 rounded transition-all duration-300"></div>
                     <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-yellow-400/0 group-hover:border-yellow-400/70 transition-all duration-300"></div>
@@ -523,14 +772,12 @@ export default function TwitchChannelInfoPage() {
                   </div>
                   <div className="mt-1">
                     <h4 className="text-xs font-bold group-hover:text-yellow-400 transition-all duration-300">
-                      {["Perfect quickhack on Arasaka CEO", 
-                        "Motorcycle jump over NCPD blockade", 
-                        "Glitched into secret dev room"][item-1]}
+                      {clip.title}
                     </h4>
                     <div className="flex items-center gap-2 mt-0.5 text-xs text-gray-400">
-                      <span>127K views</span>
+                      <span>{Intl.NumberFormat().format(clip.views)} views</span>
                       <span>•</span>
-                      <span>Clipped by DigitalSpectre</span>
+                      <span>Clipped {clip.createdAt}</span>
                     </div>
                   </div>
                 </div>
