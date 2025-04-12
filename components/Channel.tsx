@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Users, Tv, Clock, Share2, Bell, ExternalLink, MessageSquare, ThumbsUp, Award, Gamepad2, Eye, Shield, Zap, Terminal } from 'lucide-react';
+import { Users, Tv, Clock, Share2, Bell, ExternalLink, MessageSquare, ThumbsUp, Award, Gamepad2, Eye, Shield, Zap, Terminal, Code, Database, Download, Heart } from 'lucide-react';
 import Data,{ getStreamById} from "@/app/data";
 import { useParams, useRouter } from 'next/navigation';
 function formatNumber(num) {
@@ -576,72 +576,55 @@ export default function TwitchChannelInfoPage() {
               <span className="w-1 h-6 bg-gradient-to-b from-pink-500 to-purple-600"></span>
               <Tv size={16} className="text-pink-400" />
               <span className="bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
-                RECENT BROADCASTS
+                MORE INFO
               </span>
             </h3>
             
-            <div className="grid grid-cols-2 gap-4">
-              {[1, 2, 3, 4].map((item) => (
-                <div key={item} className="group cursor-pointer">
-                  <div className="relative">
-                    <img src={`/api/placeholder/400/${260 + item * 10}`} alt={`Video ${item}`} className="w-full h-40 object-cover rounded opacity-90 group-hover:opacity-100 transition-all duration-300" />
-                    
-                    {/* Enhanced cyberpunk overlays */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent p-3">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-gray-300">3 days ago</span>
-                        <span className="text-gray-300">2:14:28</span>
-                      </div>
-                    </div>
-                    
-                    {/* Technical readout overlay */}
-                    <div className="absolute top-2 left-2 text-xs text-cyan-400 font-bold opacity-0 group-hover:opacity-100 transition-all duration-300">
-                      ID: {(item * 873219).toString(16).toUpperCase()}
-                    </div>
-                    
-                    {/* Enhanced cyber border */}
-                    <div className="absolute inset-0 border border-cyan-500/0 group-hover:border-cyan-500/50 rounded transition-all duration-300"></div>
-                    <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-cyan-500/0 group-hover:border-cyan-500/70 transition-all duration-300"></div>
-                    <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-pink-500/0 group-hover:border-pink-500/70 transition-all duration-300"></div>
-                    <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-pink-500/0 group-hover:border-pink-500/70 transition-all duration-300"></div>
-                    <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-cyan-500/0 group-hover:border-cyan-500/70 transition-all duration-300"></div>
-                    
-                    {/* Play indicator */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-                      <div className="w-12 h-12 rounded-full bg-cyan-500/30 backdrop-blur-sm flex items-center justify-center border border-cyan-400">
-                        <div className="ml-1 w-0 h-0 border-t-[8px] border-t-transparent border-l-[12px] border-l-white border-b-[8px] border-b-transparent"></div>
-                      </div>
-                    </div>
+            <div className="bg-gray-900 rounded-lg p-6 border border-gray-800 relative overflow-hidden group hover:border-pink-900 transition-all">
+              {/* Decorative hex pattern */}
+              <div className="absolute top-0 right-0 w-16 h-16 opacity-20">
+                <svg viewBox="0 0 100 100">
+                  <polygon points="50,0 93.3,25 93.3,75 50,100 6.7,75 6.7,25" fill="none" stroke="magenta" strokeWidth="2"/>
+                  <polygon points="50,20 79.3,35 79.3,65 50,80 20.7,65 20.7,35" fill="none" stroke="magenta" strokeWidth="1"/>
+                </svg>
+              </div>
+              
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                <Shield size={18} className="text-pink-500" />
+                <span>Channel Rules</span>
+              </h3>
+              <ul className="space-y-3 text-gray-300">
+                <li className="flex items-start gap-3 group/item p-2 hover:bg-gray-800/50 rounded transition-colors">
+                  <span className="text-cyan-400 font-bold text-lg leading-tight">01</span>
+                  <div>
+                    <div className="font-bold text-white group-hover/item:text-cyan-400 transition-colors">Respect all netrunners</div>
+                    <div className="text-sm text-gray-400">Zero tolerance for corp shills or rival crew attacks.</div>
                   </div>
-                  <div className="mt-2">
-                    <h4 className="text-sm font-bold group-hover:text-cyan-400 transition-all duration-300 flex items-center gap-1">
-                      {["BREAKING MILITECH ENCRYPTION // LIVE HACK", 
-                        "CYBERWARE UPGRADE STREAM - NEW SANDEVISTAN MOD", 
-                        "ARASAKA TOWER INFILTRATION PLAYTHROUGH PT.1", 
-                        "Q&A - ASK A REAL NETRUNNER ANYTHING"][item-1]}
-                    </h4>
-                    <div className="flex items-center gap-2 mt-1 text-xs text-gray-400">
-                      <div className="flex items-center gap-1">
-                        <Tv size={12} />
-                        <span>21.3K views</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <MessageSquare size={12} />
-                        <span>342</span>
-                      </div>
-                    </div>
+                </li>
+                <li className="flex items-start gap-3 group/item p-2 hover:bg-gray-800/50 rounded transition-colors">
+                  <span className="text-cyan-400 font-bold text-lg leading-tight">02</span>
+                  <div>
+                    <div className="font-bold text-white group-hover/item:text-cyan-400 transition-colors">No backdoor exploits</div>
+                    <div className="text-sm text-gray-400">System breaches result in permanent blacklisting from the network.</div>
                   </div>
-                </div>
-              ))}
+                </li>
+                <li className="flex items-start gap-3 group/item p-2 hover:bg-gray-800/50 rounded transition-colors">
+                  <span className="text-cyan-400 font-bold text-lg leading-tight">03</span>
+                  <div>
+                    <div className="font-bold text-white group-hover/item:text-cyan-400 transition-colors">Share tech knowledge freely</div>
+                    <div className="text-sm text-gray-400">We rise against the corps together through open source intel.</div>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3 group/item p-2 hover:bg-gray-800/50 rounded transition-colors">
+                  <span className="text-cyan-400 font-bold text-lg leading-tight">04</span>
+                  <div>
+                    <div className="font-bold text-white group-hover/item:text-cyan-400 transition-colors">Keep sensitive intel secure</div>
+                    <div className="text-sm text-gray-400">Use encrypted DMs for classified info. Main stream is monitored.</div>
+                  </div>
+                </li>
+              </ul>
             </div>
-            
-            <div className="mt-4 text-center">
-              <button className="px-4 py-2 bg-gray-800 rounded text-sm border border-gray-700 hover:border-purple-500/50 transition-all duration-300 relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500/10 to-transparent translate-x-full group-hover:animate-shimmer"></div>
-                <span className="relative z-10">VIEW ALL VIDEOS</span>
-              </button>
-            </div>
-          </div>
+          </div> 
         </div>
         
         {/* Right column */}

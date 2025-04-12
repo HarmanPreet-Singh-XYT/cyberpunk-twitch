@@ -2208,7 +2208,7 @@ const streams: Stream[] = [
       videoId: "v1",
       channelId: "c1",
       title: "Ninja Left for Just 1 Minute & This Is What Happened",
-      thumbnail:'https://i.ytimg.com/an_webp/AbKwwgkxYjo/mqdefault_6s.webp?du=3000&sqp=CM6V5b8G&rs=AOn4CLCEWRIuUQtnAC2E3VYiGuIK6fCU5w',
+      thumbnail:'/streamThumbnail/3.webp',
       streamLink: "https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/Ninja+Left+For+Just+1+Minute+%26+This+Happened....mp4",
       duration: "0:47",
       views: 1729354,
@@ -2254,7 +2254,7 @@ const streams: Stream[] = [
       videoId: "v6",
       channelId: "c10",
       title: "DrDisrespect Valorant Stupid as like a Doc as animation",
-      thumbnail:'https://i.ytimg.com/an_webp/T8IMSPAazOQ/mqdefault_6s.webp?du=3000&sqp=CLyS5b8G&rs=AOn4CLC0oJSbAZ0cbahxXWwDzWEuLKud5A',
+      thumbnail:'/streamThumbnail/6.webp',
       streamLink: "https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/DrDisrespect+Valorant+St+pid+as++like+a+Doc+as++animation+%EF%BD%9C+Rage+Gaming.mp4",
       duration: "2:17",
       views: 3928175,
@@ -2277,7 +2277,7 @@ const streams: Stream[] = [
       videoId: "v8",
       channelId: "c2",
       title: "xQc Reacts to Pokimane's Insane Clutch",
-      thumbnail:'https://i.ytimg.com/an_webp/JBAUAaqLH3s/mqdefault_6s.webp?du=3000&sqp=CMOk5b8G&rs=AOn4CLAYRUg1RF14oGTBrZi1P0QFnPUA5w',
+      thumbnail:'/streamThumbnail/5.webp',
       streamLink: "https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/xQc+Reacts+to+Pokimane's+Insane+Clutch.mp4",
       duration: "1:48",
       views: 827391,
@@ -2300,7 +2300,7 @@ const streams: Stream[] = [
       videoId: "v9",
       channelId: "c5",
       title: "SHROUD PUBG WORLDS FASTEST 8 KILLS",
-      thumbnail:'https://i.ytimg.com/an_webp/DxyRe5wLA_4/mqdefault_6s.webp?du=3000&sqp=CNz45L8G&rs=AOn4CLAat15kgPi-bo5n35wTgTWt-PRasg',
+      thumbnail:'/streamThumbnail/4.webp',
       streamLink: "https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/SHROUD+PUBG+WORLDS+FASTEST+8+KILLS.mp4",
       duration: "0:32",
       views: 627193,
@@ -2747,6 +2747,52 @@ const getFollowedChannels = (): FollowedChannel[] => {
       };
     });
 };
+type TopStreamSummary = {
+  streamId: string;
+  channelName: string;
+  channelAvatar: string;
+  game: string;
+  viewers: number;
+  duration: string;
+  title: string;
+};
+
+type TopStreamsAndCategories = {
+  topStreams: TopStreamSummary[];
+  categories: string[];
+};
+function getTop5StreamsAndCategories(
+): TopStreamsAndCategories {
+  const top5Streams = [...streams]
+    .sort((a, b) => b.viewers - a.viewers)
+    
+
+  const top5WithDetails: TopStreamSummary[] = top5Streams.map(stream => {
+    const channel = channels.find(ch => ch.id === stream.channelId);
+    const user = users.find(u => u.id === channel?.userId);
+
+    return {
+      streamId: stream.id,
+      channelName: user?.name || channel?.name || "Unknown",
+      channelAvatar: user?.avatar || "/default-avatar.png",
+      game: stream.game,
+      viewers: stream.viewers,
+      duration: stream.duration,
+      title: stream.title
+    };
+  });
+
+  const categories = Array.from(
+    new Set(top5WithDetails.map(stream => stream.game))
+  );
+
+  return {
+    topStreams: top5WithDetails,
+    categories
+  };
+}
+
+
 
 // Helper function to get carousel streams for UI
 const getCarouselStreams = (): CarouselStream[] => {
@@ -2855,6 +2901,7 @@ export const cyberpunkTwitchData = {
   carouselStreams: getCarouselStreams(),
   recommendedStreams: getRecommendedStreams(),
   recommendedChannels: getRecommendedChannels(),
+  broadcastSummary: getTop5StreamsAndCategories(),
   
   // Top categories (just reuse categories but sort by viewers)
   topCategories: [...categories].sort((a, b) => b.viewers - a.viewers),

@@ -580,12 +580,57 @@ export default function CyberpunkTwitchCarousel() {
       <CategoriesSection/>
       <FollowingStreams/>
       <RecommendedStreams/>
+      <Clips/>
     </div>
   );
 }
 
 
-
+function Clips() {
+  return (
+    <div className="relative mt-8">
+      {/* Decorative cyberpunk element */}
+      <div className="absolute -left-4 top-0 w-1 h-8 bg-[#121212] shadow-glow-pink"></div>
+      
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-white relative">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">RECOMMENDED_</span>
+          <span className="text-cyan-400">CLIPS</span>
+          <span className="animate-pulse text-pink-500 ml-1">|</span>
+        </h2>
+        <a href="/browse" className="text-sm text-cyan-400 hover:text-pink-400 transition-colors flex items-center group">
+          <span>VIEW_ALL</span>
+          <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {data.clips.map((each,index)=>{
+          if(index>3) return;
+          const channel = data.channels.find((channel) => channel.id === each.channelId);
+          const user = data.users.find((user) => user.id === channel.userId);
+          return <StreamCard 
+          isClip={true}
+            key={each.id}
+            avatar={user.avatar}
+            id={each.id}
+            title={each.title}
+            creator={channel.name} 
+            game={each.game}
+            viewers={each.views} 
+            tags={["competitive", "esports", "fps"]}
+            live={false}
+            viewerTrend="up"
+            thumbnail={each.thumbnail}
+          />
+        }
+        )}
+      </div>
+    </div>
+  );
+}
 // Recommended Streams Component with enhanced cyberpunk styling
 function RecommendedStreams() {
   return (
@@ -709,7 +754,7 @@ function formatNumber(num) {
   return num.toString();
 }
 // Enhanced Stream Card Component
-function StreamCard({ id,title, creator, game,avatar, viewers, tags = [], live = false, viewerTrend = "stable", featured = false, thumbnail }) {
+function StreamCard({ id,title, creator, game,avatar, viewers, tags = [], live = false, viewerTrend = "stable", featured = false, thumbnail, isClip = false }) {
   // Viewer trend indicators
   const router = useRouter();
   const trendIcons = {
@@ -720,7 +765,7 @@ function StreamCard({ id,title, creator, game,avatar, viewers, tags = [], live =
 
   return (
     <div className={`rounded-lg overflow-hidden bg-[#121212] border ${featured ? 'border-cyan-500 shadow-glow-cyan' : 'border-purple-900'} hover:border-pink-500 transition-all group transform hover:-translate-y-1`}>
-      <div onClick={()=>{router.push(`/live/${id}`)}} className="aspect-video hover:cursor-pointer bg-[#121212] relative overflow-hidden">
+      <div onClick={()=>{isClip ? router.push(`/clip/${id}`) : router.push(`/live/${id}`)}} className="aspect-video hover:cursor-pointer bg-[#121212] relative overflow-hidden">
         <img src={thumbnail} alt="Stream thumbnail" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
         
         {/* Stream information overlay */}
@@ -766,7 +811,7 @@ function StreamCard({ id,title, creator, game,avatar, viewers, tags = [], live =
           </div> */}
           <img src={avatar} alt={creator} className="w-8 h-8 rounded-full object-cover overflow-hidden border border-cyan-700 flex-shrink-0" />
           <div>
-            <h3 onClick={()=>{router.push(`/live/${id}`)}} className="text-sm hover:cursor-pointer font-medium text-white line-clamp-1 group-hover:text-cyan-400 transition-colors">{title}</h3>
+            <h3 onClick={()=>{isClip ? router.push(`/clip/${id}`) : router.push(`/live/${id}`)}} className="text-sm hover:cursor-pointer font-medium text-white line-clamp-1 group-hover:text-cyan-400 transition-colors">{title}</h3>
             <p onClick={()=>{router.push(`/channel/${id}`)}} className="text-xs hover:cursor-pointer text-gray-400 hover:text-pink-400 transition-colors">@{creator}</p>
           </div>
         </div>

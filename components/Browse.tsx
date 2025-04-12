@@ -23,7 +23,7 @@ const Browse = () => {
     const [theme, setTheme] = useState('neon'); // neon, retro, minimal
     return  (
         <div className={`min-h-screen bg-gray-900 text-gray-100 overflow-hidden relative ${theme === 'minimal' ? 'bg-opacity-95' : ''}`}>
-      
+          
         {/* Main layout */}
         <div className="flex flex-col h-screen">
             {/* <Navbar setIsMenuOpen={setIsMenuOpen} /> */}
@@ -56,13 +56,6 @@ const Browse = () => {
 const MainComp = ()=>{
     const [activeIndex, setActiveIndex] = useState(2); // Center stream is active by default
       const [isPlaying, setIsPlaying] = useState(true);
-      const [isMuted, setIsMuted] = useState(false);
-      const [isHovering, setIsHovering] = useState(null);
-      const [isGlitching, setIsGlitching] = useState(false);
-      const [systemMessage, setSystemMessage] = useState("CONNECTION ESTABLISHED");
-      const glitchTimerRef = useRef(null);
-      const systemMessageRef = useRef(null);
-      const streams = data.carouselStreams;
     
       // Auto-rotate carousel every 8 seconds if not the center stream
       useEffect(() => {
@@ -73,50 +66,7 @@ const MainComp = ()=>{
           return () => clearTimeout(timer);
         }
       }, [activeIndex, isPlaying]);
-    
-      // Random glitch effect
-      useEffect(() => {
-        const startRandomGlitches = () => {
-          const glitchInterval = setInterval(() => {
-            if (Math.random() > 0.7) {
-              setIsGlitching(true);
-              setTimeout(() => setIsGlitching(false), 500);
-            }
-          }, 3000);
-          return glitchInterval;
-        };
-        
-        const glitchInterval = startRandomGlitches();
-        return () => clearInterval(glitchInterval);
-      }, []);
-    
-      // System messages
-      useEffect(() => {
-        const systemMessages = [
-          "SIGNAL STRONG: NEURAL LINK ACTIVE",
-          "BANDWIDTH OPTIMIZED",
-          "REALITY AUGMENTATION ENGAGED",
-          "FIREWALL STATUS: SECURE",
-          "BRAINDANCE STREAMS AVAILABLE",
-          "ENCRYPTED CONNECTION VERIFIED",
-          "NETWATCH PRESENCE: UNDETECTED"
-        ];
-        
-        systemMessageRef.current = setInterval(() => {
-          setSystemMessage(systemMessages[Math.floor(Math.random() * systemMessages.length)]);
-        }, 10000);
-        
-        return () => clearInterval(systemMessageRef.current);
-      }, []);
-    
-      // Additional glitch effect when changing streams
-      useEffect(() => {
-        setIsGlitching(true);
-        setTimeout(() => setIsGlitching(false), 300);
-      }, [activeIndex]);
-      const formatViewers = (num) => {
-        return num > 1000 ? `${(num / 1000).toFixed(1)}K` : num;
-      };
+  
   return (
     <div className="bg-black min-h-screen text-white font-mono relative overflow-hidden">
       {/* Background effects */}
@@ -473,266 +423,459 @@ function Stats() {
         </div>
       );
 }
-function FeaturedStream(){
-    return (
-        <div className="mb-10">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-white relative pl-3 before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:bg-yellow-500 flex items-center">
-              <span className="glitch-text">SPOTLIGHT</span>
-              <span className="text-yellow-500 mx-1"></span>
-              <span className="text-cyan-400">FEATURED</span>
-              <span className="ml-2 px-1 py-0.5 bg-yellow-500/20 text-yellow-500 text-xs rounded-sm border border-yellow-500/50 animate-pulse">PRIME</span>
-            </h2>
-            {/* <div className="text-xs text-gray-400 flex items-center gap-2">
-              <Clock size={14} className="text-yellow-500" />
-              <span>SYSTEM.TIME: 22:45:16</span>
-            </div> */}
-          </div>
-          
-          {/* Premium featured stream with more details */}
-          <div className="border border-yellow-500/50 rounded-md overflow-hidden bg-gray-900/90 relative">
-            {/* Animated border effect */}
-            <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-500/70 to-transparent animate-pulse"></div>
-              <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-500/70 to-transparent animate-pulse"></div>
-              <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-yellow-500/70 to-transparent animate-pulse"></div>
-              <div className="absolute right-0 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-yellow-500/70 to-transparent animate-pulse"></div>
+function FeaturedStream() {
+  // State for live chat messages
+  const [chatMessages, setChatMessages] = useState([
+    { user: "CyberNinja", message: "That hack was amazing! How did you bypass the genome signature?", color: "text-cyan-400", time: "22:43:16" },
+    { user: "NetWalker", message: "How did you bypass the ICE so quickly? Been stuck there for hours", color: "text-purple-400", time: "22:43:42" },
+    { user: "Ghost_42", message: "Corporate security is a joke lol. Their firewall version is 2 updates behind.", color: "text-green-400", time: "22:44:05" },
+    { user: "DataWr4ith", message: "Anyone know which deck he's using? Looks like BlackMarket custom?", color: "text-pink-400", time: "22:44:23" },
+    { user: "NeonHex", message: "Those guards never saw it coming. Classic distraction technique.", color: "text-yellow-400", time: "22:44:51" },
+    { user: "Binary_Bloom", message: "Just donated 50 eddies! Worth every penny for this content!", color: "text-green-400", time: "22:45:10" }
+  ]);
+  
+  // State for user input
+  const [messageInput, setMessageInput] = useState('');
+  
+  // State for stream stats
+  const [streamStats, setStreamStats] = useState({
+    viewers: 24721,
+    followers: 1200000,
+    donations: 4285,
+    duration: '02:28:14',
+  });
+  
+  // State for user actions feedback
+  const [feedback, setFeedback] = useState(null);
+  
+  // Ref for chat container to auto-scroll
+  const chatContainerRef = useRef(null);
+  
+  // Simulated user messages to periodically add to chat
+  const simulatedMessages = [
+    { user: "NetRunner404", message: "Anyone got codes for the east wing security?", color: "text-blue-400" },
+    { user: "SynthWave", message: "That's some serious hardware you're running. Custom mods?", color: "text-purple-400" },
+    { user: "CyberPsycho", message: "Arasaka's gonna be MAD when they see this stream lol", color: "text-red-400" },
+    { user: "DataJack", message: "The subnet masking technique is brilliant!", color: "text-green-400" },
+    { user: "NightCity_V", message: "Checking in from Night City. Local fixers are watching this!", color: "text-yellow-400" },
+    { user: "ChromeEdge", message: "That's the fastest I've seen anyone crack a level 4 ICE", color: "text-cyan-400" },
+    { user: "Netrix", message: "Just shared this with my netrunner group. They're logging in now!", color: "text-pink-400" },
+    { user: "BitShifter", message: "Saving these techniques for my next run. Pure gold.", color: "text-amber-400" },
+  ];
+  
+  // Function to format current time as HH:MM:SS
+  const formatTime = () => {
+    const now = new Date();
+    return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+  };
+  
+  // Function to handle sending a message
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (messageInput.trim() === '') return;
+    
+    const newMessage = {
+      user: "YOU",
+      message: messageInput,
+      color: "text-white",
+      time: formatTime()
+    };
+    
+    setChatMessages(prev => [...prev, newMessage]);
+    setMessageInput('');
+  };
+  
+  // Function to handle user actions (donate, follow, subscribe)
+  const handleUserAction = (action) => {
+    let feedbackMessage = '';
+    let feedbackColor = '';
+    
+    switch(action) {
+      case 'donate':
+        const amount = Math.floor(Math.random() * 100) + 10;
+        feedbackMessage = `You donated €${amount}!`;
+        feedbackColor = 'text-green-400';
+        setStreamStats(prev => ({...prev, donations: prev.donations + amount}));
+        
+        // Add donation message to chat
+        setChatMessages(prev => [...prev, {
+          user: "SYSTEM",
+          message: `USER donated €${amount}! Thank you for your support!`,
+          color: "text-green-400",
+          time: formatTime()
+        }]);
+        break;
+      case 'follow':
+        feedbackMessage = 'You are now following NetKnight!';
+        feedbackColor = 'text-purple-400';
+        setStreamStats(prev => ({...prev, followers: prev.followers + 1}));
+        break;
+      case 'subscribe':
+        feedbackMessage = 'Premium subscription activated!';
+        feedbackColor = 'text-yellow-400';
+        break;
+      default:
+        break;
+    }
+    
+    if (feedbackMessage) {
+      setFeedback({
+        message: feedbackMessage,
+        color: feedbackColor
+      });
+      
+      // Clear feedback after 3 seconds
+      setTimeout(() => {
+        setFeedback(null);
+      }, 3000);
+    }
+  };
+  
+  // Effect to update duration timer every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      // Parse hours, minutes, seconds from duration string
+      const [hours, minutes, seconds] = streamStats.duration.split(':').map(Number);
+      
+      // Calculate new duration
+      let newSeconds = seconds + 1;
+      let newMinutes = minutes;
+      let newHours = hours;
+      
+      if (newSeconds >= 60) {
+        newSeconds = 0;
+        newMinutes += 1;
+      }
+      
+      if (newMinutes >= 60) {
+        newMinutes = 0;
+        newHours += 1;
+      }
+      
+      // Format new duration string
+      const newDuration = `${String(newHours).padStart(2, '0')}:${String(newMinutes).padStart(2, '0')}:${String(newSeconds).padStart(2, '0')}`;
+      
+      setStreamStats(prev => ({...prev, duration: newDuration}));
+    }, 1000);
+    
+    return () => clearInterval(timer);
+  }, [streamStats.duration]);
+  
+  // Effect to simulate random users joining the chat
+  useEffect(() => {
+    const chatSimulation = setInterval(() => {
+      // Randomly select a message from simulated messages
+      const randomIndex = Math.floor(Math.random() * simulatedMessages.length);
+      const randomMessage = simulatedMessages[randomIndex];
+      
+      // Add current time to message
+      const messageWithTime = {
+        ...randomMessage,
+        time: formatTime()
+      };
+      
+      // Add to chat
+      setChatMessages(prev => [...prev, messageWithTime]);
+      
+      // Randomly increase viewers
+      if (Math.random() > 0.7) {
+        const viewerIncrease = Math.floor(Math.random() * 50) + 1;
+        setStreamStats(prev => ({
+          ...prev,
+          viewers: prev.viewers + viewerIncrease
+        }));
+      }
+    }, 5000); // Add a new message every 5 seconds
+    
+    return () => clearInterval(chatSimulation);
+  }, []);
+  
+  // Effect to auto-scroll chat to bottom when new messages are added
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
+  
+  // Function to format numbers with commas
+  const formatNumber = (num) => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+  
+  return (
+    <div className="mb-10">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-white relative pl-3 before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:bg-yellow-500 flex items-center">
+          <span className="glitch-text">SPOTLIGHT</span>
+          <span className="text-yellow-500 mx-1"></span>
+          <span className="text-cyan-400">FEATURED</span>
+          <span className="ml-2 px-1 py-0.5 bg-yellow-500/20 text-yellow-500 text-xs rounded-sm border border-yellow-500/50 animate-pulse">PRIME</span>
+        </h2>
+      </div>
+      
+      {/* Premium featured stream with more details */}
+      <div className="border border-yellow-500/50 rounded-md overflow-hidden bg-gray-900/90 relative">
+        {/* Animated border effect */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-500/70 to-transparent animate-pulse"></div>
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-500/70 to-transparent animate-pulse"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-yellow-500/70 to-transparent animate-pulse"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-yellow-500/70 to-transparent animate-pulse"></div>
+        </div>
+        
+        {/* Digital noise overlay */}
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyIiBoZWlnaHQ9IjIiPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMwMDAiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')] opacity-20 pointer-events-none"></div>
+        
+        <div className="flex flex-col lg:flex-row">
+          {/* Thumbnail */}
+          <div className="relative lg:w-2/3">
+            <div className="absolute top-0 left-0 w-full h-6 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 z-10 flex items-center px-2">
+              <div className="text-xs text-cyan-400 font-mono">FEED://NETSTREAM.GLOBAL/NETKNIGHT/LIVE</div>
             </div>
             
-            {/* Digital noise overlay */}
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyIiBoZWlnaHQ9IjIiPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMwMDAiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')] opacity-20 pointer-events-none"></div>
+            <img src="/api/placeholder/1280/720" alt="Featured Stream" className="w-full h-64 lg:h-96 object-cover" />
             
-            <div className="flex flex-col lg:flex-row">
-              {/* Thumbnail */}
-              <div className="relative lg:w-2/3">
-                <div className="absolute top-0 left-0 w-full h-6 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 z-10 flex items-center px-2">
-                  <div className="text-xs text-cyan-400 font-mono">FEED://NETSTREAM.GLOBAL/NETKNIGHT/LIVE</div>
+            {/* Scanline effect */}
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJzY2FubGluZXMiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjQiPjxsaW5lIHgxPSIwIiB5MT0iMCIgeDI9IjEwMCUiIHkyPSIwIiBzdHlsZT0ic3Ryb2tlOmJsYWNrO3N0cm9rZS13aWR0aDoxcHg7c3Ryb2tlLW9wYWNpdHk6MC4wNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzY2FubGluZXMpIi8+PC9zdmc+')] opacity-30 pointer-events-none"></div>
+            
+            {/* Overlay elements */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+            
+            {/* Stream status indicators */}
+            <div className="absolute top-8 left-4 flex items-center gap-2">
+              <div className="bg-red-600 text-xs px-2 py-0.5 rounded flex items-center gap-1 backdrop-blur-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse"></span>
+                LIVE
+              </div>
+              <div className="bg-black/70 text-xs px-2 py-0.5 rounded backdrop-blur-sm flex items-center gap-1 border border-cyan-500/30">
+                <Eye size={12} className="text-cyan-400" />
+                <span className="font-mono text-cyan-300">{formatNumber(streamStats.viewers)}</span>
+              </div>
+              <div className="bg-black/70 text-xs px-2 py-0.5 rounded backdrop-blur-sm flex items-center gap-1 border border-yellow-500/30">
+                <Clock size={12} className="text-yellow-400" />
+                <span className="font-mono text-yellow-300">{streamStats.duration}</span>
+              </div>
+            </div>
+            
+            {/* Featured badge */}
+            <div className="absolute top-8 right-4 bg-gradient-to-r from-yellow-500 to-amber-600 text-black text-xs px-3 py-1 rounded-sm font-bold flex items-center gap-1">
+              <Zap size={12} />
+              FEATURED
+            </div>
+            
+            {/* Stream info overlay */}
+            <div className="absolute bottom-0 left-0 right-0 p-4">
+              <div className="mb-1 flex items-center gap-2">
+                <div className="px-1.5 py-0.5 bg-cyan-500/20 text-cyan-400 text-xs rounded-sm border border-cyan-500/50">
+                  TIER 4
                 </div>
-                
-                <img src="/api/placeholder/1280/720" alt="Featured Stream" className="w-full h-64 lg:h-96 object-cover" />
-                
-                {/* Scanline effect */}
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJzY2FubGluZXMiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjQiPjxsaW5lIHgxPSIwIiB5MT0iMCIgeDI9IjEwMCUiIHkyPSIwIiBzdHlsZT0ic3Ryb2tlOmJsYWNrO3N0cm9rZS13aWR0aDoxcHg7c3Ryb2tlLW9wYWNpdHk6MC4wNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzY2FubGluZXMpIi8+PC9zdmc+')] opacity-30 pointer-events-none"></div>
-                
-                {/* Overlay elements */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
-                
-                {/* Stream status indicators */}
-                <div className="absolute top-8 left-4 flex items-center gap-2">
-                  <div className="bg-red-600 text-xs px-2 py-0.5 rounded flex items-center gap-1 backdrop-blur-sm">
-                    <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse"></span>
-                    LIVE
-                  </div>
-                  <div className="bg-black/70 text-xs px-2 py-0.5 rounded backdrop-blur-sm flex items-center gap-1 border border-cyan-500/30">
-                    <Eye size={12} className="text-cyan-400" />
-                    <span className="font-mono text-cyan-300">24.7K</span>
-                  </div>
-                  <div className="bg-black/70 text-xs px-2 py-0.5 rounded backdrop-blur-sm flex items-center gap-1 border border-yellow-500/30">
-                    <Clock size={12} className="text-yellow-400" />
-                    <span className="font-mono text-yellow-300">02:28:14</span>
-                  </div>
-                </div>
-                
-                {/* Featured badge */}
-                <div className="absolute top-8 right-4 bg-gradient-to-r from-yellow-500 to-amber-600 text-black text-xs px-3 py-1 rounded-sm font-bold flex items-center gap-1">
-                  <Zap size={12} />
-                  FEATURED
-                </div>
-                
-                {/* Stream info overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <div className="mb-1 flex items-center gap-2">
-                    <div className="px-1.5 py-0.5 bg-cyan-500/20 text-cyan-400 text-xs rounded-sm border border-cyan-500/50">
-                      TIER 4
-                    </div>
-                    <div className="px-1.5 py-0.5 bg-purple-500/20 text-purple-400 text-xs rounded-sm border border-purple-500/50">
-                      ENCRYPTED
-                    </div>
-                  </div>
-                  
-                  <h3 className="text-xl font-bold text-white mb-1 relative">
-                    <span className="text-yellow-500">[</span>
-                    CYBERSPACE REVOLUTION: CORPORATE RAID
-                    <span className="text-yellow-500">]</span>
-                  </h3>
-                  
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="relative">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-yellow-500 to-orange-600 flex items-center justify-center">
-                        <Shield size={14} className="text-black" />
-                      </div>
-                      <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-cyan-500 flex items-center justify-center text-xs font-bold border-2 border-gray-900">
-                        V
-                      </div>
-                    </div>
-                    <div>
-                      <span className="text-sm text-white font-bold">NetKnight</span>
-                      <div className="flex items-center gap-1">
-                        <span className="text-xs text-gray-400">REPUTATION</span>
-                        <div className="flex">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <div key={star} className="w-2 h-2 bg-yellow-500 rounded-full mx-0.5"></div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <p className="text-sm text-gray-300 max-w-2xl border-l-2 border-yellow-500/50 pl-2">
-                    Join the most anticipated corporate infiltration of the year. Live walkthrough of Arasaka's security systems with real-time hack demonstrations. <span className="text-yellow-400">Premium access includes source code downloads.</span>
-                  </p>
-                </div>
-                
-                {/* Watch button */}
-                <div className="absolute bottom-4 right-4">
-                  <button className="bg-gradient-to-r from-yellow-500 to-orange-600 text-black px-4 py-2 rounded-sm font-bold text-sm flex items-center gap-2 hover:from-yellow-400 hover:to-orange-500 transition-all border-2 border-transparent hover:border-yellow-300">
-                    JACK_IN
-                    <ChevronRight size={16} />
-                  </button>
+                <div className="px-1.5 py-0.5 bg-purple-500/20 text-purple-400 text-xs rounded-sm border border-purple-500/50">
+                  ENCRYPTED
                 </div>
               </div>
               
-              {/* Stream details and chat preview */}
-              <div className="p-4 lg:w-1/3 bg-gray-900 relative">
-                {/* Terminal top bar */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-yellow-500"></div>
-                
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-sm font-bold text-gray-400 font-mono">STREAM_DETAILS<span className="text-yellow-500">//</span></h4>
-                  <div className="text-xs text-cyan-400 font-mono flex items-center">
-                    <div className="w-2 h-2 rounded-full bg-cyan-400 mr-1 animate-pulse"></div>
-                    UPTIME: 02:28:14
+              <h3 className="text-xl font-bold text-white mb-1 relative">
+                <span className="text-yellow-500">[</span>
+                CYBERSPACE REVOLUTION: CORPORATE RAID
+                <span className="text-yellow-500">]</span>
+              </h3>
+              
+              <div className="flex items-center gap-2 mb-2">
+                <div className="relative">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-yellow-500 to-orange-600 flex items-center justify-center">
+                    <Shield size={14} className="text-black" />
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-cyan-500 flex items-center justify-center text-xs font-bold border-2 border-gray-900">
+                    V
                   </div>
                 </div>
-                
-                {/* Stream stats */}
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div className="p-3 bg-gray-800/50 border border-cyan-500/30 rounded-sm relative overflow-hidden group hover:border-cyan-500/60 transition-all">
-                    <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div className="text-xs text-gray-500 mb-1 flex items-center gap-1">
-                      <Users size={10} className="text-cyan-400" />
-                      VIEWERS
-                    </div>
-                    <div className="text-xl font-bold text-white font-mono">24,721</div>
-                  </div>
-                  
-                  <div className="p-3 bg-gray-800/50 border border-purple-500/30 rounded-sm relative overflow-hidden group hover:border-purple-500/60 transition-all">
-                    <div className="absolute inset-0 bg-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div className="text-xs text-gray-500 mb-1 flex items-center gap-1">
-                      <Users size={10} className="text-purple-400" />
-                      FOLLOWERS
-                    </div>
-                    <div className="text-xl font-bold text-white font-mono">1.2M</div>
-                  </div>
-                  
-                  <div className="p-3 bg-gray-800/50 border border-yellow-500/30 rounded-sm relative overflow-hidden group hover:border-yellow-500/60 transition-all">
-                    <div className="absolute inset-0 bg-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div className="text-xs text-gray-500 mb-1 flex items-center gap-1">
-                      <BarChart2 size={10} className="text-yellow-400" />
-                      CATEGORY
-                    </div>
-                    <div className="text-sm font-bold text-white font-mono">Cyberpunk 2077</div>
-                  </div>
-                  
-                  <div className="p-3 bg-gray-800/50 border border-green-500/30 rounded-sm relative overflow-hidden group hover:border-green-500/60 transition-all">
-                    <div className="absolute inset-0 bg-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div className="text-xs text-gray-500 mb-1 flex items-center gap-1">
-                      <DollarSign size={10} className="text-green-400" />
-                      DONATIONS
-                    </div>
-                    <div className="text-sm font-bold text-white font-mono">€4,285</div>
-                  </div>
-                </div>
-                
-                {/* Tags */}
-                <div className="mb-4">
-                  <div className="text-xs text-gray-500 mb-2 flex items-center">
-                    <span className="font-mono">TAGS</span>
-                    <span className="text-yellow-500 mx-1">//</span>
-                    <span className="text-cyan-400 font-mono text-xs">FILTER.APPLY</span>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {["Cyberpunk", "Hacking", "Tutorial", "Corporate", "English", "Stealth", "Arasaka", "NetRunning"].map((tag, i) => (
-                      <span key={i} className="text-xs px-2 py-1 bg-gray-800 border border-yellow-500/30 rounded-sm text-gray-300 hover:bg-gray-700 hover:border-yellow-500/60 transition-all flex items-center cursor-pointer">
-                        <span className="text-yellow-500 mr-1">#</span>{tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Chat preview */}
                 <div>
-                  <div className="text-xs text-gray-500 mb-2 flex items-center justify-between">
-                    <div className="flex items-center">
-                      <span className="font-mono">LIVE_CHAT</span>
-                      <span className="text-yellow-500 mx-1">//</span>
+                  <span className="text-sm text-white font-bold">NetKnight</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs text-gray-400">REPUTATION</span>
+                    <div className="flex">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <div key={star} className="w-2 h-2 bg-yellow-500 rounded-full mx-0.5"></div>
+                      ))}
                     </div>
-                    <span className="text-cyan-400 flex items-center gap-1">
-                      <MessageSquare size={10} />
-                      <span className="font-mono">4.2K</span>
-                    </span>
                   </div>
-                  
-                  <div className="h-40 bg-gray-800/70 border border-purple-500/30 rounded-sm p-2 overflow-y-auto custom-scrollbar mb-2 relative">
-                    {/* Terminal style overlay */}
-                    <div className="absolute inset-0 pointer-events-none opacity-5 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyIiBoZWlnaHQ9IjIiPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PC9zdmc+')]"></div>
-                    
-                    {/* Chat system message */}
-                    <div className="text-xs mb-2 py-1 px-2 bg-yellow-500/10 border border-yellow-500/30 rounded-sm">
-                      <span className="text-yellow-400 font-bold">[SYSTEM]:</span>
-                      <span className="text-gray-300"> Premium stream started. Netrunner protection active. Chat moderation level: MEDIUM.</span>
-                    </div>
-                    
-                    {[
-                      { user: "CyberNinja", message: "That hack was amazing! How did you bypass the genome signature?", color: "text-cyan-400", time: "22:43:16" },
-                      { user: "NetWalker", message: "How did you bypass the ICE so quickly? Been stuck there for hours", color: "text-purple-400", time: "22:43:42" },
-                      { user: "Ghost_42", message: "Corporate security is a joke lol. Their firewall version is 2 updates behind.", color: "text-green-400", time: "22:44:05" },
-                      { user: "DataWr4ith", message: "Anyone know which deck he's using? Looks like BlackMarket custom?", color: "text-pink-400", time: "22:44:23" },
-                      { user: "NeonHex", message: "Those guards never saw it coming. Classic distraction technique.", color: "text-yellow-400", time: "22:44:51" },
-                      { user: "Binary_Bloom", message: "Just donated 50 eddies! Worth every penny for this content!", color: "text-green-400", time: "22:45:10" }
-                    ].map((chat, i) => (
-                      <div key={i} className="text-xs mb-1.5 flex items-start group">
-                        <span className="text-gray-500 font-mono text-xs mr-1 opacity-50">{chat.time}</span>
-                        <span className={`font-bold ${chat.color}`}>{chat.user}: </span>
-                        <span className="text-gray-300 ml-1">{chat.message}</span>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {/* Chat input */}
-                  <div className="relative">
-                    <input 
-                      type="text" 
-                      placeholder="Enter message..." 
-                      className="w-full bg-gray-800 text-gray-300 text-xs rounded-sm py-2 px-3 border border-cyan-500/30 focus:border-cyan-500/60 focus:outline-none focus:ring-1 focus:ring-cyan-500/50"
-                    />
-                    <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-cyan-400 hover:text-cyan-300 transition-colors">
-                      <MessageSquare size={14} />
-                    </button>
-                  </div>
-                </div>
-                
-                {/* Stream controls */}
-                <div className="mt-4 flex gap-2">
-                  <button className="flex-1 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 p-2 rounded-sm border border-cyan-500/30 hover:border-cyan-500/60 transition-all flex items-center justify-center gap-1">
-                    <DollarSign size={12} className="text-cyan-400" />
-                    DONATE
-                  </button>
-                  <button className="flex-1 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 p-2 rounded-sm border border-purple-500/30 hover:border-purple-500/60 transition-all flex items-center justify-center gap-1">
-                    <Users size={12} className="text-purple-400" />
-                    FOLLOW
-                  </button>
-                  <button className="flex-1 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 p-2 rounded-sm border border-yellow-500/30 hover:border-yellow-500/60 transition-all flex items-center justify-center gap-1">
-                    <Shield size={12} className="text-yellow-400" />
-                    SUBSCRIBE
-                  </button>
                 </div>
               </div>
+              
+              <p className="text-sm text-gray-300 max-w-2xl border-l-2 border-yellow-500/50 pl-2">
+                Join the most anticipated corporate infiltration of the year. Live walkthrough of Arasaka's security systems with real-time hack demonstrations. <span className="text-yellow-400">Premium access includes source code downloads.</span>
+              </p>
+            </div>
+            
+            {/* Watch button */}
+            <div className="absolute bottom-4 right-4">
+              <button className="bg-gradient-to-r from-yellow-500 to-orange-600 text-black px-4 py-2 rounded-sm font-bold text-sm flex items-center gap-2 hover:from-yellow-400 hover:to-orange-500 transition-all border-2 border-transparent hover:border-yellow-300">
+                JACK_IN
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
+          
+          {/* Stream details and chat preview */}
+          <div className="p-4 lg:w-1/3 bg-gray-900 relative">
+            {/* Terminal top bar */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-yellow-500"></div>
+            
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-sm font-bold text-gray-400 font-mono">STREAM_DETAILS<span className="text-yellow-500">//</span></h4>
+              <div className="text-xs text-cyan-400 font-mono flex items-center">
+                <div className="w-2 h-2 rounded-full bg-cyan-400 mr-1 animate-pulse"></div>
+                UPTIME: {streamStats.duration}
+              </div>
+            </div>
+            
+            {/* Stream stats */}
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="p-3 bg-gray-800/50 border border-cyan-500/30 rounded-sm relative overflow-hidden group hover:border-cyan-500/60 transition-all">
+                <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="text-xs text-gray-500 mb-1 flex items-center gap-1">
+                  <Users size={10} className="text-cyan-400" />
+                  VIEWERS
+                </div>
+                <div className="text-xl font-bold text-white font-mono">{formatNumber(streamStats.viewers)}</div>
+              </div>
+              
+              <div className="p-3 bg-gray-800/50 border border-purple-500/30 rounded-sm relative overflow-hidden group hover:border-purple-500/60 transition-all">
+                <div className="absolute inset-0 bg-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="text-xs text-gray-500 mb-1 flex items-center gap-1">
+                  <Users size={10} className="text-purple-400" />
+                  FOLLOWERS
+                </div>
+                <div className="text-xl font-bold text-white font-mono">{formatNumber(streamStats.followers)}</div>
+              </div>
+              
+              <div className="p-3 bg-gray-800/50 border border-yellow-500/30 rounded-sm relative overflow-hidden group hover:border-yellow-500/60 transition-all">
+                <div className="absolute inset-0 bg-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="text-xs text-gray-500 mb-1 flex items-center gap-1">
+                  <BarChart2 size={10} className="text-yellow-400" />
+                  CATEGORY
+                </div>
+                <div className="text-sm font-bold text-white font-mono">Cyberpunk 2077</div>
+              </div>
+              
+              <div className="p-3 bg-gray-800/50 border border-green-500/30 rounded-sm relative overflow-hidden group hover:border-green-500/60 transition-all">
+                <div className="absolute inset-0 bg-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="text-xs text-gray-500 mb-1 flex items-center gap-1">
+                  <DollarSign size={10} className="text-green-400" />
+                  DONATIONS
+                </div>
+                <div className="text-sm font-bold text-white font-mono">€{formatNumber(streamStats.donations)}</div>
+              </div>
+            </div>
+            
+            {/* Tags */}
+            <div className="mb-4">
+              <div className="text-xs text-gray-500 mb-2 flex items-center">
+                <span className="font-mono">TAGS</span>
+                <span className="text-yellow-500 mx-1">//</span>
+                <span className="text-cyan-400 font-mono text-xs">FILTER.APPLY</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {["Cyberpunk", "Hacking", "Tutorial", "Corporate", "English", "Stealth", "Arasaka", "NetRunning"].map((tag, i) => (
+                  <span key={i} className="text-xs px-2 py-1 bg-gray-800 border border-yellow-500/30 rounded-sm text-gray-300 hover:bg-gray-700 hover:border-yellow-500/60 transition-all flex items-center cursor-pointer">
+                    <span className="text-yellow-500 mr-1">#</span>{tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+            
+            {/* Chat preview */}
+            <div>
+              <div className="text-xs text-gray-500 mb-2 flex items-center justify-between">
+                <div className="flex items-center">
+                  <span className="font-mono">LIVE_CHAT</span>
+                  <span className="text-yellow-500 mx-1">//</span>
+                </div>
+                <span className="text-cyan-400 flex items-center gap-1">
+                  <MessageSquare size={10} />
+                  <span className="font-mono">{formatNumber(Math.floor(streamStats.viewers * 0.17))}</span>
+                </span>
+              </div>
+              
+              <div 
+                ref={chatContainerRef} 
+                className="h-40 bg-gray-800/70 border border-purple-500/30 rounded-sm p-2 overflow-y-auto custom-scrollbar mb-2 relative"
+              >
+                {/* Terminal style overlay */}
+                <div className="absolute inset-0 pointer-events-none opacity-5 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyIiBoZWlnaHQ9IjIiPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PC9zdmc+')]"></div>
+                
+                {/* Chat system message */}
+                <div className="text-xs mb-2 py-1 px-2 bg-yellow-500/10 border border-yellow-500/30 rounded-sm">
+                  <span className="text-yellow-400 font-bold">[SYSTEM]:</span>
+                  <span className="text-gray-300"> Premium stream started. Netrunner protection active. Chat moderation level: MEDIUM.</span>
+                </div>
+                
+                {/* Chat messages */}
+                {chatMessages.map((chat, i) => (
+                  <div key={i} className="text-xs mb-1.5 flex items-start group">
+                    <span className="text-gray-500 font-mono text-xs mr-1 opacity-50">{chat.time}</span>
+                    <span className={`font-bold ${chat.color}`}>{chat.user}: </span>
+                    <span className="text-gray-300 ml-1">{chat.message}</span>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Chat input */}
+              <form onSubmit={handleSendMessage} className="relative">
+                <input 
+                  type="text" 
+                  placeholder="Enter message..." 
+                  className="w-full bg-gray-800 text-gray-300 text-xs rounded-sm py-2 px-3 border border-cyan-500/30 focus:border-cyan-500/60 focus:outline-none focus:ring-1 focus:ring-cyan-500/50"
+                  value={messageInput}
+                  onChange={(e) => setMessageInput(e.target.value)}
+                />
+                <button 
+                  type="submit" 
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-cyan-400 hover:text-cyan-300 transition-colors"
+                >
+                  <MessageSquare size={14} />
+                </button>
+              </form>
+            </div>
+            
+            {/* Stream controls with feedback */}
+            <div className="mt-4 flex gap-2 relative">
+              <button 
+                className="flex-1 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 p-2 rounded-sm border border-cyan-500/30 hover:border-cyan-500/60 transition-all flex items-center justify-center gap-1"
+                onClick={() => handleUserAction('donate')}
+              >
+                <DollarSign size={12} className="text-cyan-400" />
+                DONATE
+              </button>
+              <button 
+                className="flex-1 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 p-2 rounded-sm border border-purple-500/30 hover:border-purple-500/60 transition-all flex items-center justify-center gap-1"
+                onClick={() => handleUserAction('follow')}
+              >
+                <Users size={12} className="text-purple-400" />
+                FOLLOW
+              </button>
+              <button 
+                className="flex-1 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 p-2 rounded-sm border border-yellow-500/30 hover:border-yellow-500/60 transition-all flex items-center justify-center gap-1"
+                onClick={() => handleUserAction('subscribe')}
+              >
+                <Shield size={12} className="text-yellow-400" />
+                SUBSCRIBE
+              </button>
+              
+              {/* Action feedback popup */}
+              {feedback && (
+                <div className="absolute -top-10 left-0 right-0 bg-gray-800 border border-gray-700 text-center py-2 rounded-sm animate-fadeIn">
+                  <span className={`text-sm ${feedback.color}`}>{feedback.message}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
-      );
+      </div>
+    </div>
+  );
 }
+
 function TopComp(){
     // State for animated counts on tags
   const [tagCounts, setTagCounts] = useState({});
@@ -779,11 +922,11 @@ function TopComp(){
       date: "APRIL 15, 2077", 
       time: "18:00 UTC", 
       prize: "₩500,000", 
-      participants: 128, 
+      participants: 256, 
       maxParticipants: 256,
-      image: "/api/placeholder/600/300", 
-      status: "REGISTRATION OPEN",
-      statusType: "success",
+      image: "https://www.pcgamesn.com/wp-content/sites/pcgamesn/2019/06/cyberpunk-netrunner.jpg", 
+      status: "FULL",
+      statusType: "warning",
       description: "The biggest NetRunner tournament of the year. Compete in high-stakes hacking challenges across multiple corporate databases.",
       sponsors: ["Arasaka", "Militech", "Kang Tao"]
     },
@@ -795,7 +938,7 @@ function TopComp(){
       prize: "₩250,000", 
       participants: 64, 
       maxParticipants: 64,
-      image: "/api/placeholder/600/300", 
+      image: "https://cdn-s.cdprojektred.com/news/d0d0fc155980a3c11af44df8236c2e38052255de_q90_1280x720.png", 
       status: "FULL",
       statusType: "warning",
       description: "The climactic finale of the Corpo Wars tournament series. Corporate teams battle for supremacy in virtual combat arenas.",
@@ -807,11 +950,11 @@ function TopComp(){
       date: "APRIL 22, 2077", 
       time: "22:00 UTC", 
       prize: "₩100,000", 
-      participants: 32, 
+      participants: 128, 
       maxParticipants: 128,
-      image: "/api/placeholder/600/300", 
-      status: "REGISTRATION OPEN",
-      statusType: "success",
+      image: "https://staticg.sportskeeda.com/editor/2022/09/02886-16639610814337-1920.jpg", 
+      status: "FULL",
+      statusType: "warning",
       description: "Street-level competition for up-and-coming runners. Prove your skills in the digital underground of Night City.",
       sponsors: ["Afterlife", "Lizzie's Bar"]
     }
@@ -1020,13 +1163,9 @@ function Broadcast(){
   
   const categories = [
     "All", 
-    "Cyberpunk 2077", 
-    "DataCrash", 
-    "GridRunner", 
-    "Neuro Sync", 
-    "Neon Abyss"
+    ...data.broadcastSummary.categories
   ];
-  
+  const broadcastData = data.broadcastSummary.topStreams;
   const broadcasts = [
     { 
       id: 1,
@@ -1080,16 +1219,16 @@ function Broadcast(){
     }
   ];
   
-  const sortedData = [...broadcasts]
+  const sortedData = [...broadcastData]
     .filter(item => activeCategory === "All" || item.game === activeCategory)
     .sort((a, b) => {
       const factor = sortDirection === "asc" ? 1 : -1;
       if (sortColumn === "viewers") {
         return factor * (a.viewers - b.viewers);
       } else if (sortColumn === "uptime") {
-        return factor * a.uptime.localeCompare(b.uptime);
+        return factor * a.duration.localeCompare(b.duration);
       } else if (sortColumn === "streamer") {
-        return factor * a.streamer.localeCompare(b.streamer);
+        return factor * a.channelName.localeCompare(b.channelName);
       } else if (sortColumn === "game") {
         return factor * a.game.localeCompare(b.game);
       }
@@ -1201,16 +1340,16 @@ function Broadcast(){
                   <tr 
                     key={i} 
                     className="border-b border-gray-800 hover:bg-cyan-900/10 transition-colors"
-                    onMouseEnter={() => setHoverRow(row.id)}
+                    onMouseEnter={() => setHoverRow(row.streamId)}
                     onMouseLeave={() => setHoverRow(null)}
                   >
                     <td className="px-3 py-3">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-md bg-gradient-to-r from-cyan-600 to-purple-600 flex items-center justify-center text-white">
-                          {getIcon(row.icon)}
-                        </div>
+                        <img src={row.channelAvatar} className="w-8 h-8 rounded-md bg-gradient-to-r from-cyan-600 to-purple-600 flex items-center justify-center text-white"/>
+                          
+                        {/* </div> */}
                         <div>
-                          <div className="font-medium text-white">{row.streamer}</div>
+                          <div className="font-medium text-white">{row.channelName}</div>
                           <div className="flex items-center gap-1 text-xs text-cyan-500">
                             <div className="h-1.5 w-1.5 rounded-full bg-cyan-500 animate-pulse"></div>
                             LIVE
@@ -1227,15 +1366,17 @@ function Broadcast(){
                       </span>
                     </td>
                     <td className="px-3 py-3 text-right font-mono">{formatNumber(row.viewers)}</td>
-                    <td className="px-3 py-3 text-right font-mono">{row.uptime}</td>
+                    <td className="px-3 py-3 text-right font-mono">{row.duration}</td>
                     <td className="px-3 py-3 text-right">
-                      <button className={`px-3 py-1.5 text-xs rounded flex items-center gap-1 transition-all ${
-                        hoverRow === row.id 
-                          ? 'bg-cyan-500 text-black font-medium' 
-                          : 'bg-cyan-900/30 border border-cyan-500/30 text-cyan-400'
-                      }`}>
-                        <Play size={14} /> Watch
-                      </button>
+                      <a href={`/live/${row.streamId}`}>
+                        <button className={`px-3 py-1.5 text-xs rounded flex items-center gap-1 transition-all ${
+                          hoverRow === row.streamId 
+                            ? 'bg-cyan-500 text-black font-medium' 
+                            : 'bg-cyan-900/30 border border-cyan-500/30 text-cyan-400'
+                        }`}>
+                          <Play size={14} /> Watch
+                        </button>
+                      </a>
                     </td>
                   </tr>
                 ))}
@@ -1254,9 +1395,9 @@ function Broadcast(){
             <div className="text-gray-500">
               <span className="text-cyan-400">{sortedData.length}</span> broadcasts found
             </div>
-            <button className="px-4 py-1.5 bg-gray-800/60 border border-cyan-500/30 rounded text-cyan-400 hover:bg-cyan-900/20 transition-colors flex items-center gap-2">
+            {/* <button className="px-4 py-1.5 bg-gray-800/60 border border-cyan-500/30 rounded text-cyan-400 hover:bg-cyan-900/20 transition-colors flex items-center gap-2">
               Load More <ChevronDown size={14} />
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
