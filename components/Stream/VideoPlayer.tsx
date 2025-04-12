@@ -9,7 +9,7 @@ import { useParams } from 'next/navigation'
 
 export default function CyberpunkVideoPlayer() {
   // State for UI controls
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
   const [audioLevel, setAudioLevel] = useState(70);
   const [showStats, setShowStats] = useState(false);
@@ -30,6 +30,7 @@ export default function CyberpunkVideoPlayer() {
   const progressBarRef = useRef(null);
   // const [streamLink, setstreamLink] = useState("/");
   const streamLink: string = Data.clips.find(each => each.id === params.id).streamLink;
+  const poster:string = Data.clips.find(each => each.id === params.id).thumbnail;
   // Stream stats for overlay
   const [streamStats, setStreamStats] = useState({
     fps: "30",
@@ -268,7 +269,7 @@ export default function CyberpunkVideoPlayer() {
             ref={videoRef}
             className="absolute inset-0 w-full h-full object-cover"
             src={streamLink} // Replace with your video URL
-            poster="/api/placeholder/640/360" // Optional: placeholder image while video loads
+            poster={poster} // Optional: placeholder image while video loads
           ></video>
 
           {/* Cyberpunk digital effects overlays */}

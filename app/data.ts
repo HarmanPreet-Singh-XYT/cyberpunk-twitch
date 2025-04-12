@@ -2557,6 +2557,7 @@ interface FollowedChannel {
 interface CarouselStream {
   id: string;
   thumbnail:string;
+  streamLink:string;
   title: string;
   isLive: boolean;
   channel: {
@@ -2803,6 +2804,7 @@ const getCarouselStreams = (): CarouselStream[] => {
     return {
       id: stream.id,
       thumbnail: stream.thumbnail,
+      streamLink: stream.streamLink,
       title: stream.title,
       isLive: true,
       channel: {

@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Play, Pause, Volume2, VolumeX, Users, ChevronLeft, ChevronRight, Zap, Eye, Shield } from "lucide-react";
 import { useRouter } from "next/navigation";
-import data from '@/app/data'
+import data from '@/app/data';
+
 export default function CyberpunkTwitchCarousel() {
   const [activeIndex, setActiveIndex] = useState(2); // Center stream is active by default
   const [isPlaying, setIsPlaying] = useState(true);
@@ -11,64 +12,13 @@ export default function CyberpunkTwitchCarousel() {
   const [systemMessage, setSystemMessage] = useState("CONNECTION ESTABLISHED");
   const glitchTimerRef = useRef(null);
   const systemMessageRef = useRef(null);
+  const videoRefs = useRef([]);
   const streams = data.carouselStreams;
-  // const streams = [
-  //   {
-  //     id: 1,
-  //     title: "NIGHT CITY NETRUNNING // Infiltrating Arasaka",
-  //     streamer: "CyberV1per",
-  //     game: "Cyberpunk 2077",
-  //     viewers: 14826,
-  //     tags: ["FPS", "RPG", "Stealth"],
-  //     thumbnail: "/streamThumbnail/3.jpg",
-  //     securityLevel: "High",
-  //     streamQuality: "8K Neural"
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "CORPO WARS: Militech vs Arasaka [Hard Mode]",
-  //     streamer: "NeonSamurai",
-  //     game: "Cyberpunk 2077",
-  //     viewers: 8762,
-  //     tags: ["RPG", "Story", "Violence"],
-  //     thumbnail: "/streamThumbnail/2.webp",
-  //     securityLevel: "Medium",
-  //     streamQuality: "4K HDR"
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "LIVE: Neo-Tokyo Drift Championships",
-  //     streamer: "DriftQueen",
-  //     game: "NeoRacer 2077",
-  //     viewers: 22341,
-  //     tags: ["Racing", "Competitive", "Esports"],
-  //     thumbnail: "/streamThumbnail/1.webp",
-  //     securityLevel: "Low",
-  //     streamQuality: "8K Neural"
-  //   },
-  //   {
-  //     id: 4,
-  //     title: "NEURAL HACKING // Breaking ICE Protocols",
-  //     streamer: "GhostInTheNet",
-  //     game: "ShadowNet Simulator",
-  //     viewers: 7532,
-  //     tags: ["Strategy", "Hacking", "PvP"],
-  //     thumbnail: "/streamThumbnail/4.jpg",
-  //     securityLevel: "Ultra",
-  //     streamQuality: "VR-Enhanced"
-  //   },
-  //   {
-  //     id: 5,
-  //     title: "MIDNIGHT BLADE // Cyber-ninja assassination run",
-  //     streamer: "SliceOfNight",
-  //     game: "Ghost Protocol",
-  //     viewers: 11438,
-  //     tags: ["Stealth", "Action", "Speedrun"],
-  //     thumbnail: "/streamThumbnail/5.jpg",
-  //     securityLevel: "Medium",
-  //     streamQuality: "4K HDR"
-  //   }
-  // ];
+
+  // Set up video refs
+  useEffect(() => {
+    videoRefs.current = videoRefs.current.slice(0, streams.length);
+  }, [streams.length]);
 
   // Auto-rotate carousel every 8 seconds if not the center stream
   useEffect(() => {
@@ -79,6 +29,48 @@ export default function CyberpunkTwitchCarousel() {
       return () => clearTimeout(timer);
     }
   }, [activeIndex, isPlaying]);
+
+  // Handle video playback based on active index
+  useEffect(() => {
+    // Pause all videos first
+    videoRefs.current.forEach((videoRef, index) => {
+      if (videoRef && index !== activeIndex) {
+        videoRef.pause();
+      }
+    });
+
+    // Play only the active video
+    const activeVideo = videoRefs.current[activeIndex];
+    if (activeVideo && isPlaying) {
+      activeVideo.muted = isMuted;
+      // Reset the video to start if it was paused
+      if (activeVideo.paused) {
+        activeVideo.currentTime = 0;
+        activeVideo.play().catch(err => console.log("Video play error:", err));
+      }
+    }
+  }, [activeIndex, isPlaying, isMuted]);
+
+  // Handle play/pause state changes
+  useEffect(() => {
+    const activeVideo = videoRefs.current[activeIndex];
+    if (activeVideo) {
+      if (isPlaying) {
+        activeVideo.play().catch(err => console.log("Video play error:", err));
+      } else {
+        activeVideo.pause();
+      }
+    }
+  }, [isPlaying, activeIndex]);
+
+  // Handle mute/unmute state changes
+  useEffect(() => {
+    videoRefs.current.forEach(videoRef => {
+      if (videoRef) {
+        videoRef.muted = isMuted;
+      }
+    });
+  }, [isMuted]);
 
   // Random glitch effect
   useEffect(() => {
@@ -265,12 +257,63 @@ export default function CyberpunkTwitchCarousel() {
                       ${isGlitching && isActive ? 'animate-glitch-shift' : ''}
                     `}
                   >
-                    {/* Thumbnail */}
-                    <img 
-                      src={stream.thumbnail} 
-                      alt={stream.title} 
-                      className={`w-full h-full object-cover ${isActive && isGlitching ? 'animate-color-shift' : ''}`}
-                    />
+                    {/* Media Content - Video for active, Image for inactive */}
+                    {isActive ? (
+                      <video
+                      ref={(el) => { // Add curly braces here
+                        // It's good practice to handle the null case when the component unmounts
+                        if (el) {
+                          videoRefs.current[index] = el;
+                        } else {
+                          // Optional: Handle cleanup if necessary when the element unmounts
+                          // e.g., if videoRefs.current is an array you might want to nullify the entry
+                          // if (videoRefs.current) {
+                          //   videoRefs.current[index] = null;
+                          // }
+                          // Or if it's a Map/Object you might delete the key
+                          // delete videoRefs.current[index];
+                        }
+                      }} // No return statement needed, implicitly returns void
+                        src={stream.streamLink} // Use provided URL or fallback pattern
+                        poster={stream.thumbnail}
+                        className={`w-full h-full object-cover ${isActive && isGlitching ? 'animate-color-shift' : ''}`}
+                        loop
+                        playsInline
+                        muted={isMuted}
+                        autoPlay={isPlaying}
+                      />
+                    ) : (
+                      <>
+                        <img 
+                          src={stream.thumbnail} 
+                          alt={stream.title}
+                          className={`w-full h-full object-cover`}
+                        />
+                        {/* Hidden video (preloaded but not visible) */}
+                        <video
+                          ref={(el) => { // Add curly braces here
+                            // It's good practice to handle the null case when the component unmounts
+                            if (el) {
+                              videoRefs.current[index] = el;
+                            } else {
+                              // Optional: Handle cleanup if necessary when the element unmounts
+                              // e.g., if videoRefs.current is an array you might want to nullify the entry
+                              // if (videoRefs.current) {
+                              //   videoRefs.current[index] = null;
+                              // }
+                              // Or if it's a Map/Object you might delete the key
+                              // delete videoRefs.current[index];
+                            }
+                          }} // No return statement needed, implicitly returns void
+                          src={stream.streamLink || `/streamVideos/${stream.id}.mp4`}
+                          className="hidden"
+                          loop
+                          playsInline
+                          muted={true}
+                          preload="metadata"
+                        />
+                      </>
+                    )}
                     
                     {/* Digital noise overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent mix-blend-overlay"></div>
@@ -282,9 +325,6 @@ export default function CyberpunkTwitchCarousel() {
                     <div className="absolute bottom-0 left-0 right-0 p-3 z-20 hover:cursor-pointer">
                       {/* Streamer info */}
                       <a href={`/channel/${stream.id}`} className="flex items-center mb-2">
-                        {/* <div className="w-8 h-8 rounded-full bg-[#ff007f] mr-2 overflow-hidden flex items-center justify-center border border-[#00f0ff]/50 shadow-md shadow-[#00f0ff]/20">
-                          <span className="text-xs font-bold">{stream.channel.name.substring(0, 2)}</span>
-                        </div> */}
                         <img src={stream.channel.avatar} className="w-8 h-8 rounded-full mr-2 overflow-hidden border border-[#00f0ff]/50 shadow-md shadow-[#00f0ff]/20"/>
                         <div>
                           <h3 className="text-sm font-bold text-white flex items-center">
