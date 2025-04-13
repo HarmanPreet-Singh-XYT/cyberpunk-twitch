@@ -27,10 +27,13 @@ import {
 } from "lucide-react";
 import CommentsPanel from "./Shorts/Comments";
 import data from "@/app/data";
+import { useParams } from "next/navigation";
 
-export default function CyberpunkVideoShortsSpecific({id}:{id:any}) {
+export default function CyberpunkVideoShortsSpecific() {
+    const id = useParams<{ id:string }>().id as any;
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isLiked, setIsLiked] = useState({});
+  const [isVideoPlaying, setisVideoPlaying] = useState(true);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [glitchEffect, setGlitchEffect] = useState(false);
   const [showTerminal, setShowTerminal] = useState(false);
@@ -95,16 +98,29 @@ export default function CyberpunkVideoShortsSpecific({id}:{id:any}) {
     return () => clearInterval(interval);
   }, []);
 
-  // Play current video, pause others
-  // Play current video, pause others
   useEffect(() => {
     if (id) {
-        const reordered = [
-          ...videoData.filter(item => item.id === id),
-          ...videoData.filter(item => item.id !== id)
-        ];
-        setVideoData(reordered);
+      const index = parseInt(id) - 1;
+      if (!isNaN(index) && index >= 0 && index < videoData.length) {
+        setCurrentVideoIndex(index);
       }
+    }
+  }, [id, videoData.length]);
+  // Toggle video play/pause
+  const togglePlay = () => {
+    const video = videoRefs.current[currentVideoIndex];
+    if (!video) return;
+
+    if (isVideoPlaying) {
+      video.pause();
+    } else {
+      video.play();
+    }
+    setisVideoPlaying(!isVideoPlaying);
+  };
+
+  // Play current video, pause others
+  useEffect(() => {
     videoRefs.current.forEach((video, index) => {
       if (video) { // Check if the video ref exists
         if (index === currentVideoIndex) {
@@ -250,6 +266,7 @@ export default function CyberpunkVideoShortsSpecific({id}:{id:any}) {
             <div className="relative w-full h-full max-w-lg mx-auto overflow-hidden">
                 <video
                 loop
+                onClick={togglePlay}
                 ref={(el) => {
                     if (videoRefs.current) { // Ensure videoRefs.current exists
                     if (el) {
@@ -377,7 +394,7 @@ export default function CyberpunkVideoShortsSpecific({id}:{id:any}) {
                 </div>
                 
                 {/* Enhanced Cyberpunk Tags with hover effects */}
-                {/* <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-2 flex-wrap">
                     {video.caption.split('#').slice(1).map((tag, idx) => (
                     <div 
                         key={idx} 
@@ -386,7 +403,7 @@ export default function CyberpunkVideoShortsSpecific({id}:{id:any}) {
                         <span className="text-xs font-mono text-cyan-400">#{tag.trim()}</span>
                     </div>
                     ))}
-                </div> */}
+                </div>
                 </div>
 
                 {/* Enhanced Interaction Buttons with reactive feedback */}

@@ -43,7 +43,18 @@ export default function CyberpunkVideoShorts() {
   const containerRef = useRef(null);
   const videoRefs = useRef([]);
   const terminalRef = useRef(null);
+  const [isVideoPlaying, setisVideoPlaying] = useState(true);
+  const togglePlay = () => {
+    const video = videoRefs.current[currentVideoIndex];
+    if (!video) return;
 
+    if (isVideoPlaying) {
+      video.pause();
+    } else {
+      video.play();
+    }
+    setisVideoPlaying(!isVideoPlaying);
+  };
   // Handle scroll events
   useEffect(() => {
     const handleWheel = (e) => {
@@ -258,6 +269,7 @@ export default function CyberpunkVideoShorts() {
             }
           }}
           src={video.streamLink}
+          onClick={togglePlay}
           playsInline
           autoPlay
           className={`h-full w-full object-cover ${
@@ -372,7 +384,7 @@ export default function CyberpunkVideoShorts() {
           </div>
           
           {/* Enhanced Cyberpunk Tags with hover effects */}
-          {/* <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 flex-wrap">
             {video.caption.split('#').slice(1).map((tag, idx) => (
               <div 
                 key={idx} 
@@ -381,7 +393,7 @@ export default function CyberpunkVideoShorts() {
                 <span className="text-xs font-mono text-cyan-400">#{tag.trim()}</span>
               </div>
             ))}
-          </div> */}
+          </div>
         </div>
 
         {/* Enhanced Interaction Buttons with reactive feedback */}

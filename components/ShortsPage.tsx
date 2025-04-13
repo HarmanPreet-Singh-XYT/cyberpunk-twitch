@@ -31,7 +31,7 @@ const ShortsPage = ({id}:{id?:string}) => {
                     isMuted={isMuted}
                     setIsMuted={setIsMuted}
                 /> */}
-                {id ? <CyberpunkVideoShortsSpecific id={id}/> : <CyberpunkVideoShorts/>}
+                {id ? <CyberpunkVideoShortsSpecific/> : <CyberpunkVideoShorts/>}
                 
                 </div>
             </main>

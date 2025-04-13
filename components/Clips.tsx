@@ -5,7 +5,7 @@ import CyberpunkVideoPlayer from './Stream/VideoPlayer';
 import Navbar from './Stream/Navbar';
 import Sidebar from './Stream/Channels';
 import data from '@/app/data';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 function formatNumber(num) {
   if (num >= 1_000_000_000) {
     return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
@@ -147,6 +147,7 @@ export default function CyberpunkClipPage() {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
   const [isMenuOpen, setisMenuOpen] = useState(true);
+  const router = useRouter();
   return (
     <div className="min-h-screen bg-black text-gray-200 font-sans relative overflow-hidden">
       {/* Background grid pattern */}
@@ -620,7 +621,7 @@ export default function CyberpunkClipPage() {
                   </div> */}
                   <img src={userInfo.avatar} alt={channelInfo.name} className="w-full h-full rounded-lg object-cover" />
                 </div>
-                <div>
+                <div onClick={() => router.push(`/channel/${data.streams.find((each)=> each.channelId === channelInfo.id).id}`)} className='hover:cursor-pointer'>
                   <h3 className="font-bold text-lg text-purple-400 flex items-center">
                     {channelInfo.name}
                     <Shield size={14} className="ml-1 text-cyan-400" />
@@ -681,6 +682,7 @@ export default function CyberpunkClipPage() {
               <div className="space-y-4">
                 {data.clips.map((clip) => clip.id !== params.id && (
                   <div 
+                  onClick={() => router.push(`/clip/${clip.id}`)}
                     key={clip.id} 
                     className="group bg-gray-900/80 border border-gray-800 hover:border-cyan-500/50 rounded-md overflow-hidden transition-all duration-300 cursor-pointer"
                     style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)' }}
