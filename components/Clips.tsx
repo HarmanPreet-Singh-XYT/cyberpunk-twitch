@@ -519,9 +519,11 @@ export default function CyberpunkClipPage() {
                     </div>
                   </div>
                   
+                  <a href='/browse'>
                   <button className="w-full py-2 bg-gray-800/50 border border-gray-700 text-gray-300 hover:text-cyan-400 font-medium text-sm rounded hover:bg-gray-800 transition-colors mt-4">
                     LOAD MORE COMMENTS
                   </button>
+                  </a>
                 </>
               )}
               
