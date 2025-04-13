@@ -110,7 +110,7 @@ export default function CyberpunkLanding() {
       {/* Main layout */}
       <div className="flex flex-col h-screen">
         {/* <Navbar setIsMenuOpen={setIsMenuOpen} /> */}
-        <Navbar setIsMenuOpen={setIsMenuOpen} />
+        <Navbar setIsMenuOpen={setIsMenuOpen} isBrowse />
         
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar navigation */}

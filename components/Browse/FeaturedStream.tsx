@@ -269,7 +269,7 @@ export default function FeaturedStream() {
         </div>
         
         {/* Premium featured stream with more details */}
-        <div className="border border-yellow-500/50 rounded-md overflow-hidden bg-gray-900/90 relative">
+        <div className="border border-yellow-500/50 rounded-md overflow-hidden bg-[#121212]/90 relative">
           {/* Animated border effect */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-500/70 to-transparent animate-pulse"></div>
@@ -292,7 +292,7 @@ export default function FeaturedStream() {
               <div className="relative w-full h-full lg:h-full bg-black">
                 {/* Loading indicator (shows when page is loaded but video isn't) */}
                 {pageLoaded && !videoLoaded && (
-                  <div className="absolute h-full inset-0 flex flex-col items-center justify-center bg-gray-900/80 z-20">
+                  <div className="absolute h-full inset-0 flex flex-col items-center justify-center bg-[#121212]/80 z-20">
                     <div className="w-12 h-12 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin mb-4"></div>
                     <div className="text-cyan-400 text-sm font-mono">LOADING STREAM...</div>
                     <div className="mt-2 w-48 h-1 bg-gray-800 rounded-full overflow-hidden">
@@ -304,7 +304,7 @@ export default function FeaturedStream() {
                 
                 {/* Initial loading indicator (shows when page isn't loaded yet) */}
                 {!pageLoaded && (
-                  <div className="absolute h-full inset-0 flex flex-col items-center justify-center bg-gray-900 z-30">
+                  <div className="absolute h-full inset-0 flex flex-col items-center justify-center bg-[#121212] z-30">
                     <div className="w-16 h-16 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin mb-4"></div>
                     <div className="text-yellow-500 text-sm font-mono">INITIALIZING INTERFACE...</div>
                     <div className="mt-4 w-64 h-2 bg-gray-800 rounded-full overflow-hidden">
@@ -446,7 +446,7 @@ export default function FeaturedStream() {
                   </div>
                   
                   <p className="text-sm text-gray-300 max-w-2xl border-l-2 border-yellow-500/50 pl-2">
-                    Join the most anticipated corporate infiltration of the year. Live walkthrough of Arasaka's security systems with real-time hack demonstrations. <span className="text-yellow-400">Premium access includes source code downloads.</span>
+                  Enter the digital Arena as Dr DisRespect tears through firewalls in real-time—code, chaos, and the Two-Time’s tactical domination, all in one stream. <span className="text-yellow-400">Premium access includes source code downloads.</span>
                   </p>
                 </div>
                 
@@ -465,7 +465,7 @@ export default function FeaturedStream() {
             </div>
             
             {/* Stream details and chat preview */}
-            <div className="p-4 lg:w-1/3 bg-gray-900 relative">
+            <div className="p-4 lg:w-1/3 bg-[#121212] relative">
               {/* Terminal top bar */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-yellow-500"></div>
               

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Menu, Zap, Globe, Clock, Search, Bell, User, ChevronDown, Shield, Wifi, Battery, Terminal, Cpu } from 'lucide-react';
-
+import NotificationPopup from '../Notification';
 // Global styles can be moved to a separate CSS file or added to your global CSS
 const globalStyles = `
   @keyframes dot-1 {
@@ -44,7 +44,7 @@ function NavLink({ children, active, link }) {
   );
 }
 
-function Navbar({ setIsMenuOpen }) {
+function Navbar({ setIsMenuOpen, isBrowse = false }:{setIsMenuOpen: any, isBrowse?: boolean}) {
     const [scrolled, setScrolled] = useState(false);
     const [currentTime, setCurrentTime] = useState('00:00:00');
     const [pingStatus, setPingStatus] = useState('OPTIMAL');
@@ -157,8 +157,8 @@ function Navbar({ setIsMenuOpen }) {
                 </a>
                 
                 <nav className="hidden md:flex space-x-1">
-                  <NavLink link={'/'} active>Discover</NavLink>
-                  <NavLink link={'/browse'} active={false}>Browse</NavLink>
+                  <NavLink link={'/'} active={!isBrowse}>Discover</NavLink>
+                  <NavLink link={'/browse'} active={isBrowse}>Browse</NavLink>
                 </nav>
               </div>
               
@@ -222,17 +222,18 @@ function Navbar({ setIsMenuOpen }) {
                   </div>
                 </div>
                 
-                <button className="p-2 rounded-lg text-gray-300 relative group" aria-label="Notifications">
+                {/* <button className="p-2 rounded-lg text-gray-300 relative group" aria-label="Notifications">
                   <span className="absolute inset-0 bg-purple-800 opacity-0 group-hover:opacity-20 transition-opacity"></span>
                   <span className="absolute inset-0 border border-purple-500/0 group-hover:border-purple-500/50 rounded-lg transition-all"></span>
                   <Bell size={20} className="relative z-10 group-hover:text-cyan-400 transition-colors" />
                   <span className="absolute top-0 right-0 block w-2 h-2 rounded-full bg-pink-500 ring-2 ring-pink-500/20 animate-pulse"></span>
-                  
+                   */}
                   {/* Notification count */}
                   {/* <span className="absolute -top-1 -right-1 text-xs bg-pink-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
                     3
                   </span> */}
-                </button>
+                {/* </button> */}
+                <NotificationPopup />
                 
                 {/* New button: Terminal */}
                 <a href='/console' className="p-2 rounded-lg text-gray-300 relative group overflow-hidden hidden md:flex" aria-label="Terminal">
