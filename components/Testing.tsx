@@ -581,6 +581,7 @@ function Clips() {
           return <StreamCard 
             key={each.id}
             avatar={user.avatar}
+            isClip={true}
             id={each.id}
             title={each.title}
             creator={channel.name} 
@@ -610,7 +611,7 @@ function formatNumber(num) {
   return num.toString();
 }
 // Enhanced Stream Card Component
-function StreamCard({ id,title, creator, game,avatar, viewers, tags = [], live = false, viewerTrend = "stable", featured = false, thumbnail }) {
+function StreamCard({ id,title, creator, game,avatar, viewers, tags = [], live = false, viewerTrend = "stable", featured = false, thumbnail, isClip = false }) {
   // Viewer trend indicators
   const router = useRouter();
   const trendIcons = {
@@ -621,7 +622,7 @@ function StreamCard({ id,title, creator, game,avatar, viewers, tags = [], live =
 
   return (
     <div className={`rounded-lg overflow-hidden bg-[#121212] border ${featured ? 'border-cyan-500 shadow-glow-cyan' : 'border-purple-900'} hover:border-pink-500 transition-all group transform hover:-translate-y-1`}>
-      <div onClick={()=>{router.push(`/live/${id}`)}} className="aspect-video hover:cursor-pointer bg-[#121212] relative overflow-hidden">
+      <div onClick={()=>{isClip ? router.push(`/clip/${id}`) : router.push(`/live/${id}`)}} className="aspect-video hover:cursor-pointer bg-[#121212] relative overflow-hidden">
         <img src={thumbnail} alt="Stream thumbnail" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
         
         {/* Stream information overlay */}
