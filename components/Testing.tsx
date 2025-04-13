@@ -578,9 +578,11 @@ function Clips() {
           if(index>3) return;
           const channel = data.channels.find((channel) => channel.id === each.channelId);
           const user = data.users.find((user) => user.id === channel.userId);
+          const streams = data.streams.find((user) => user.channelId === channel.id);
           return <StreamCard 
             key={each.id}
             avatar={user.avatar}
+            streamID={streams.id}
             isClip={true}
             id={each.id}
             title={each.title}
@@ -611,7 +613,7 @@ function formatNumber(num) {
   return num.toString();
 }
 // Enhanced Stream Card Component
-function StreamCard({ id,title, creator, game,avatar, viewers, tags = [], live = false, viewerTrend = "stable", featured = false, thumbnail, isClip = false }) {
+function StreamCard({ id,title,streamID='', creator, game,avatar, viewers, tags = [], live = false, viewerTrend = "stable", featured = false, thumbnail, isClip = false }) {
   // Viewer trend indicators
   const router = useRouter();
   const trendIcons = {
@@ -669,7 +671,7 @@ function StreamCard({ id,title, creator, game,avatar, viewers, tags = [], live =
           <img src={avatar} alt={creator} className="w-8 h-8 rounded-full object-cover overflow-hidden border border-cyan-700 flex-shrink-0" />
           <div>
             <h3 onClick={()=>{isClip ? router.push(`/clip/${id}`) : router.push(`/live/${id}`)}} className="text-sm hover:cursor-pointer font-medium text-white line-clamp-1 group-hover:text-cyan-400 transition-colors">{title}</h3>
-            <p onClick={()=>{router.push(`/channel/${id}`)}} className="text-xs hover:cursor-pointer text-gray-400 hover:text-pink-400 transition-colors">@{creator}</p>
+            <p onClick={()=>{isClip ? router.push(`/channel/${streamID}`) : router.push(`/channel/${id}`)}}  className="text-xs hover:cursor-pointer text-gray-400 hover:text-pink-400 transition-colors">@{creator}</p>
           </div>
         </div>
         
