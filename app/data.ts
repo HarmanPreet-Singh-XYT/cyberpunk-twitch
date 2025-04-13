@@ -507,7 +507,117 @@ const users: User[] = [
       }
     }
 ];
-
+// Enhanced video data with more cyberpunk elements and narrative
+const shorts = [
+  {
+    id: 2,
+    streamID:"s10",
+    streamLink:"https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/shocked-perplexed-confused-wow-720-ytshorts.savetube.me.mp4",
+    videoUrl: "/shorts/2.avif",
+    username: "DrDisrespect",
+    caption: "Shocked Perplexed Confused WOW",
+    likes: 3812,
+    comments: 94,
+    shares: 45,
+    userRank: "Street Merc",
+    location: "Kabuki District",
+    cryptoValue: 1.87,
+    avatar:"https://yt3.ggpht.com/_0_SuenjzMocr2OTOHbGjEin5FcHOy-vRroLcEZtj0WfUMEQXVQqbtEuRaa-tIewyjbAkffR=s176-c-k-c0x00ffffff-no-rj-mo",
+    threatLevel: "Medium",
+    implants: ["Mantis Blades", "Reflex Booster", "Dermal Armor"],
+    timestamp: "03:17:09"
+  },
+  {
+    id: 1,
+    streamID:"s10",
+    streamLink:"https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/flashback-the-only-way-to-deal-with-campers-good-ol-verdansk-memories-drdisrespect-shorts-720-ytshorts.savetube.me.mp4",
+    videoUrl: "/shorts/6.avif",
+    username: "DrDisrespect",
+    caption: "FLASHBACK: The only way to deal with campers, good of verdansk memories",
+    likes: 4253,
+    comments: 128,
+    shares: 76,
+    userRank: "Elite Netrunner",
+    location: "Night City Downtown",
+    cryptoValue: 2.45,
+    avatar:"https://yt3.ggpht.com/_0_SuenjzMocr2OTOHbGjEin5FcHOy-vRroLcEZtj0WfUMEQXVQqbtEuRaa-tIewyjbAkffR=s176-c-k-c0x00ffffff-no-rj-mo",
+    threatLevel: "High",
+    implants: ["NeuroDeck", "OpticMod", "ICE-Breaker"],
+    timestamp: "21:45:33"
+  },
+  {
+    id: 3,
+    streamID:"s10",
+    streamLink:"https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/they-always-peek-drdisrespect-reminds-them-shorts-warzone-720-ytshorts.savetube.me.mp4",
+    videoUrl: "/shorts/3.avif",
+    username: "DrDisrespect",
+    caption: "They always peek DrDisprespect, remind them Warzone",
+    likes: 5126,
+    comments: 201,
+    shares: 112,
+    userRank: "Corporate Spy",
+    location: "Arasaka Tower",
+    cryptoValue: 5.32,
+    avatar:"https://yt3.ggpht.com/_0_SuenjzMocr2OTOHbGjEin5FcHOy-vRroLcEZtj0WfUMEQXVQqbtEuRaa-tIewyjbAkffR=s176-c-k-c0x00ffffff-no-rj-mo",
+    threatLevel: "Critical",
+    implants: ["Memory Boost", "Neural Link", "Ghost Protocol"],
+    timestamp: "00:13:47"
+  },
+  {
+    id: 4,
+    streamID:"s10",
+    streamLink:"https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/flashback-how-to-approach-any-scary-situation-in-life-residentevil-drdisrespect-shorts-720-ytshorts.savetube.me.mp4",
+    videoUrl: "/shorts/4.avif",
+    username: "DrDisrespect",
+    caption: "FLASHBACK: how to approach any scary situation in life, Resident Evil",
+    likes: 7329,
+    comments: 315,
+    shares: 189,
+    userRank: "Street Racer",
+    location: "Westbrook",
+    cryptoValue: 3.21,
+    avatar:"https://yt3.ggpht.com/_0_SuenjzMocr2OTOHbGjEin5FcHOy-vRroLcEZtj0WfUMEQXVQqbtEuRaa-tIewyjbAkffR=s176-c-k-c0x00ffffff-no-rj-mo",
+    threatLevel: "Low",
+    implants: ["Reflex Tuner", "Synaptic Accelerator", "Optic Zoom"],
+    timestamp: "22:51:04"
+  },
+  {
+    id: 5,
+    streamID:"s10",
+    streamLink:"https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/was-jared-leto-the-best-joker-drdisrespect-shorts-720-ytshorts.savetube.me.mp4",
+    videoUrl: "/shorts/5.avif",
+    username: "DrDisrespect",
+    caption: "was jared leto the best jocker DrDisrespect",
+    likes: 7329,
+    comments: 315,
+    shares: 189,
+    userRank: "Street Racer",
+    avatar:"https://yt3.ggpht.com/_0_SuenjzMocr2OTOHbGjEin5FcHOy-vRroLcEZtj0WfUMEQXVQqbtEuRaa-tIewyjbAkffR=s176-c-k-c0x00ffffff-no-rj-mo",
+    location: "Westbrook",
+    cryptoValue: 3.21,
+    threatLevel: "Low",
+    implants: ["Reflex Tuner", "Synaptic Accelerator", "Optic Zoom"],
+    timestamp: "22:51:04"
+  },
+  {
+    id: 6,
+    streamID:"s5",
+    streamLink:"https://harmantwitchcyberpunk.s3.ap-south-1.amazonaws.com/shroud-inhuman-flick-shorts-shroud-cs2-streamer-clutch-flick-720-ytshorts.savetube.me.mp4",
+    videoUrl: "/shorts/1.avif",
+    username: "Shroud",
+    avatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/7ed5e0c6-0191-4eef-8328-4af6e4ea5318-profile_image-150x150.png",
+    caption: "Shroud Inhuman Flick #shorts #shroud #cs2 #streamer #clutch #flick",
+    likes: 7329,
+    comments: 315,
+    shares: 189,
+    userRank: "Street Racer",
+    location: "Westbrook",
+    cryptoValue: 3.21,
+    threatLevel: "Low",
+    implants: ["Reflex Tuner", "Synaptic Accelerator", "Optic Zoom"],
+    timestamp: "22:51:04"
+  },
+];
 // Channel data
 const channels: Channel[] = [
     {
@@ -2897,6 +3007,8 @@ export const cyberpunkTwitchData = {
   categories,
   comments,
   statusUpdates,
+  shorts,
+
   
   // Organized data for UI components
   followedChannels: getFollowedChannels(),

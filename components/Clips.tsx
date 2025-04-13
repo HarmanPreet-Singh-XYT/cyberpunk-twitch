@@ -195,7 +195,7 @@ export default function CyberpunkClipPage() {
           />
         </div>
       )} */}
-    <Navbar setIsMenuOpen={setisMenuOpen}/>
+    <Navbar setIsMenuOpen={setisMenuOpen} isClip={true}/>
       <div className="relative z-10 mx-auto px-4 py-6">
         <header className="mb-6">
           <div className="flex justify-between items-center mb-4">

@@ -44,7 +44,7 @@ function NavLink({ children, active, link }) {
   );
 }
 
-function Navbar({ setIsMenuOpen, isBrowse = false }:{setIsMenuOpen: any, isBrowse?: boolean}) {
+function Navbar({ setIsMenuOpen, isBrowse = false,isShorts = false,isClip = false }:{setIsMenuOpen: any, isBrowse?: boolean,isShorts?:boolean,isClip?:boolean}) {
     const [scrolled, setScrolled] = useState(false);
     const [currentTime, setCurrentTime] = useState('00:00:00');
     const [pingStatus, setPingStatus] = useState('OPTIMAL');
@@ -157,8 +157,10 @@ function Navbar({ setIsMenuOpen, isBrowse = false }:{setIsMenuOpen: any, isBrows
                 </a>
                 
                 <nav className="hidden md:flex space-x-1">
-                  <NavLink link={'/'} active={!isBrowse}>Discover</NavLink>
+                  <NavLink link={'/'} active={!isBrowse && !isShorts && !isClip}>Discover</NavLink>
                   <NavLink link={'/browse'} active={isBrowse}>Browse</NavLink>
+                  <NavLink link={'/shorts'} active={isShorts}>Shorts</NavLink>
+                  <NavLink link={'/clip/cl1'} active={isClip}>Clips</NavLink>
                 </nav>
               </div>
               

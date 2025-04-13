@@ -36,8 +36,8 @@ const Browse = () => {
             <Sidebar setIsOpen={setIsMenuOpen} isOpen={isMenuOpen} setCurrentSection={setCurrentSection} />
             
             {/* Main content area */}
-            <main className="flex-1 overflow-y-auto pb-20 relative z-10">
-                <div className="mx-auto px-4 py-6">
+            <main className="flex-1 overflow-y-auto relative z-10">
+                <div className="mx-auto px-4 pt-6">
                 {/* <FeaturedStream 
                     isVideoPlaying={isVideoPlaying} 
                     setIsVideoPlaying={setIsVideoPlaying}
@@ -45,7 +45,7 @@ const Browse = () => {
                     setIsMuted={setIsMuted}
                 /> */}
                 <MainComp/>
-                <div className='py-6'></div>
+                
                 </div>
             </main>
             </div>
@@ -181,13 +181,14 @@ const MainComp = ()=>{
           </div>
         </div>
         <FeaturedStream/>
-        <TopComp/>
+        <Shorts/>
+        <LiveStreams/>
         <RecommendedStreams/>
         <div className='mt-12'></div>
-        <Stats/>
-        <LiveStreams/>
-        <Broadcast/>
+        <TopComp/>
         <Clips/>
+        <Broadcast/>
+        <Stats/>
         {/* New Feature: Current Broadcasts by Category */}
       </div>
       {/* Global CSS for animations */}
@@ -1665,6 +1666,121 @@ function Clips() {
         )}
       </div>
     </div>
+  );
+}
+function Shorts() {
+  return (
+    <div className="relative my-8">
+      {/* Decorative cyberpunk element */}
+      <div className="absolute -left-4 top-0 w-1 h-8 bg-black shadow-glow-pink"></div>
+      
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-white relative">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">TRENDING_</span>
+          <span className="text-cyan-400">SHORTS</span>
+          <span className="animate-pulse text-pink-500 ml-1">|</span>
+        </h2>
+        <a href="/browse" className="text-sm text-cyan-400 hover:text-pink-400 transition-colors flex items-center group">
+          <span>VIEW_ALL</span>
+          <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+      
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+        {data.shorts.map((each, index) => {
+          if(index > 5) return;
+
+          return <ShortCard 
+            key={each.id}
+            avatar={each.avatar}
+            id={each.id}
+            title={each.caption}
+            creator={each.username}
+            // views={each.views}
+            channelId={each.streamID} 
+            thumbnail={each.videoUrl}
+          />
+        })}
+      </div>
+    </div>
+  );
+}
+
+// Enhanced Short Video Card Component for portrait videos
+function ShortCard({ id, title, creator, avatar,  channelId, thumbnail }) {
+  const router = useRouter();
+  
+  return (
+    <a href={`/shorts/${id}`}>
+      <div className="rounded-lg overflow-hidden bg-black border border-purple-900 hover:border-pink-500 transition-all group transform hover:-translate-y-1 hover:shadow-glow-pink">
+        {/* Portrait video container with cyberpunk aesthetic */}
+        <div 
+          onClick={() => router.push(`/shorts/${id}`)} 
+          className="relative aspect-[9/16] bg-black overflow-hidden hover:cursor-pointer"
+        >
+          <img 
+            src={thumbnail} 
+            alt={title} 
+            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+          />
+          
+          {/* Neon glow overlay effect */}
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-20 bg-gradient-to-t from-cyan-500 to-pink-500 mix-blend-overlay transition-opacity"></div>
+          
+          {/* Top glitch line effect */}
+          <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50"></div>
+          
+          {/* View count overlay */}
+          <div className="absolute bottom-0 right-0 m-2 px-1.5 py-0.5 bg-black bg-opacity-70 border border-pink-500 text-xs font-medium rounded text-white flex items-center space-x-1">
+            <svg className="w-3 h-3 text-pink-400" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+              <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+            </svg>
+            {/* <span>{formatNumber(views)}</span> */}
+          </div>
+          
+          {/* Cyberpunk corner elements */}
+          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-cyan-500 opacity-70 group-hover:opacity-100 transition-opacity"></div>
+          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-pink-500 opacity-70 group-hover:opacity-100 transition-opacity"></div>
+        </div>
+        
+        {/* Info section */}
+        <div className="p-2 bg-gradient-to-b from-black to-gray-900">
+          <h3 
+            onClick={() => router.push(`/short/${id}`)}
+            className="text-xs font-medium text-white line-clamp-1 group-hover:text-cyan-400 transition-colors hover:cursor-pointer"
+          >
+            {title}
+          </h3>
+          
+          <div className="flex items-center mt-1.5 space-x-1.5">
+            <img 
+              src={avatar} 
+              alt={creator} 
+              className="w-5 h-5 rounded-full object-cover border border-purple-700"
+              onClick={() => router.push(`/channel/${channelId}`)}
+            />
+            <p 
+              onClick={() => router.push(`/channel/${channelId}`)} 
+              className="text-xs text-gray-400 hover:text-pink-400 transition-colors truncate hover:cursor-pointer"
+            >
+              @{creator}
+            </p>
+          </div>
+          
+          {/* Play indicator */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="w-12 h-12 rounded-full bg-black bg-opacity-50 border border-pink-500 flex items-center justify-center">
+              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
   );
 }
 export default Browse

@@ -118,7 +118,7 @@ export default function CyberpunkLanding() {
           <Sidebar setIsOpen={setIsMenuOpen} isOpen={isMenuOpen} setCurrentSection={setCurrentSection} />
           
           {/* Main content area */}
-          <main className="flex-1 overflow-y-auto pb-20 relative z-10">
+          <main className="flex-1 overflow-y-auto relative z-10">
             <div className="mx-auto px-4 py-6">
               {/* <FeaturedStream 
                 isVideoPlaying={isVideoPlaying} 
@@ -127,15 +127,6 @@ export default function CyberpunkLanding() {
                 setIsMuted={setIsMuted}
               /> */}
               <CyberpunkTwitchCarousel/>
-              <div className='py-6'></div>
-              {currentSection === 'recommended' && (
-                <>
-                  {/* <RecommendedStreams /> */}
-                  {/* <ProductShowcase /> */}
-                </>
-              )}
-              {/* {currentSection === 'categories' && <CategoriesSection />} */}
-              {/* {currentSection === 'following' && <FollowingSection />} */}
             </div>
           </main>
         </div>
