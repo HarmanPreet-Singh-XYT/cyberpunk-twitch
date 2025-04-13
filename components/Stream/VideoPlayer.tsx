@@ -267,6 +267,7 @@ export default function CyberpunkVideoPlayer() {
             autoPlay
             playsInline
             ref={videoRef}
+            loop
             className="absolute inset-0 w-full h-full object-cover"
             src={streamLink} // Replace with your video URL
             poster={poster} // Optional: placeholder image while video loads
