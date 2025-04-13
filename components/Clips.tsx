@@ -519,11 +519,11 @@ export default function CyberpunkClipPage() {
                     </div>
                   </div>
                   
-                  <a href='/browse'>
+                  
                   <button className="w-full py-2 bg-gray-800/50 border border-gray-700 text-gray-300 hover:text-cyan-400 font-medium text-sm rounded hover:bg-gray-800 transition-colors mt-4">
                     LOAD MORE COMMENTS
                   </button>
-                  </a>
+                  
                 </>
               )}
               
@@ -720,11 +720,12 @@ export default function CyberpunkClipPage() {
                     </div>
                   </div>
                 ))}
-
+                <a href='/browse'>
                 <button className="w-full py-2 bg-gray-800 border border-purple-600/30 text-purple-400 font-medium text-sm rounded hover:bg-gray-700 transition-colors mt-4 group relative overflow-hidden">
                   <span className="relative z-10 group-hover:text-white transition-colors">LOAD MORE CLIPS</span>
                   <div className="absolute inset-0 bg-purple-600/30 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
                 </button>
+                </a>
               </div>
             </div>
 
