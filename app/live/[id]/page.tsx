@@ -1,4 +1,4 @@
-import CyberpunkTwitch from '@/components/Testing'
+import CyberpunkTwitch from '@/components/StreamPage'
 import React from 'react'
 
 const page = () => {

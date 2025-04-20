@@ -25,7 +25,7 @@ import {
   Send,
   ZapOff
 } from "lucide-react";
-import CommentsPanel from "./Shorts/Comments";
+import CommentsPanel from "./Comments";
 import data from "@/app/data";
 import { useParams } from "next/navigation";
 

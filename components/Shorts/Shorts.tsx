@@ -25,7 +25,7 @@ import {
   Send,
   ZapOff
 } from "lucide-react";
-import CommentsPanel from "./Shorts/Comments";
+import CommentsPanel from "./Comments";
 import data from "@/app/data";
 // Enhanced video data with more cyberpunk elements and narrative
 const videoData = data.shorts;

@@ -3,7 +3,7 @@ import { Play, Pause, Volume2, VolumeX, Users, ChevronLeft, ChevronRight, Zap, E
 import { useRouter } from "next/navigation";
 import data from '@/app/data';
 
-export default function CyberpunkTwitchCarousel() {
+export default function CyberpunkTwitchBrowse() {
   const [activeIndex, setActiveIndex] = useState(2); // Center stream is active by default
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false);

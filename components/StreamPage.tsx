@@ -12,7 +12,7 @@ import {
   ChevronRight,
   Wifi
 } from 'lucide-react';
-import CyberpunkTwitchStream from './Enahanced';
+import CyberpunkTwitchStream from './LiveStream';
 import Navbar from './Stream/Navbar';
 import Sidebar from './Stream/Channels';
 import { useRouter } from 'next/navigation';

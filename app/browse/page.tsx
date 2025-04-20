@@ -1,6 +1,6 @@
 'use client'
-import Browse from '@/components/Browse'
-import CyberpunkLanding from '@/components/Landing'
+import Browse from '@/components/LandingPage'
+import CyberpunkLanding from '@/components/Browse'
 
 import React from 'react'
 

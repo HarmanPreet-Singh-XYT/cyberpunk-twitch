@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import Navbar from './Stream/Navbar';
-import CyberpunkVideoShorts from './Shorts';
+import CyberpunkVideoShorts from './Shorts/Shorts';
 import Sidebar from './Stream/Channels';
-import CyberpunkVideoShortsSpecific from './ShortsID';
+import CyberpunkVideoShortsSpecific from './Shorts/ShortsID';
 
 const ShortsPage = ({id}:{id?:string}) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Users, Tv, Clock, Share2, Bell, ExternalLink, MessageSquare, ThumbsUp, Award, Gamepad2, Eye, Shield, Zap, Terminal, Code, Database, Download, Heart } from 'lucide-react';
 import Data,{ getStreamById} from "@/app/data";
 import { useParams, useRouter } from 'next/navigation';
+import Navbar from './Stream/Navbar';
 function formatNumber(num) {
   if (num >= 1_000_000_000) {
     return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
@@ -237,9 +238,10 @@ export default function TwitchChannelInfoPage() {
     
     return () => clearInterval(interval);
   }, []);
-  
+  const [IsMenuOpen, setIsMenuOpen] = useState(true);
   return (
     <div className="flex flex-col w-full min-h-screen bg-black text-gray-200 font-mono relative overflow-hidden">
+      <Navbar setIsMenuOpen={setIsMenuOpen}/>
       {/* Enhanced cyberpunk background with digital noise */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzE4MTgxOCIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIiAvPjwvc3ZnPg==')] opacity-20"></div>
       
